@@ -122,8 +122,6 @@ We aim to develop an all-encompassing mobile application that is able to track a
 
 ## Features
 
-### Workout Tracker
-
 <table>
   <tr>
     <th>Subfeature</th>
@@ -139,8 +137,7 @@ We aim to develop an all-encompassing mobile application that is able to track a
   </tr>
   <tr>
    
-
-### Workout Routines
+### Workout Tracker
 
 <table>
   <tr>
@@ -156,6 +153,8 @@ We aim to develop an all-encompassing mobile application that is able to track a
     <td>Users can view a set of exercises based on the specific muscle groups they are interested in working out for the session. The recommended exercises will include a short description of how to execute the exercise and explain which muscle groups are targeted in the movement. A short video will also be available to the user to provide them greater clarity as to how to perform the exercise with safe and proper form.</td>
   </tr>
   <tr>
+
+### Workout Routines
 
 ### Workout Analysis
 <table>
