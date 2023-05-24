@@ -172,6 +172,7 @@ We aim to develop an all-encompassing mobile application that is able to track a
 </td>
   </tr>
   <tr>
+
 ### Workout Analysis
 
 <table>
@@ -184,6 +185,7 @@ We aim to develop an all-encompassing mobile application that is able to track a
     <td>Users can use the app to track their weight by using the weight tracker function. Calorie recommendations and tracking will also be implemented, to help users to reach their targeted weight range.</td>
   </tr>
   <tr>
+
 ### Weight & Calorie Tracker
 
 <table>
@@ -200,6 +202,7 @@ We aim to develop an all-encompassing mobile application that is able to track a
     <td>Users can view a set of exercises based on the specific muscle groups they are interested in working out for the session. The recommended exercises will include a short description of how to execute the exercise and explain which muscle groups are targeted in the movement. A short video will also be available to the user to provide them greater clarity as to how to perform the exercise with safe and proper form.</td>
   </tr>
   <tr>
+
 ### Social Features 
 
 
