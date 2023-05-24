@@ -103,16 +103,16 @@ As fitness enthusiasts, we believe that tracking workouts is crucial for progres
 
 ### Objectives
 
-We hope to develop an all-encompassing mobile application that is able to track a large variety of different health-related information including workout details, weight, and calorie intake. By providing an avenue for one to track such information, we hope to optimize users’ workouts and lifestyles, helping them to achieve their fitness goals.
+We aim to develop an all-encompassing mobile application that is able to track a large variety of different health-related information including workout details, weight, and calorie intake. By providing an avenue for one to track such information, we hope to optimize users’ workouts and lifestyles, helping them to achieve their fitness goals.
 
 
 ## User Stories
 
-1.As an individual who exercises regularly, I would like to log my workouts as well as track my weight and calories using the same application
+1. As an individual who exercises regularly, I would like to log my workouts as well as track my weight and calories using the same application
 
-2.As an individual who wishes to improve on exercise forms, I would like a tutorial video on how to properly perform an exercise
+2. As an individual who wishes to improve on exercise forms, I would like a tutorial video on how to properly perform an exercise
 
-3.As an individual who just started to work out, I want to know what workouts I can do with my current resources and how to execute the exercises in a safe manner as a beginner
+3. As an individual who just started to work out, I want to know what workouts I can do with my current resources and how to execute the exercises in a safe manner as a beginner
 
 4. As an individual with a fitness goal, I would like to be able to view charts and data from past workouts to make sure that I am progressing towards my goals.
 
@@ -124,7 +124,18 @@ We hope to develop an all-encompassing mobile application that is able to track 
 
 ### Exercise
 
-### Built With
+## Timeline
+
+### Milestone 1 - Ideation (29 May)
+
+#### Milestone 1- Poster Submission
+
+#### Milestone 1 - Project Log
+
+#### Milestone 1 - Project Video 
+
+
+### Tech Stack
 
 * [![Next][Next.js]][Next-url]
 * [![React][React.js]][React-url]
