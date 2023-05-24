@@ -122,7 +122,52 @@ We aim to develop an all-encompassing mobile application that is able to track a
 
 ## Features
 
-### Exercise
+### Workout Tracker
+
+<table>
+  <tr>
+    <th>Feature List</th>
+    <th></th>
+  </tr>
+  <tr>
+    <td>(Left) Exercise recommendations</td>
+    <td>(Right) Users can view a set of exercises based on the specific muscle groups they are interested in working out for the session. The recommended exercises will include a short description of how to execute the exercise and explain which muscle groups are targeted in the movement. A short video will also be available to the user to provide them greater clarity as to how to perform the exercise with safe and proper form.</td>
+  </tr>
+  <tr>
+    <td>(Left) Custom Exercise Routines</td>
+    <td>(Right) Users can create their own personal exercise routines by adding different workouts to a routine. This will help to organise their workouts, which they can easily follow during their training.</td>
+  </tr>
+  <tr>
+    <td>Exercise Tracker</td>
+    <td>Users will have the option to start a new workout, which they will then be prompted to select the type of exercise they will be engaging in, from cardiovascular activities such as running to weightlifting and calisthenics from an existing database of exercises.</td>
+  </tr>
+  <tr>
+    <td>View past workouts</td>
+    <td>Users will be able to view specific information about their past workouts, such as the number of reps and sets done for each exercise. Users can also view charts about their progress over time, which displays information such as their total volume and best sets for a specific exercise.</td>
+  </tr>
+  <tr>
+    <td>Timer</td>
+    <td>Users are able to set a timer within the application to time their workouts without changing applications.</td>
+  </tr>
+  <tr>
+    <td>Weight and Calories Tracker</td>
+    <td>Users can use the app to track their weight by using the weight tracker function. Calorie recommendations and tracking will also be implemented, to help users reach their targeted weight range.</td>
+  </tr>
+  <tr>
+    <td>Reminders (Telegram Bot)</td>
+    <td>Users are able to request a daily reminder to keep track of their meal intake and/or workouts in the form of a Telegram bot (that can be pinned).</td>
+  </tr>
+</table>
+
+
+### Workout Routines
+
+### Workout Analysis
+
+### Weight & Calorie Tracker
+
+### Social Features 
+
 
 ## Timeline
 
