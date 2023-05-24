@@ -129,7 +129,7 @@ We aim to develop an all-encompassing mobile application that is able to track a
   </tr>
   <tr>
     <td>Workout Tracker</td>
-</td>Users will have the option to start a new workout, which they will then be prompted to select the type of exercise they will be engaging in, from cardiovascular activities such as running to weightlifting and calisthenics from an existing database of exercises.</td>
+<td>Users will have the option to start a new workout, which they will then be prompted to select the type of exercise they will be engaging in, from cardiovascular activities such as running to weightlifting and calisthenics from an existing database of exercises.</td>
   </tr>
   <tr>
     <td>Timer</td>
