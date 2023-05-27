@@ -7,32 +7,43 @@ const LoginScreen = ({ navigation }) => {
   const [password, setPassword] = useState('');
 
   const handleLogin = () => {
-    if (email && password) {
-      const firstPart = email.split('@')[0];
+    const trimmedEmail = email.trim();
+    const trimmedPassword = password.trim();
+    
+    if (trimmedEmail && trimmedPassword) {
+      const firstPart = trimmedEmail.split('@')[0];
       if (firstPart) {
         console.log('Logged in successfully');
-        navigation.navigate('Profile', { firstName: firstPart });
+        navigation.navigate('Profile', { 
+          firstName: firstPart,
+          email: trimmedEmail,
+        });
       } else {
         Alert.alert('Please enter a valid email');
       }
     } else {
       Alert.alert('Please enter valid credentials');
     }
-  };
+};
+
 
   return (
     <View style={styles.container}>
       <Text style={styles.textInput}> EMAIL: </Text>
       <TextInput
         style={styles.input}
-        onChangeText={setEmail}
+        onChangeText={(text) => {
+          if (!text.includes(' ')) {
+            setEmail(text.toLowerCase());
+          }
+        }}
         value={email}
       />
       <Text style={styles.textInput}> PASSWORD: </Text>
       <TextInput
         style={styles.input}
         secureTextEntry
-        onChangeText={setPassword}
+        onChangeText={(text) => setPassword(text.toLowerCase())}
         value={password}
       />
       <Button title="Login" onPress={handleLogin} />
