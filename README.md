@@ -163,8 +163,9 @@ See the [open issues](https://github.com/github_username/repo_name/issues) for a
 ## Timeline
 
 ### Milestone 1 - Ideation (29 May)
-| Task           | Description              | Handled By                 | Complete By                                                                                                                                                                           |
-|----------------|--------------------------|----------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Task           | Description                                         | Handled By                 | Complete By                                                                                                                                                             |
+|----------------|-----------------------------------------------------|----------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Familiarisation| Complete courses on React Native, Firebase etc.     | Si Rui, Kin Tat            | 22 May                          | | Familiarise with React Native. | Researched on optimal ways to implement React Native. | Kin Tat  | 22 May |         
                                        
 
 #### Milestone 1- Poster Submission
