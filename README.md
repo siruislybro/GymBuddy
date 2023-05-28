@@ -165,7 +165,7 @@ See the [open issues](https://github.com/github_username/repo_name/issues) for a
 ### Milestone 1 - Ideation (29 May)
 
 #### Milestone 1- Poster Submission
-![Alt text](images/GymBuddy Poster 2.png)
+![Alt text](images/GymBuddyPoster2.png)
 
 #### Milestone 1 - Project Log
 
