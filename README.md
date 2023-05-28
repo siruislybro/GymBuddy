@@ -163,6 +163,9 @@ See the [open issues](https://github.com/github_username/repo_name/issues) for a
 ## Timeline
 
 ### Milestone 1 - Ideation (29 May)
+| Task           | Description              | Handled By                 | Complete By                                                                                                                                                                           |
+|----------------|--------------------------|----------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+                                       
 
 #### Milestone 1- Poster Submission
 ![Alt text](images/GymBuddyPoster2.png)
