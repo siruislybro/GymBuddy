@@ -173,6 +173,11 @@ See the [open issues](https://github.com/github_username/repo_name/issues) for a
 
 
 #### Milestone 1 - Project Video 
+                                       
+Prototype Demo - Showcase of User Authentication and Quick Start Feature
+                                       
+<a href="https://drive.google.com/file/d/1mjbVRUisS3vfPTLoTEgFqM_g6A9ZXDwS/view?usp=sharing"><img src="images/Milestone1Thumbnail.png">
+</a>
 
 
 ### Tech Stack
