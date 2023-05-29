@@ -167,8 +167,8 @@ See the [open issues](https://github.com/github_username/repo_name/issues) for a
 |-------------------------------|-----------------------------------------------------|----------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Familiarisation.| Complete courses on React Native, Firebase etc.     | Si Rui, Kin Tat            | 22 May                         | | Familiarise with React Native. | Researched on optimal ways to implement React Native. | Kin Tat  | 22 May                          |
 | Familiarise with Firebase. | Researched on optimal ways to implement Firebase. | Si Rui | 22 May | 
-| Creating of User Interfaces. | Implemented the basic screens of any mobile app (Login,  Sign Up, Home) | Kin Tat | 26 May           |                             
-                                       
+| Creating of User Interfaces. | Implemented the basic screens of any mobile app (Login,  Sign Up, Home) | Kin Tat | 25 May           | | User authentication | Integrated app with Firebase authentication | Si Rui | 26 May |  
+| UX Improvements | Improved the logic and the general flow of the app | Si Rui, Kin Tat | 28 May |                                      
 
 #### Milestone 1- Poster Submission
 ![Alt text](images/GymBuddyPoster2.png)
