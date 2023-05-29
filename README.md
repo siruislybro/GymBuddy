@@ -98,12 +98,18 @@ Proposed Level of Achievement: Apollo 11
 
 ### Motivation
 
-As fitness enthusiasts, we believe that tracking workouts is crucial for progressing towards our fitness goals. It helps us see our advancements in specific exercises and adjust our routines for optimal training. Logging workouts holds us accountable and honest, revealing our commitment and progress. It allows us to analyze our performance, track duration, intensity, and exercises performed. By tracking workouts, we become purpose-driven and more efficient, as it helps us plan, organize, and understand our fitness goals. It provides a clear measurement of our progress and motivates us to push harder. However, existing applications often lack the necessary functionalities or are inconvenient to integrate into our workouts. To address this, we aim to develop a convenient mobile application that allows users to easily log their fitness progress and work towards their health and fitness goals.
+As fitness enthusiasts, we've always found tracking our workouts crucial in making consistent progress. It's not just about tracking duration or intensity; it's about seeing advancements in specific exercises and adjusting routines for optimal training. It keeps us accountable, gives a clear measure of our progress, and motivates us to push our limits. However, the challenge we've often encountered is the lack of convenience and personalization in existing workout apps.
+
+Drawing from our personal experiences and a desire to help others on their fitness journey, we envision an app that offers more than just workout tracking. Imagine an app that not only logs your fitness progress but also provides you with personalized workout routines tailored to your unique characteristics such as height, weight, and body type. Think of it as your personal trainer, guiding you step-by-step and helping you make sense of the vast world of fitness.
+
+But we also understand that motivation can sometimes be hard to sustain. That's where a sense of community and friendly competition come in. Our app features a leaderboard system, promoting a healthy competitive spirit among users. It adds a fun element to the fitness journey, encouraging you to keep pushing and making each personal best feel even more rewarding.
+
+Ultimately, we're excited to bring to life an app that transforms fitness tracking into a more personal, engaging, and rewarding experience. It's not just about keeping logs; it's about embarking on a fitness journey that is uniquely yours, supported by a community that cheers you on every step of the way.
 
 
 ### Objectives
 
-We aim to develop an all-encompassing mobile application that is able to track a large variety of different health-related information including workout details, weight, and calorie intake. By providing an avenue for one to track such information, we hope to optimize users’ workouts and lifestyles, helping them to achieve their fitness goals.
+We are developing a holistic mobile application that goes beyond tracking workouts, offering a comprehensive health companion. Our app will track various health-related metrics, provide personalized recommendations, and incorporate leaderboards for healthy competition and motivation. By empowering users to optimize their fitness routines and align their nutrition with their goals, our goal is to provide a dynamic and engaging platform that supports users every step of the way on their fitness journey.
 
 
 ## User Stories
