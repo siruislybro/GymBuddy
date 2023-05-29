@@ -163,8 +163,8 @@ See the [open issues](https://github.com/github_username/repo_name/issues) for a
 ## Timeline
 
 ### Milestone 1 - Ideation (29 May)
-| Task                          | Description                                         | Handled By                 | Complete By      |                                                                                                                                                   
-|-------------------------------|-----------------------------------------------------|----------------------------|------------------|--------------------------------------------------------------------------------------------------------------------------------------
+| Task                          | Description                                         | Handled By                 | Complete By     |                                                                                                                                                   
+|-------------------------------|-----------------------------------------------------|----------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Familiarisation.| Complete courses on React Native, Firebase etc.     | Si Rui, Kin Tat            | 22 May                         | | Familiarise with React Native. | Researched on optimal ways to implement React Native. | Kin Tat  | 22 May                          |
 | Familiarise with Firebase. | Researched on optimal ways to implement Firebase. | Si Rui | 22 May | 
 | Creating of User Interfaces. | Implemented the basic screens of any mobile app (Login,  Sign Up, Home) | Kin Tat | 26 May           |                             
