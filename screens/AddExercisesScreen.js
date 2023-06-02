@@ -1,21 +1,35 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
+import Exercise from '../models/Exercise';
 
-const AddExercisesScreen = ({ navigation }) => {
+const AddExercisesScreen = ({ navigation, route }) => {
   const [exerciseName, setExerciseName] = useState('');
   const [showCategoryButtons, setShowCategoryButtons] = useState(false);
+  const exercises = route.params?.exercises || [];
 
-  const handleSubmit = () => {
+  const handleAddExercise = () => {
     if (exerciseName === '') {
       alert('Exercise name required!');
     } else {
-      console.log('Exercise Name:', exerciseName);
+      const newExercise = {
+        name: exerciseName,
+        sets: [
+          {
+            weight: 0,
+            reps: 0,
+            done: false
+          }
+          //...add more sets as needed
+        ]
+      }
+      const updatedExercises = [...exercises, newExercise];
+      console.log(updatedExercises);
       setExerciseName('');
-      navigation.goBack();
+      navigation.navigate("QuickStart", { exercises: updatedExercises });
     }
   };
 
-  const handleAddExercises = () => {
+  const handleViewExercises = () => {
     setShowCategoryButtons(true);
   };
 
@@ -33,11 +47,13 @@ const AddExercisesScreen = ({ navigation }) => {
         onChangeText={setExerciseName}
       />
 
-      <Button title="Submit" onPress={handleSubmit} />
+      <Button title="Add Exercise" onPress={handleAddExercise} />
+
+      <View style={styles.buttonSpacing}></View>
       {!showCategoryButtons && (
         <Button
-          title="Add Exercises"
-          onPress={handleAddExercises}
+          title="View Exercises"
+          onPress={handleViewExercises}
         />
       )}
       {showCategoryButtons && (
@@ -63,7 +79,7 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   label: {
-    marginBottom: 8,
+    marginBottom: 16,
   },
   input: {
     height: 40,
@@ -71,6 +87,9 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginBottom: 16,
     paddingHorizontal: 8,
+  },
+  buttonSpacing: {
+    marginTop: 15,
   },
   categoryButtons: {
     marginTop: 16,
