@@ -14,6 +14,13 @@ import ExerciseOverviewScreen from './screens/ExerciseOverviewScreen';
 import ExerciseDetailsScreen from './screens/ExerciseDetailsScreen';
 import { Ionicons } from '@expo/vector-icons';
 import Colors from './colours/colors';
+import Exercise from './models/Exercise';
+import StatisticsScreen from './screens/StatisticsScreen';
+import CalendarScreen from './screens/CalanderScreen';
+import PastWorkoutsScreen from './screens/PastWorkoutsScreen';
+import MeasurementScreen from './screens/MeasurementsScreen';
+import CaloriesScreen from './screens/CaloriesScreen';
+import LeaderboardScreen from './screens/LeaderboardScreen';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -91,6 +98,36 @@ export default function App() {
               };
             }}
           />
+        <Stack.Screen 
+          name="StatisticsScreen"
+          component={StatisticsScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen 
+          name="CalendarScreen"
+          component={CalendarScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen 
+          name="PastWorkoutsScreen"
+          component={PastWorkoutsScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen 
+          name="MeasurementsScreen"
+          component={MeasurementScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen 
+          name="CaloriesScreen"
+          component={CaloriesScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen 
+          name="LeaderboardScreen"
+          component={LeaderboardScreen}
+          options={{ headerShown: false }}
+        />        
         <Stack.Screen 
           name="ExerciseDetails"
           component={ExerciseDetailsScreen}

@@ -6,6 +6,11 @@ const ProfileScreen = ({ route, navigation }) => {
   const { email } = "sr@test.com";
   console.log('Received Email:', email);
 
+  const username = "sr";
+  const numWorkouts = 150;
+  const numFollowers = 200;
+  const numFollowing = 100;
+  
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -26,22 +31,28 @@ const ProfileScreen = ({ route, navigation }) => {
       </TouchableOpacity>
       <View style={styles.buttonsContainer}>
         <View style={styles.buttonsContainer}>
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity onPress={() => navigation.navigate('StatisticsScreen')} style={styles.button}>
+            <Image source = {require('../images/Statistics.png')} style = {styles.buttonImage} />
             <Text style={styles.buttonText}>Statistics</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity onPress={() => navigation.navigate('CalendarScreen')} style={styles.button}>
+            <Image source = {require('../images/Calendar.png')} style = {styles.buttonImage} />
             <Text style={styles.buttonText}>Calendar</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity onPress={() => navigation.navigate('PastWorkoutsScreen')} style={styles.button}>
+            <Image source = {require('../images/PastWorkouts.png')} style = {styles.buttonImage} />
             <Text style={styles.buttonText}>Past Workouts</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity onPress={() => navigation.navigate('MeasurementsScreen')} style={styles.button}>
+            <Image source = {require('../images/Measurements.png')} style = {styles.buttonImage} />
             <Text style={styles.buttonText}>Measurements</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity onPress={() => navigation.navigate('CaloriesScreen')} style={styles.button}>
+            <Image source = {require('../images/Calories.png')} style = {styles.buttonImage} />
             <Text style={styles.buttonText}>Calories</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity onPress={() => navigation.navigate('LeaderboardScreen')} style={styles.button}>
+            <Image source = {require('../images/Leaderboard.png')} style = {styles.buttonImage} />
             <Text style={styles.buttonText}>Leaderboard</Text>
         </TouchableOpacity>
         </View>
@@ -66,9 +77,9 @@ const styles = StyleSheet.create({
   },
   avatar: {
     marginTop: 20,
-    width: 80,
-    height: 80,
-    borderRadius: 40,
+    width: 200,
+    height: 200,
+    borderRadius: 100,
   },
   settings: {
     position: 'absolute',
@@ -80,33 +91,45 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   editProfileButton: {
-    backgroundColor: 'gray',
+    backgroundColor: 'lightgray',
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 5,
     marginBottom: 20,
   },
   editProfileText: {
-    color: 'white',
+    color: 'black',
     fontSize: 14,
   },
   buttonsContainer: {
-    width: '100%',
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-around',
+    paddingHorizontal: "4%",
+    paddingVertical: "4%",
   },
   button: {
-    backgroundColor: 'gray',
+    backgroundColor: 'lightgray',
     padding: 10,
     borderRadius: 5,
-    width: '30%',
+    width: "30%",
+    height: 100, 
     marginBottom: 10,
+    marginLeft: '1%',
+    marginRight: '1%',
+    alignItems: 'center',
+    justifyContent: 'center', 
   },
   buttonText: {
-    color: 'white',
+    color: 'black',
     fontSize: 12,
     textAlign: 'center',
+  },
+  buttonImage: {
+    width: '100%',
+    height: '70%',
+    marginBottom: 5, 
+    resizeMode : 'contain',
   },
 });
 
