@@ -5,14 +5,14 @@ import { View, Button, StyleSheet, FlatList, Text, TextInput, TouchableOpacity }
 const QuickStartScreen = ({ navigation, route }) => {
   const [exercises, setExercises] = useState(route.params?.exercises || [
     {name: 'Exercise 1', sets: [{weight: '', reps: ''}]}, 
-    //...
+    
   ]);
 
   useEffect(() => {
-    if (route.params?.exercises) {
-      setExercises(route.params.exercises);
+    if (route.params?.newExercise) {
+      setExercises(prevExercises => [...prevExercises, {name: route.params.newExercise, sets: [{weight: '', reps: ''}]}]);
     }
-  }, [route.params?.exercises]);
+  }, [route.params?.newExercise]);
 
   const currentDate = new Date().toLocaleString();
 
@@ -40,7 +40,7 @@ const QuickStartScreen = ({ navigation, route }) => {
       <TextInput
         placeholder="Weight (kg)"
         style={styles.setInputField}
-        value={item.weight.toString()}
+        value={item.weight}
         onChangeText={text => handleWeightChange(text, exerciseIndex, index)}
       />
       <TextInput

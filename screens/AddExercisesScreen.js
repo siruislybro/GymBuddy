@@ -1,31 +1,30 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
-import Exercise from '../models/Exercise';
 
 const AddExercisesScreen = ({ navigation, route }) => {
   const [exerciseName, setExerciseName] = useState('');
   const [showCategoryButtons, setShowCategoryButtons] = useState(false);
   const exercises = route.params?.exercises || [];
 
+  const muscleGroups = {
+    'Arms': ['biceps', 'triceps', 'forearms'],
+    'Legs': ['quadriceps', 'calves', 'hamstrings'],
+    'Chest': ['chest'],
+    'Back': ['lower_back', 'upper_back'],
+  };
+
+  const addExercise = useCallback((exercise) => {
+    setExerciseName(exercise);
+  }, []);
+
   const handleAddExercise = () => {
     if (exerciseName === '') {
       alert('Exercise name required!');
     } else {
-      const newExercise = {
-        name: exerciseName,
-        sets: [
-          {
-            weight: 0,
-            reps: 0,
-            done: false
-          }
-          //...add more sets as needed
-        ]
-      }
-      const updatedExercises = [...exercises, newExercise];
+      const updatedExercises = [...exercises, { name: exerciseName, sets: [{ weight: '', reps: '' }] }];
       console.log(updatedExercises);
       setExerciseName('');
-      navigation.navigate("QuickStart", { exercises: updatedExercises });
+      navigation.navigate('QuickStart', { exercises: updatedExercises });
     }
   };
 
@@ -33,9 +32,12 @@ const AddExercisesScreen = ({ navigation, route }) => {
     setShowCategoryButtons(true);
   };
 
-  const handleNavigate = (categoryId) => {
-    // Navigate to the ExerciseOverviewScreen with the selected categoryId
-    navigation.navigate('ExerciseOverview', { categoryId });
+  const handleNavigate = (category) => {
+    const muscles = muscleGroups[category];
+    muscles.forEach(muscle => {
+      const cleanedMuscle = muscle.replace('_', ' ');
+      navigation.navigate('ExerciseOverview', { muscle: cleanedMuscle, addExercise });
+    });
   };
 
   return (
@@ -58,14 +60,13 @@ const AddExercisesScreen = ({ navigation, route }) => {
       )}
       {showCategoryButtons && (
         <View style={styles.categoryButtons}>
-          <Button
-            title="Chest"
-            onPress={() => handleNavigate('c1')}
-          />
-          <Button
-            title="Back"
-            onPress={() => handleNavigate('c2')}
-          />
+          {Object.keys(muscleGroups).map((category) => (
+            <Button
+              key={category}
+              title={category}
+              onPress={() => handleNavigate(category)}
+            />
+          ))}
         </View>
       )}
     </View>

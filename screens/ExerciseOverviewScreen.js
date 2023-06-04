@@ -1,75 +1,97 @@
-import React, { useState, useEffect, useLayoutEffect } from 'react';
-import { View, FlatList, StyleSheet, Platform } from 'react-native';
-import { EXERCISES, CATEGORIES } from '../data/tempData';
-import ExerciseItem from '../components/ExerciseItem';
-import { SearchBar } from 'react-native-elements';
+// ExerciseOverviewScreen.js
+import React, { useState, useEffect } from 'react';
+import { FlatList, StyleSheet, View, Button, ScrollView } from 'react-native';
+import axios from 'axios';
 
-function ExerciseOverviewScreen({ route, navigation }) {
-    const catId = route.params.categoryId;
+import ExerciseCard from "../components/ExerciseCard.js"
 
-    const [searchQuery, setSearchQuery] = useState('');
-    const [filteredExercises, setFilteredExercises] = useState([]);
+const API_KEY = 'DIPsRHPESoUC2bCJ8qjDvw==0CkuC18ovLG4RD1a'; // replace with your actual API key
+const API_URL = 'https://api.api-ninjas.com/v1/exercises?muscle=';
 
-    const allExercises = EXERCISES.filter((exerciseItem) => {
-        return exerciseItem.categoryIds.indexOf(catId) >= 0;
-    });
+const ExerciseOverviewScreen = ({ navigation, route }) => {
+  const [exercises, setExercises] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState(null);
 
-    // Filter the exercises every time the search query changes
-    useEffect(() => {
-        setFilteredExercises(
-            allExercises.filter(exercise =>
-                exercise.title.toLowerCase().includes(searchQuery.toLowerCase())
-            )
-        );
-    }, [searchQuery]);
+  // Mapping muscle groups into major parts
+  const majorParts = {
+    'Arms': ['biceps', 'forearms', 'triceps'],
+    'Chest': ['chest'],
+    'Back': ['lats', 'lower_back', 'middle_back', 'traps', 'neck'],
+    'Core': ['abdominals', 'abductors', 'adductors'],
+    'Legs': ['calves', 'glutes', 'hamstrings', 'quadriceps'],
+  };
 
-    useLayoutEffect(() => {
-        const categoryTitle = CATEGORIES.find(
-            (category) => category.id === catId
-        ).title;
+  const fetchExercises = async (muscleGroup) => {
+    const response = await axios.get(`${API_URL}${muscleGroup}`, { headers: { 'X-Api-Key': API_KEY }});
+    const fetchedExercises = response.data;
+    setExercises(prevExercises => [...prevExercises, ...fetchedExercises]);
+  };
 
-        navigation.setOptions({
-            title: categoryTitle,
-        });
-    }, [catId, navigation]);
-
-    function renderExerciseItem(itemData) {
-        const item = itemData.item;
-
-        const exerciseItemProps = {
-            id: item.id,
-            title: item.title,
-            description: item.description,
-            difficulty: item.difficulty,
-            instructions: item.instructions,
-            imageUrl: item.imageUrl,
-        }
-        return (
-            <ExerciseItem {...exerciseItemProps} />
-        );
+  const handleNavigate = (category) => {
+    if (selectedCategory === category) {
+      setSelectedCategory(null);
+      return;
     }
+    setSelectedCategory(category);
+  };
 
-    return (
-        <View style={styles.container}>
-            <SearchBar
-                placeholder="Search exercises..."
-                onChangeText={setSearchQuery}
-                value={searchQuery}
-            />
-            <FlatList
-                data={filteredExercises}
-                keyExtractor={(item) => item.id}
-                renderItem={renderExerciseItem}
-            />
-        </View >
-    );
-}
+  useEffect(() => {
+    Object.values(majorParts).flat().forEach(fetchExercises);
+  }, []);
 
-export default ExerciseOverviewScreen;
+  return (
+    <View style={styles.container}>
+      <FlatList
+        data={exercises}
+        keyExtractor={(item, index) => item.id || String(index)}  // If your data item doesn't have 'id', use index as a fallback
+        renderItem={({ item }) => (
+          <ExerciseCard
+            title={item.name}
+            difficulty={item.difficulty}
+            instructions={item.instructions}
+            item={item}
+            onPress={() => navigation.navigate('ExerciseDetails', { exercise: item })}
+            navigation={navigation}
+          />
+        )}
+      />
+      <View style={styles.buttonsContainer}>
+        <ScrollView horizontal>
+          {selectedCategory ? 
+            majorParts[selectedCategory].map((muscleGroup) => (
+              <Button
+                key={muscleGroup}
+                title={`View ${muscleGroup} Exercises`}
+                onPress={() => fetchExercises(muscleGroup)}
+              />
+            )) :
+            Object.keys(majorParts).map((category) => (
+              <Button
+                key={category}
+                title={`View ${category} Exercises`}
+                onPress={() => handleNavigate(category)}
+              />
+            ))
+          }
+        </ScrollView>
+      </View>
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        padding: 16,
-    },
+  container: {
+    flex: 1,
+    padding: 16,
+    justifyContent: 'center',
+  },
+  buttonsContainer: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    flexDirection: 'row',
+    padding: 10,
+  },
 });
+
+export default ExerciseOverviewScreen;
