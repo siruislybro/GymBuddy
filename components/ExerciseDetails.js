@@ -1,24 +1,25 @@
-import { View, Text, StyleSheet } from 'react-native';
-import Colors from '../colours/colors';
+import React from 'react';
+import { Text, StyleSheet, View } from 'react-native';
 
-function ExerciseDetails({instructions, difficulty, style, textStyle }) {
-    return (
-        <View style={[styles.details, style]}>
-            <Text style={[styles.detailItem, textStyle]}>{difficulty} </Text>
-            <Text style={[styles.detailItem, textStyle]}>{instructions} </Text>
-        </View>
-    )
+function ExerciseDetails({ instructions, difficulty, muscle, equipment }) {
+  return (
+    <View style={styles.container}>
+      <Text style={styles.text}>Muscle: {muscle}</Text>
+      {/* <Text style={styles.text}>Equipment: {equipment}</Text>
+      <Text style={styles.text}>Difficulty: {difficulty}</Text>
+      <Text style={styles.text}>Instructions: {instructions}</Text> */}
+    </View>
+  );
 }
 
-export default ExerciseDetails;
-
 const styles = StyleSheet.create({
-    details: {
-        flexDirection: 'column',
-        alignItems: 'center',
-        padding: 8,
-        justifyContent: 'center',
-        color: "black"
-    },
-
+  container: {
+    marginVertical: 10,
+  },
+  text: {
+    fontSize: 16,
+    color: 'black',
+  },
 });
+
+export default ExerciseDetails;

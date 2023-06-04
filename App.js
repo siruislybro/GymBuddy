@@ -66,7 +66,7 @@ export default function App() {
         <Stack.Screen 
         name="MainTabs" 
         component={MainTabs} 
-        options={{ headerShown: false }} 
+        options={{ headerShown: true }} 
         />
         <Stack.Screen
           name="Login"
@@ -76,7 +76,7 @@ export default function App() {
         />
         <Stack.Screen name="Sign Up" 
         component={SignUpScreen} 
-        options={{ headerShown: false }} 
+        options={{ headerShown: true }} 
         />
         <Stack.Screen 
           name="QuickStart"
