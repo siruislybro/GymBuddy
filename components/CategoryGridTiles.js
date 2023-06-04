@@ -20,11 +20,11 @@ const CategoryGridTiles = (props) => {
         <View style={styles.gridItem}>
             <TouchableComponent style={{flex: 1}} onPress={props.onSelect}>
                 <View style={{ ...styles.container, ...{backgroundColor: props.color} }}>
-                    <ImageBackground source={{uri: props.image}} style={styles.bgImage}>
+                    {/* <ImageBackground source={{uri: props.image}} style={styles.bgImage}> */}
                         <Text style={styles.title} numberOfLines={2}>
                             {props.title}
                         </Text>
-                    </ImageBackground>
+                    {/* </ImageBackground> */}
                 </View>
             </TouchableComponent>
         </View>

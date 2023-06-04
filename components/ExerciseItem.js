@@ -1,37 +1,25 @@
-import { View, Text, StyleSheet, Pressable, Image, Platform } from 'react-native';
+import React from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Platform } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import ExerciseDetails from './ExerciseDetails';
-import Colors from '../colours/colors';
 
-function ExerciseItem({ id, title, difficulty, description, instructions, imageUrl}) {
+
+function ExerciseItem({ title, muscle, addExercise}) {
     const navigation = useNavigation();
 
     function selectExerciseItemHandler() {
         navigation.navigate('ExerciseDetails', {
-            exerciseId: id
+            exerciseTitle: title,
+            addExercise: addExercise,
         });
     }
 
     return (
-        <View style={styles.exerciseItem}>
-            <Pressable
-                android_ripple={{ color: '#ccc' }}
-                style={({ pressed }) => (pressed ? styles.buttonPressed : null)}
-                onPress={selectExerciseItemHandler}
-            >
-                <View style={styles.innerContainer}>
-                    <View>
-                        <Image source={{ uri: imageUrl }} style={styles.image} />
-                        <Text style={styles.title}>{title}</Text>
-                    </View>
-                    <ExerciseDetails
-                        difficulty={difficulty}
-                        description={description}
-                        instructions={instructions}
-                    />
-                </View>
-            </Pressable>
-        </View >
+        <TouchableOpacity style={styles.exerciseItem} onPress={selectExerciseItemHandler}>
+            <View style={styles.innerContainer}>
+                <Text style={styles.title}>{title}</Text>
+                <Text style={styles.detailItem}>{muscle}</Text>
+            </View>
+        </TouchableOpacity>
     );
 }
 
@@ -40,11 +28,11 @@ export default ExerciseItem;
 const styles = StyleSheet.create({
     exerciseItem: {
         margin: 16,
+        padding: 16,
         borderRadius: 8,
         overflow: Platform.OS === 'android' ? 'hidden' : 'visible',
         backgroundColor: 'white',
         elevation: 4,
-        backgroundColor: 'white',
         shadowColor: 'black',
         shadowOpacity: 0.35,
         shadowOffset: { width: 0, height: 2 },
@@ -54,18 +42,11 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         overflow: 'hidden',
     },
-    image: {
-        width: '100%',
-        height: 200,
-    },
-    buttonPressed: {
-        opacity: 0.5,
-    },
     title: {
         fontWeight: 'bold',
         textAlign: 'center',
         fontSize: 18,
-        margin: 8,
+        marginBottom: 8,
     },
     detailItem: {
         marginHorizontal: 4,
