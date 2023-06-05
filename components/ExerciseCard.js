@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { StyleSheet, View, Text, Button } from 'react-native';
 
-const ExerciseCard = ({ title, difficulty, onPress }) => {
+const ExerciseCard = ({ title, difficulty, onPress, muscle }) => {
   const navigation = useNavigation();
 
   const handleAddExercise = () => {
@@ -13,6 +13,7 @@ const ExerciseCard = ({ title, difficulty, onPress }) => {
     <View style={styles.card}>
       <View style={styles.info}>
         <Text style={styles.title}>{title}</Text>
+        <Text style={styles.muscle}>Targets: {muscle.replace(/_/g, ' ')}</Text>
         <Text style={styles.muscle}>{difficulty}</Text>
         <Button title="Add Exercise" onPress={handleAddExercise} />
         <Button title="Go to Details" onPress={onPress} />
@@ -23,7 +24,7 @@ const ExerciseCard = ({ title, difficulty, onPress }) => {
 
 const styles = StyleSheet.create({
   card: {
-    flex: 1,
+    backgroundColor: '#fff',
     margin: 10,
     borderWidth: 1,
     borderRadius: 10,
@@ -38,7 +39,7 @@ const styles = StyleSheet.create({
   },
   muscle: {
     fontSize: 16,
-    color: '#888',
+    color: '#444',
   },
 });
 

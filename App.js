@@ -58,15 +58,15 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen 
-        name = "Start" 
-        component = {StartScreen} 
-        options = {{headerShown: false}} 
-        initialParams={{initial : true}} 
+          name = "Start" 
+          component = {StartScreen} 
+          options = {{headerShown: false}} 
+          initialParams={{initial : true}} 
         />
         <Stack.Screen 
-        name="MainTabs" 
-        component={MainTabs} 
-        options={{ headerShown: true }} 
+          name="MainTabs" 
+          component={MainTabs} 
+          options={{ headerShown: false }} 
         />
         <Stack.Screen
           name="Login"
@@ -74,9 +74,10 @@ export default function App() {
           options={{ headerShown: false }}
           cardstyle={backgroundColor = Colors.buttonColor}
         />
-        <Stack.Screen name="Sign Up" 
-        component={SignUpScreen} 
-        options={{ headerShown: true }} 
+        <Stack.Screen 
+          name="Sign Up" 
+          component={SignUpScreen} 
+          options={{ headerShown: true }} 
         />
         <Stack.Screen 
           name="QuickStart"
@@ -95,6 +96,7 @@ export default function App() {
             const title = route.params.title;
             return {
               title: title,
+              headerShown: false,
             };
           }}
         />
