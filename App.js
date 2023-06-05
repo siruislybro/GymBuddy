@@ -133,7 +133,7 @@ export default function App() {
         <Stack.Screen 
           name="ExerciseDetails"
           component={ExerciseDetailsScreen}
-          options={{ headerShown: true }}
+          options={{ headerShown: false }}
         />
       </Stack.Navigator>
       <StatusBar style="light" />

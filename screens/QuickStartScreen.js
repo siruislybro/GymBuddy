@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Button, StyleSheet, FlatList, Text, TextInput, TouchableOpacity } from 'react-native';
+import { AntDesign } from '@expo/vector-icons';
+import { Icon } from 'react-native-elements';
 // import { CheckBox } from '@react-native-community/checkbox';
 
 const QuickStartScreen = ({ navigation, route }) => {
@@ -56,8 +58,15 @@ const QuickStartScreen = ({ navigation, route }) => {
     </View>
   );
 
+  function handleRemoveExercise(index) {
+    setExercises(prevExercises => prevExercises.filter((_, i) => i !== index));
+  }
+
   const renderExerciseItem = ({ item, index }) => (
     <View style={styles.exerciseItem}>
+      <TouchableOpacity onPress={() => handleRemoveExercise(index)}>
+        <AntDesign name="close" size={24} color="red" /> 
+      </TouchableOpacity>
       <Text style={styles.exerciseName}>{item.name}</Text>
       <FlatList
         data={item.sets}
@@ -70,18 +79,19 @@ const QuickStartScreen = ({ navigation, route }) => {
     </View>
   );
 
-  const handleGoBack = () => {
+  const backButtonHandler = () => {
     navigation.goBack();
   };
+  
 
   return (
     <View style={styles.screen}>
       <View style={styles.topBar}>
-        <Button
-          title="Back"
-          onPress={handleGoBack}
-          style={styles.backButton}
-        />
+        <TouchableOpacity 
+            style={styles.backButton} 
+            onPress={backButtonHandler}>
+            <Icon name='arrow-back' color='white' />
+        </TouchableOpacity>
         <View style={styles.header}>
           <Text style={styles.workoutName}>Workout Name</Text>
           <Text style={styles.dateTime}>{currentDate}</Text>
@@ -106,13 +116,20 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
     padding: 20,
+    backgroundColor: '#1a1a1a',
   },
   topBar: {
     flexDirection: 'row',
     alignItems: 'center',
+    backgroundColor: '#2e2e2e',
+    borderRadius: 10,
+    padding: 10,
+    margin: 10,
   },
   backButton: {
-    marginRight: 20,
+    marginRight: 10,
+    opacity: 2,
+    TouchableOpacity: 0.75,
   },
   header: {
     marginLeft: 20,
@@ -121,17 +138,22 @@ const styles = StyleSheet.create({
   workoutName: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#333',
+    color: '#fff',
+    marginTop: 20,
   },
   dateTime: {
     fontSize: 16,
-    color: '#777',
+    color: '#bbb',
+    marginBottom: 20,
   },
   setInput: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: 10,
+    backgroundColor: '#2e2e2e',
+    borderRadius: 10,
+    margin: 10,
   },
   setInputField: {
     width: '40%',
@@ -140,33 +162,31 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     paddingLeft: 8,
     margin: 2,
+    backgroundColor: '#fff',
+    color: '#333',
   },
-  exerciseList: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
+  exerciseItem: {
+    backgroundColor: '#2e2e2e',
+    borderRadius: 10,
     padding: 10,
-    margin: 5,
-    marginVertical: 100
-  },
-  exerciseButton: {
-    flex: 1,
-    justifyContent: 'center',
-    width: '80%',
+    margin: 10,
   },
   exerciseName: {
-    fontSize: 20,   // Adjust the value as needed
+    fontSize: 20,
     fontWeight: 'bold',
+    color: '#fff',
   },
   addButton: {
     marginTop: 10,
     paddingVertical: 10,
     paddingHorizontal: 20,
     alignItems: 'center',
+    backgroundColor: '#007bff',
+    borderRadius: 10,
   },
   addSetButtonText: {
     fontSize: 16,
-    color: '#007BFF', // Feel free to change this color to your liking.
+    color: '#fff',
   },
 });
 
