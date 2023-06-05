@@ -17,9 +17,18 @@ const HomeScreen = ({ navigation,route }) => {
     };
 
     const handleStartRoutinePress = () => {
-        // Handle start routine logic
-        console.log('Start Routine pressed');
-    };
+        // TODO: Check if the user has already answered the questions. This would involve fetching the user's details from your PostgreSQL database using an API request
+        const hasAnsweredQuestions = false; // Replace this with the actual condition
+        
+        if (hasAnsweredQuestions) {
+          // If the user has already answered the questions, navigate directly to the recommended routine
+          navigation.navigate('RecommendedRoutineScreen');
+        } else {
+          // If the user hasn't answered the questions, navigate to the UserDetailScreen
+          navigation.navigate('UserDetail');
+        }
+      };
+      
 
     return (
         <View style={styles.container}>

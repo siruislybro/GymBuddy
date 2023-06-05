@@ -9,6 +9,7 @@ import SignUpScreen from './screens/SignUpScreen';
 import HomeScreen from './screens/HomeScreen';
 import ProfileScreen from './screens/ProfileScreen';
 import QuickStartScreen from './screens/QuickStartScreen';
+import UserDetailScreen from './screens/UserDetailScreen';
 import AddExercisesScreen from './screens/AddExercisesScreen';
 import ExerciseOverviewScreen from './screens/ExerciseOverviewScreen';
 import ExerciseDetailsScreen from './screens/ExerciseDetailsScreen';
@@ -82,6 +83,11 @@ export default function App() {
         <Stack.Screen 
           name="QuickStart"
           component={QuickStartScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen 
+          name="UserDetail"
+          component={UserDetailScreen}
           options={{ headerShown: false }}
         />
         <Stack.Screen 
