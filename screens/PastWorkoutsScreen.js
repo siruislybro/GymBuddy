@@ -2,7 +2,10 @@ import React, { useState } from 'react';
 import { StyleSheet, View, Text, TextInput, FlatList, Button } from 'react-native';
 import DatePicker from 'react-native-datepicker';
 
-const PastWorkoutsScreen = () => {
+const PastWorkoutsScreen = ({navigation}) => {
+  function backButtonHandler() {
+    navigation.goBack();
+  }
   const [date, setDate] = useState(new Date());
   const [workoutName, setWorkoutName] = useState('');
   const [duration, setDuration] = useState('');
@@ -25,6 +28,10 @@ const PastWorkoutsScreen = () => {
 
   return (
     <View style={styles.container}>
+      <Button
+        title='Back to profile'
+        onPress={backButtonHandler}
+      /> 
       <Text style={styles.title}>Past Workouts</Text>
       <View style={styles.inputContainer}>
         <DatePicker

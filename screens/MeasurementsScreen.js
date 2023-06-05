@@ -2,7 +2,10 @@ import React, { useState } from 'react';
 import { StyleSheet, View, Text, TextInput, FlatList, Button } from 'react-native';
 import DatePicker from 'react-native-datepicker';
 
-const MeasurementScreen = () => {
+const MeasurementScreen = ({navigation}) => {
+  function backButtonHandler() {
+    navigation.goBack();
+  }
   const [date, setDate] = useState(new Date());
   const [height, setHeight] = useState('');
   const [weight, setWeight] = useState('');
@@ -20,6 +23,10 @@ const MeasurementScreen = () => {
 
   return (
     <View style={styles.container}>
+      <Button
+        title='Back to profile'
+        onPress={backButtonHandler}
+      /> 
       <Text style={styles.title}>Measurements</Text>
       <View style={styles.inputContainer}>
         <DatePicker

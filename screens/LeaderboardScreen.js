@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, FlatList } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, FlatList, Button } from 'react-native';
 
 const data = [ // this would ideally come from your data source
   { id: '1', name: 'User 1', score: 100 },
@@ -8,7 +8,11 @@ const data = [ // this would ideally come from your data source
   // ... more data
 ];
 
-const LeaderboardScreen = () => {
+const LeaderboardScreen = ({navigation}) => {
+    
+  function backButtonHandler() {
+    navigation.goBack();
+  }
   const [selectedTab, setSelectedTab] = React.useState('Friends');
 
   const renderListItem = ({ item }) => (
@@ -20,6 +24,10 @@ const LeaderboardScreen = () => {
 
   return (
     <View style={styles.container}>
+      <Button
+        title='Back to profile'
+        onPress={backButtonHandler}
+      />      
       <View style={styles.tabs}>
         <TouchableOpacity 
           style={selectedTab === 'Friends' ? styles.tabSelected : styles.tab} 

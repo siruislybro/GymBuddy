@@ -1,14 +1,21 @@
 import React from 'react';
-import { View, Text, FlatList, StyleSheet, SafeAreaView } from 'react-native';
+import { View, Text, FlatList, StyleSheet, SafeAreaView, Button } from 'react-native';
 
-const StatisticsScreen = () => {
-  // Replace with your data
+const StatisticsScreen = ({navigation}) => {
+  
+  function backButtonHandler() {
+    navigation.goBack();
+  }
   const workouts = ['Workout 1', 'Workout 2', 'Workout 3'];
   const exercises = ['Exercise 1', 'Exercise 2', 'Exercise 3'];
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.categoryContainer}>
+        <Button
+          title='Back to profile'
+          onPress={backButtonHandler}
+        />            
         <Text style={styles.categoryTitle}>Workouts</Text>
         <FlatList
           data={workouts}

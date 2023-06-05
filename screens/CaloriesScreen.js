@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, FlatList } from 'react-native';
 
-const CaloriesScreen = () => {
+const CaloriesScreen = ({navigation}) => {
+  function backButtonHandler() {
+    navigation.goBack();
+  }
   const [calorieInput, setCalorieInput] = useState('');
   const [caloriesData, setCaloriesData] = useState([]);
 
   const addCaloriesData = () => {
+
     setCaloriesData(currentData => [
       ...currentData,
       { id: Math.random().toString(), value: calorieInput, date: new Date().toLocaleDateString() }
@@ -15,6 +19,10 @@ const CaloriesScreen = () => {
 
   return (
     <View style={styles.screen}>
+      <Button
+        title='Back to profile'
+        onPress={backButtonHandler}
+      />           
       <Text style={styles.title}>Calories Input</Text>
       <View style={styles.inputContainer}>
         <TextInput 
