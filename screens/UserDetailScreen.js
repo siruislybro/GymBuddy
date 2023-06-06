@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Button } from 'react-native';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 
 const UserDetailScreen = ({ navigation, route }) => {
   const [height, setHeight] = useState('');
   const [weight, setWeight] = useState('');
+  const [openBodyType, setOpenBodyType] = useState(false);
   const [bodyType, setBodyType] = useState(null);
+  const [openGoal, setOpenGoal] = useState(false);
   const [goal, setGoal] = useState(null);
 
   // Function to handle when the submit button is pressed
@@ -22,36 +24,36 @@ const UserDetailScreen = ({ navigation, route }) => {
       <Text style={styles.title}>User Details</Text>
       <TextInput style={styles.input} placeholder="Height" value={height} onChangeText={setHeight} />
       <TextInput style={styles.input} placeholder="Weight" value={weight} onChangeText={setWeight} />
-      
+
       <DropDownPicker
+        zIndex={openBodyType ? 3000 : 0}
+        open={openBodyType}
+        value={bodyType}
         items={[
           { label: 'Mesomorph', value: 'Mesomorph' },
           { label: 'Ectomorph', value: 'Ectomorph' },
           { label: 'Endomorph', value: 'Endomorph' },
         ]}
-        value={bodyType}
-        defaultNull
+        setOpen={setOpenBodyType}
+        setValue={setBodyType}
         placeholder="Select Body Type"
-        containerStyle={{ height: 40, marginBottom: 20 }}
+        containerStyle={{ height: 60 }}
         style={{ backgroundColor: '#fafafa' }}
-        itemStyle={{ justifyContent: 'flex-start' }}
-        dropDownStyle={{ backgroundColor: '#fafafa' }}
-        onChangeItem={item => setBodyType(item.value)}
       />
 
       <DropDownPicker
+        zIndex={openGoal ? 2000 : 0}
+        open={openGoal}
+        value={goal}
         items={[
           { label: 'Lose Weight', value: 'loseWeight' },
           { label: 'Build Muscle', value: 'buildMuscle' },
         ]}
-        value={goal}
-        defaultNull
+        setOpen={setOpenGoal}
+        setValue={setGoal}
         placeholder="Select Goal"
-        containerStyle={{ height: 40, marginBottom: 20 }}
+        containerStyle={{ height: 60 }}
         style={{ backgroundColor: '#fafafa' }}
-        itemStyle={{ justifyContent: 'flex-start' }}
-        dropDownStyle={{ backgroundColor: '#fafafa' }}
-        onChangeItem={item => setGoal(item.value)}
       />
 
       <TouchableOpacity style={styles.button} onPress={handleSubmit}>
@@ -80,11 +82,6 @@ const styles = StyleSheet.create({
     padding: 10,
     marginBottom: 20,
   },
-  picker: {
-    height: 50,
-    width: '100%',
-    marginBottom: 20,
-  },
   button: {
     backgroundColor: '#0484fb',
     padding: 10,
@@ -95,27 +92,6 @@ const styles = StyleSheet.create({
     color: '#fff',
     textAlign: 'center',
     fontSize: 18,
-  },
-  centeredView: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 22,
-  },
-  modalView: {
-    margin: 20,
-    backgroundColor: 'white',
-    borderRadius: 20,
-    padding: 35,
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
   },
 });
 
