@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Button, StyleSheet, FlatList, Text, TextInput, TouchableOpacity } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import { Icon } from 'react-native-elements';
+import BackButton from '../components/BackButton';
 // import { CheckBox } from '@react-native-community/checkbox';
 
 const QuickStartScreen = ({ navigation, route }) => {
@@ -80,19 +81,11 @@ const QuickStartScreen = ({ navigation, route }) => {
     </View>
   );
 
-  const backButtonHandler = () => {
-    navigation.goBack();
-  };
-  
 
   return (
     <View style={styles.screen}>
       <View style={styles.topBar}>
-        <TouchableOpacity 
-            style={styles.backButton} 
-            onPress={backButtonHandler}>
-            <Icon name='arrow-back' color='white' />
-        </TouchableOpacity>
+        <BackButton />
         <View style={styles.header}>
           <Text style={styles.workoutName}>Workout Name</Text>
           <Text style={styles.dateTime}>{currentDate}</Text>
@@ -117,7 +110,7 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
     padding: 20,
-    backgroundColor: '#1a1a1a',
+    backgroundColor: '#010202',
   },
   topBar: {
     flexDirection: 'row',
@@ -126,11 +119,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 10,
     margin: 10,
-  },
-  backButton: {
-    marginRight: 10,
-    opacity: 2,
-    TouchableOpacity: 0.75,
   },
   header: {
     marginLeft: 20,

@@ -3,6 +3,7 @@ import React from 'react';
 import { StyleSheet, View, Text, ScrollView, TouchableOpacity, Button } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { useNavigation } from '@react-navigation/native';
+import BackButton from '../components/BackButton';
 
 const ExerciseDetailsScreen = ({ route }) => {
     const navigation = useNavigation();
@@ -12,18 +13,10 @@ const ExerciseDetailsScreen = ({ route }) => {
       navigation.navigate('QuickStart', { newExercise: exercise.name });
     };
 
-  function backButtonHandler() {
-    navigation.goBack();
-  }
-
   return (
     <View style={styles.container}>
       <View style={styles.topBar}>
-        <TouchableOpacity 
-            style={styles.backButton} 
-            onPress={backButtonHandler}>
-            <Icon name='arrow-back' color='white' />
-        </TouchableOpacity>
+        <BackButton />
         <Text style={styles.title}>{exercise.name}</Text>
       </View>
       <Text style={styles.subtitle}>Difficulty: {exercise.difficulty}</Text>
@@ -42,12 +35,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: '#303030',
-  },
-  backButton: {
-    marginRight: 10,
-    opacity: 2,
-    TouchableOpacity: 0.75,
+    backgroundColor: '#010202',
   },
   topBar: {
     flexDirection: 'row',

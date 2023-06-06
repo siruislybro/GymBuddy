@@ -1,5 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
+import BackButton from '../components/BackButton';
 
 const AddExercisesScreen = ({ navigation, route }) => {
   const [exerciseName, setExerciseName] = useState('');
@@ -42,6 +43,9 @@ const AddExercisesScreen = ({ navigation, route }) => {
 
   return (
     <View style={styles.container}>
+      <View style={styles.topBar}>
+        <BackButton />
+      </View>
       <Text style={styles.label}>Exercise Name</Text>
       <TextInput
         style={styles.input}
@@ -78,9 +82,16 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     padding: 16,
+    backgroundColor: '#010202',
+  },
+  topBar: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 20,
   },
   label: {
     marginBottom: 16,
+    color: '#fff',
   },
   input: {
     height: 40,
@@ -88,6 +99,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginBottom: 16,
     paddingHorizontal: 8,
+    color: '#fff',
+    backgroundColor: '#333',
   },
   buttonSpacing: {
     marginTop: 15,
@@ -96,5 +109,6 @@ const styles = StyleSheet.create({
     marginTop: 16,
   },
 });
+
 
 export default AddExercisesScreen;

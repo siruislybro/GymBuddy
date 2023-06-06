@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
+import BackButton from '../components/BackButton';
 
 const UserDetailScreen = ({ navigation, route }) => {
   const [height, setHeight] = useState('');
@@ -21,9 +22,12 @@ const UserDetailScreen = ({ navigation, route }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>User Details</Text>
-      <TextInput style={styles.input} placeholder="Height" value={height} onChangeText={setHeight} />
-      <TextInput style={styles.input} placeholder="Weight" value={weight} onChangeText={setWeight} />
+        <View style={styles.innerContainer}>
+        <BackButton />
+      <Text style={styles.title}>User Details</Text>           
+        </View>
+      <TextInput style={styles.input} placeholder="Height" value={height} onChangeText={setHeight} placeholderTextColor="#FFF" />
+      <TextInput style={styles.input} placeholder="Weight" value={weight} onChangeText={setWeight} placeholderTextColor="#FFF" />
 
       <DropDownPicker
         zIndex={openBodyType ? 3000 : 0}
@@ -37,8 +41,11 @@ const UserDetailScreen = ({ navigation, route }) => {
         setOpen={setOpenBodyType}
         setValue={setBodyType}
         placeholder="Select Body Type"
+        placeholderStyle={{color: "#FFF"}}
         containerStyle={{ height: 60 }}
-        style={{ backgroundColor: '#fafafa' }}
+        style={{ backgroundColor: '#010202', borderWidth: 1, borderColor: "#FFF" }}
+        dropDownStyle={{backgroundColor: "#010202"}}
+        labelStyle={{color: "#FFF"}}
       />
 
       <DropDownPicker
@@ -52,8 +59,11 @@ const UserDetailScreen = ({ navigation, route }) => {
         setOpen={setOpenGoal}
         setValue={setGoal}
         placeholder="Select Goal"
+        placeholderStyle={{color: "#FFF"}}
         containerStyle={{ height: 60 }}
-        style={{ backgroundColor: '#fafafa' }}
+        style={{ backgroundColor: '#010202', borderWidth: 1, borderColor: "#FFF" }}
+        dropDownStyle={{backgroundColor: "#010202"}}
+        labelStyle={{color: "#FFF"}}
       />
 
       <TouchableOpacity style={styles.button} onPress={handleSubmit}>
@@ -68,19 +78,27 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     padding: 20,
+    backgroundColor: '#010202',
+  },
+  innerContainer: {
+    flexDirection: 'row',
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
     textAlign: 'center',
+    justifyContent: 'center',
+    marginHorizontal: 60,
     marginBottom: 20,
+    color: '#FFF',
   },
   input: {
     borderWidth: 1,
-    borderColor: '#000',
+    borderColor: '#FFF',
     borderRadius: 5,
     padding: 10,
     marginBottom: 20,
+    color: '#FFF',
   },
   button: {
     backgroundColor: '#0484fb',
