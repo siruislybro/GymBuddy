@@ -17,17 +17,21 @@ const AddExercisesScreen = ({ navigation, route }) => {
   const addExercise = useCallback((exercise) => {
     setExerciseName(exercise);
   }, []);
-
+  
   const handleAddExercise = () => {
     if (exerciseName === '') {
       alert('Exercise name required!');
     } else {
       const updatedExercises = [...exercises, { name: exerciseName, sets: [{ weight: '', reps: '' }] }];
+      route.params.exercises = updatedExercises; // Mutating the route params directly
       console.log(updatedExercises);
       setExerciseName('');
-      navigation.navigate('QuickStart', { exercises: updatedExercises });
+      navigation.navigate('QuickStart', { newExercise: exerciseName });
     }
   };
+  
+  
+  
 
   const handleViewExercises = () => {
     setShowCategoryButtons(true);

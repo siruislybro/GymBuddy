@@ -12,10 +12,12 @@ const QuickStartScreen = ({ navigation, route }) => {
   ]);
 
   useEffect(() => {
-    if (route.params?.exercises) {
-      setExercises(route.params?.exercises);
+    if (route.params?.newExercise) {
+      setExercises(prevExercises => [...prevExercises, {name: route.params.newExercise, sets: [{weight: '', reps: ''}]}]);
+      route.params.newExercise = null;
     }
-  }, [route.params?.exercises]);
+  }, [route.params?.newExercise]);
+  
 
 
   const currentDate = new Date().toLocaleString();
