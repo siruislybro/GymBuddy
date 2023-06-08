@@ -57,7 +57,7 @@ const MainTabs = () => {
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator>     
         <Stack.Screen 
           name = "Start" 
           component = {StartScreen} 
@@ -135,7 +135,8 @@ export default function App() {
           name="LeaderboardScreen"
           component={LeaderboardScreen}
           options={{ headerShown: false }}
-        />        
+        />  
+               
         <Stack.Screen 
           name="ExerciseDetails"
           component={ExerciseDetailsScreen}

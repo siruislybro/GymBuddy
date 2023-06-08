@@ -124,10 +124,11 @@ const styles = StyleSheet.create({
   },
   header: {
     marginLeft: 20,
+    height: 50,
     alignItems: 'flex-start', // align text to the left
   },
   workoutName: {
-    fontSize: 24,
+    fontSize: 12,
     fontWeight: 'bold',
     color: '#fff',
     marginTop: 20,
@@ -144,7 +145,6 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: '#2e2e2e',
     borderRadius: 10,
-    margin: 10,
   },
   setInputField: {
     width: '40%',
@@ -152,7 +152,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 5,
     paddingLeft: 8,
-    margin: 2,
     backgroundColor: '#fff',
     color: '#333',
   },
