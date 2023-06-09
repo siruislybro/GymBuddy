@@ -22,6 +22,7 @@ import PastWorkoutsScreen from './screens/PastWorkoutsScreen';
 import MeasurementScreen from './screens/MeasurementsScreen';
 import CaloriesScreen from './screens/CaloriesScreen';
 import LeaderboardScreen from './screens/LeaderboardScreen';
+import { db, auth } from './firebase';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -53,6 +54,8 @@ const MainTabs = () => {
     </Tab.Navigator>
   );
 };
+
+
 
 export default function App() {
   return (

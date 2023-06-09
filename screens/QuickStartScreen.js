@@ -3,23 +3,39 @@ import { View, Button, StyleSheet, FlatList, Text, TextInput, TouchableOpacity }
 import { AntDesign } from '@expo/vector-icons';
 import { Icon } from 'react-native-elements';
 import BackButton from '../components/BackButton';
+import { db, auth } from '../firebase';
+
 // import { CheckBox } from '@react-native-community/checkbox';
 
-const QuickStartScreen = ({ navigation, route }) => {
-  const [exercises, setExercises] = useState(route.params?.exercises || [
-    {name: 'Exercise 1', sets: [{weight: '', reps: ''}]}, 
-    
-  ]);
-
-  useEffect(() => {
-    if (route.params?.newExercise) {
-      setExercises(prevExercises => [...prevExercises, {name: route.params.newExercise, sets: [{weight: '', reps: ''}]}]);
-      route.params.newExercise = null;
-    }
-  }, [route.params?.newExercise]);
+  const QuickStartScreen = ({ navigation, route }) => {
+    const user = auth.currentUser;
+    const [exercises, setExercises] = useState(route.params?.exercises || [
+      {name: 'Exercise 1', sets: [{weight: '', reps: ''}]}, 
+    ]);
   
-
-
+    useEffect(() => {
+      if (route.params?.newExercise) {
+        setExercises(prevExercises => {
+          const newExercises = [...prevExercises, {name: route.params.newExercise, sets: [{weight: '', reps: ''}]}];
+          route.params.newExercise = null;
+          saveToFirestore(newExercises);
+          return newExercises;
+        });
+      }
+    }, [route.params?.newExercise]);
+  
+    const saveToFirestore = async (exercises) => {
+      const currentDate = new Date().toLocaleString();
+      const docRef = db.collection('workouts').doc(user.uid).collection('userWorkouts').doc();
+    
+      try {
+        await docRef.set({ exercises, createdAt: currentDate });
+        console.log('Document successfully written!');
+      } catch (error) {
+        console.error('Error writing document: ', error);
+      }
+    };    
+    
   const currentDate = new Date().toLocaleString();
 
   const handleWeightChange = (text, exerciseIndex, setIndex) => {
@@ -32,12 +48,16 @@ const QuickStartScreen = ({ navigation, route }) => {
     let newExercises = [...exercises];
     newExercises[exerciseIndex].sets[setIndex].reps = text;
     setExercises(newExercises);
+    saveToFirestore(newExercises, user);
+
   };
 
   const handleAddSet = (exerciseIndex) => {
     let newExercises = [...exercises];
     newExercises[exerciseIndex].sets.push({weight: '', reps: ''});
     setExercises(newExercises);
+    saveToFirestore(newExercises, user);
+
   };
 
   const renderSetItem = (exerciseIndex) => ({ item, index }) => (
@@ -63,7 +83,15 @@ const QuickStartScreen = ({ navigation, route }) => {
   );
 
   function handleRemoveExercise(index) {
-    setExercises(prevExercises => prevExercises.filter((_, i) => i !== index));
+    setExercises(prevExercises => {
+      const newExercises = prevExercises.filter((_, i) => i !== index);
+      
+      // Save to Firestore
+      saveToFirestore(newExercises, user);
+
+      
+      return newExercises;
+    });
   }
 
   const renderExerciseItem = ({ item, index }) => (
@@ -102,6 +130,10 @@ const QuickStartScreen = ({ navigation, route }) => {
         <Button
           title="Add Exercises"
           onPress={() => navigation.navigate('AddExercisesScreen', { exercises: exercises})}
+        />
+        <Button
+          title="End Workout"
+          onPress={() => saveToFirestore(exercises)}
         />
       </View>
     </View>
