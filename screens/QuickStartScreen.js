@@ -68,10 +68,12 @@ const QuickStartScreen = ({ navigation, route }) => {
 
   const renderExerciseItem = ({ item, index }) => (
     <View style={styles.exerciseItem}>
-      <TouchableOpacity onPress={() => handleRemoveExercise(index)}>
-        <AntDesign name="close" size={24} color="red" /> 
-      </TouchableOpacity>
-      <Text style={styles.exerciseName}>{item.name}</Text>
+      <View style={styles.exerciseHeader}>
+        <Text style={styles.exerciseName}>{item.name}</Text>
+        <TouchableOpacity onPress={() => handleRemoveExercise(index)}>
+          <AntDesign name="close" size={24} color="red" /> 
+        </TouchableOpacity>
+      </View>
       <FlatList
         data={item.sets}
         keyExtractor={(item, index) => index.toString()}
@@ -155,6 +157,11 @@ const styles = StyleSheet.create({
     margin: 2,
     backgroundColor: '#fff',
     color: '#333',
+  },
+  exerciseHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   exerciseItem: {
     backgroundColor: '#2e2e2e',
