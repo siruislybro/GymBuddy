@@ -22,6 +22,7 @@ import PastWorkoutsScreen from './screens/PastWorkoutsScreen';
 import MeasurementScreen from './screens/MeasurementsScreen';
 import CaloriesScreen from './screens/CaloriesScreen';
 import LeaderboardScreen from './screens/LeaderboardScreen';
+import { db, auth } from './firebase';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -54,10 +55,12 @@ const MainTabs = () => {
   );
 };
 
+
+
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator>     
         <Stack.Screen 
           name = "Start" 
           component = {StartScreen} 
@@ -67,7 +70,7 @@ export default function App() {
         <Stack.Screen 
           name="MainTabs" 
           component={MainTabs} 
-          options={{ headerShown: false }} 
+          options={{ headerShown: false}} 
         />
         <Stack.Screen
           name="Login"
@@ -78,7 +81,7 @@ export default function App() {
         <Stack.Screen 
           name="Sign Up" 
           component={SignUpScreen} 
-          options={{ headerShown: true }} 
+          options={{ headerShown: false }} 
         />
         <Stack.Screen 
           name="QuickStart"
@@ -135,7 +138,8 @@ export default function App() {
           name="LeaderboardScreen"
           component={LeaderboardScreen}
           options={{ headerShown: false }}
-        />        
+        />  
+               
         <Stack.Screen 
           name="ExerciseDetails"
           component={ExerciseDetailsScreen}

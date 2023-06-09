@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "@react-native-community/checkbox": "^0.5.15",
+    "@react-native-firebase/app": "^18.0.0",
+    "@react-native-firebase/auth": "^18.0.0",
     "@react-native-picker/picker": "^2.4.10",
     "@react-navigation/bottom-tabs": "^6.5.7",
     "@react-navigation/native": "^6.1.6",
@@ -18,6 +20,7 @@
     "expo": "~48.0.15",
     "expo-status-bar": "~1.4.4",
     "firebase": "^9.22.1",
+    "openai": "^3.2.1",
     "react": "18.2.0",
     "react-native": "0.71.8",
     "react-native-calendars": "^1.1298.0",

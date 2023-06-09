@@ -1,38 +1,46 @@
-import React, {useLayoutEffect} from 'react';
-import { View, Text, StyleSheet, Pressable, TouchableOpacity } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import React from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Linking } from 'react-native';
 import Colors from '../colours/colors';
 
 const HomeScreen = ({ navigation,route }) => {
 
     const { userName, email } = route.params;
-
-    console.log("Email:", email) 
+    
 
     const handleQuickStartPress = () => {
-        // Handle quick start logic
         const exercises = []
         navigation.navigate('QuickStart', { exercises });
         console.log('Quick Start pressed');
     };
 
     const handleStartRoutinePress = () => {
-        // TODO: Check if the user has already answered the questions. This would involve fetching the user's details from your PostgreSQL database using an API request
         const hasAnsweredQuestions = false; // Replace this with the actual condition
         
         if (hasAnsweredQuestions) {
-          // If the user has already answered the questions, navigate directly to the recommended routine
           navigation.navigate('RecommendedRoutineScreen');
         } else {
-          // If the user hasn't answered the questions, navigate to the UserDetailScreen
           navigation.navigate('UserDetail');
         }
+    };
+
+    const handleSetRemindersPress = () => {
+        const botUsername = 'YourGymBuddyBot';
+        const telegramUrlApp = `tg://resolve?domain=${botUsername}`;
+        const telegramUrlWeb = `https://t.me/${botUsername}`;
+        
+        Linking.canOpenURL(telegramUrlApp).then(supported => {
+          if (supported) {
+            Linking.openURL(telegramUrlApp);
+          } else {
+            // If the Telegram app is not installed, open in web browser
+            Linking.openURL(telegramUrlWeb);
+          }
+        });
       };
       
-
+      
     return (
         <View style={styles.container}>
-            {/* Your other content here */}
             <Text style={styles.welcomeText}>Welcome {userName}!</Text>
             <View style={styles.buttons}>
                 <TouchableOpacity
@@ -49,8 +57,15 @@ const HomeScreen = ({ navigation,route }) => {
                 >
                     <Text style={styles.buttonText}>Start Routine</Text>
                 </TouchableOpacity>
+                <TouchableOpacity
+                    style={styles.button}
+                    onPress={handleSetRemindersPress}
+                    activeOpacity={0.5}
+                >
+                    <Text style={styles.buttonText}>Set Reminders</Text>
+                </TouchableOpacity>
             </View>
-        </View >
+        </View>
     );
 };
 
@@ -74,10 +89,10 @@ const styles = StyleSheet.create({
         marginTop: 10,
     },
     button: {
-        flex: 0.2,
+        flex: 0.3,
         padding: 10,
-        borderWidth: 2,
-        borderRadius: 5,
+        borderWidth: 1,
+        borderRadius: 10,
         marginRight: 10,
         backgroundColor: '#0484fb',
 
@@ -85,10 +100,8 @@ const styles = StyleSheet.create({
     buttonText: {
         textAlign: 'center',
         color: 'white',
-        fontSize: 18,
+        fontSize: 15,
     },
 });
-;
 
 export default HomeScreen;
-
