@@ -1,42 +1,47 @@
 import React, { useState } from 'react';
 import Colors from '../colours/colors';
 import { View, TextInput, Button, StyleSheet, Text } from 'react-native';
-import { auth } from '../firebase'
-import { getDatabase, ref, query, orderByChild, equalTo, onValue } from "firebase/database";
+import { auth } from '../firebase';
+import { getFirestore, collection, query, where, getDocs } from "firebase/firestore";
 
 
 const LoginScreen = ({ navigation }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    const handleLogin = () => {
+    const handleLogin = async () => {
         const trimmedEmail = email.trim();
         const trimmedPassword = password.trim();
-        auth
-        .signInWithEmailAndPassword(trimmedEmail, trimmedPassword)
-        .then(userCredentials => {
-            const db = getDatabase();
-            const usersRef = ref(db, "users");
-
-            // Create a query to search for the user with the matching email
-            const q = query(usersRef, orderByChild("email"), equalTo(email));
-
-            // Attach a listener to the query to retrieve the user data
-            onValue(q, (snapshot) => {
-                snapshot.forEach((childSnapshot) => {
-                    const userData = childSnapshot.val();
-                    const username = userData.username;
-                    console.log("Username:", username);
-                    navigation.navigate('MainTabs', 
-                    {screen: "Home" , params: 
-                    { userName: username ,
-                    email: trimmedEmail}});
-                });
-            });
-        })
-        .catch(error => alert(error.message))
-    }
-
+        await authenticateUser(trimmedEmail, trimmedPassword);
+        await fetchUsernameAndNavigate(trimmedEmail);
+      };
+      
+      const authenticateUser = async (email, password) => {
+        try {
+          await auth.signInWithEmailAndPassword(email, password);
+        } catch (error) {
+          alert(error.message);
+        }
+      };
+      
+      const fetchUsernameAndNavigate = async (email) => {
+        const db = getFirestore();
+        const usersRef = collection(db, "users");
+        const q = query(usersRef, where("email", "==", email));
+      
+        const querySnapshot = await getDocs(q);
+        querySnapshot.forEach((doc) => {
+          const userData = doc.data();
+          const username = userData.username;
+          console.log("Username:", username);
+          navigation.navigate('MainTabs', 
+            {screen: "Home" , params: 
+              { userName: username ,
+              email: email}
+            }
+          );
+        });
+      };
 
     return (
         <View style={styles.container}>

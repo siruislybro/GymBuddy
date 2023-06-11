@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { View, TextInput, Button, StyleSheet } from 'react-native';
+import { View, TextInput, Button, StyleSheet, Alert } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import { auth } from '../firebase'
-import { getDatabase, ref, set, onValue } from "firebase/database";
+import { getFirestore, doc, setDoc } from '@firebase/firestore';
 
-const SignUpScreen = () => {
+const SignUpScreen = ({ navigation }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [name, setName] = useState('');
@@ -16,19 +17,23 @@ const SignUpScreen = () => {
             console.log(user.email);
             // After successful signup, write user data to database
             writeUserData(user.uid, name, email);
+            Alert.alert("Success!", "Account created successfully", [{ text: "OK", onPress: () => navigation.navigate('Login')}]);
         })
         .catch(error => alert(error.message))
     }
 
-    function writeUserData(userId, name, email, imageUrl) {
+    const writeUserData = async (userId, name, email) => {
+        const db = getFirestore();
 
-        const db = getDatabase();
-        const reference = ref(db, 'users/' + userId);
-        
-        set(reference, {
-          username: name,
-          email: email,
-        });
+        try {
+            await setDoc(doc(db, "users", userId), {
+                username: name,
+                email: email,
+            });
+            console.log('User data written to Firestore');
+        } catch (error) {
+            console.error('Error writing user data to Firestore: ', error);
+        }
     }
 
     return (
