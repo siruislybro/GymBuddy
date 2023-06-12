@@ -22,6 +22,7 @@ import PastWorkoutsScreen from './screens/PastWorkoutsScreen';
 import MeasurementScreen from './screens/MeasurementsScreen';
 import CaloriesScreen from './screens/CaloriesScreen';
 import LeaderboardScreen from './screens/LeaderboardScreen';
+import WorkoutDetailScreen from './screens/WorkoutDetailScreen';
 import { db, auth } from './firebase';
 
 const Tab = createBottomTabNavigator();
@@ -143,6 +144,11 @@ export default function App() {
         <Stack.Screen 
           name="ExerciseDetails"
           component={ExerciseDetailsScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen 
+          name="WorkoutDetail"
+          component={WorkoutDetailScreen}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

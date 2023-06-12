@@ -1,64 +1,114 @@
 import React, { useState, useEffect } from 'react';
-import { View, Button, StyleSheet, FlatList, Text, TextInput, TouchableOpacity } from 'react-native';
+import { View, Button, StyleSheet, FlatList, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import { Icon } from 'react-native-elements';
 import BackButton from '../components/BackButton';
 import { db, auth } from '../firebase';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { v4 as uuidv4 } from 'uuid';
+import 'react-native-get-random-values';
 
-// import { CheckBox } from '@react-native-community/checkbox';
+const QuickStartScreen = ({ navigation, route }) => {
+  const user = auth.currentUser;
+  const [workoutName, setWorkoutName] = useState('');
+  const [exercises, setExercises] = useState(route.params?.exercises || [
+    {name: 'Exercise 1', sets: [{weight: '', reps: ''}]}, 
+  ]);
+  
 
-  const QuickStartScreen = ({ navigation, route }) => {
-    const user = auth.currentUser;
-    const [exercises, setExercises] = useState(route.params?.exercises || [
-      {name: 'Exercise 1', sets: [{weight: '', reps: ''}]}, 
-    ]);
-  
-    useEffect(() => {
-      if (route.params?.newExercise) {
-        setExercises(prevExercises => {
-          const newExercises = [...prevExercises, {name: route.params.newExercise, sets: [{weight: '', reps: ''}]}];
-          route.params.newExercise = null;
-          saveToFirestore(newExercises);
-          return newExercises;
-        });
+  useEffect(() => {
+    if (route.params?.newExercise) {
+      setExercises(prevExercises => {
+        const newExercises = [...prevExercises, {name: route.params.newExercise, sets: [{weight: '', reps: ''}]}];
+        route.params.newExercise = null;
+
+        return newExercises;
+      });
+    }
+  }, [route.params?.newExercise]);
+
+  useEffect(() => {
+    (async () => {
+      const savedExercises = await getData('@workout');
+      if (savedExercises) {
+        setExercises(savedExercises);
       }
-    }, [route.params?.newExercise]);
   
-    const saveToFirestore = async (exercises) => {
-      const currentDate = new Date().toLocaleString();
-      const docRef = db.collection('workouts').doc(user.uid).collection('userWorkouts').doc();
-    
-      try {
-        await docRef.set({ exercises, createdAt: currentDate });
-        console.log('Document successfully written!');
-      } catch (error) {
-        console.error('Error writing document: ', error);
+      const savedWorkoutName = await getData('@workoutName');
+      if (savedWorkoutName) {
+        setWorkoutName(savedWorkoutName);
       }
-    };    
-    
+    })();
+  }, []);
+  
+  const storeData = async (key, value) => {
+    try {
+      const jsonValue = JSON.stringify(value)
+      await AsyncStorage.setItem(key, jsonValue)
+    } catch (e) {
+      // saving error
+    }
+  }
+  
+  const getData = async (key) => {
+    try {
+      const jsonValue = await AsyncStorage.getItem(key)
+      return jsonValue != null ? JSON.parse(jsonValue) : null;
+    } catch(e) {
+      // error reading value
+    }
+  }
+  
+  // and when you change workoutName, store it in AsyncStorage
+  useEffect(() => {
+    storeData('@workoutName', workoutName);
+  }, [workoutName]);
+  
+
+  const saveToFirestore = async (exercises, workoutName) => {
+    const currentDate = new Date().toLocaleString();
+    const workoutId = uuidv4();
+    const docRef = db.collection('workouts').doc(user.uid).collection('userWorkouts').doc(workoutId);
+    try {
+      await docRef.set({ workoutName, exercises, createdAt: currentDate });
+      console.log('Document successfully written!');
+    } catch (error) {
+      console.error('Error writing document: ', error);
+    }
+  };
+  
+  
   const currentDate = new Date().toLocaleString();
 
   const handleWeightChange = (text, exerciseIndex, setIndex) => {
     let newExercises = [...exercises];
     newExercises[exerciseIndex].sets[setIndex].weight = text;
     setExercises(newExercises);
+    storeData(newExercises);
   };
 
   const handleRepsChange = (text, exerciseIndex, setIndex) => {
     let newExercises = [...exercises];
     newExercises[exerciseIndex].sets[setIndex].reps = text;
     setExercises(newExercises);
-    saveToFirestore(newExercises, user);
-
+    storeData(newExercises);
   };
 
   const handleAddSet = (exerciseIndex) => {
     let newExercises = [...exercises];
     newExercises[exerciseIndex].sets.push({weight: '', reps: ''});
     setExercises(newExercises);
-    saveToFirestore(newExercises, user);
-
+    storeData(newExercises);
   };
+
+  function handleRemoveExercise(index) {
+    setExercises(prevExercises => {
+      const newExercises = prevExercises.filter((_, i) => i !== index);
+      storeData('@workout', newExercises); // Update stored data in AsyncStorage
+      return newExercises;
+    });
+  }
+  
 
   const renderSetItem = (exerciseIndex) => ({ item, index }) => (
     <View style={styles.setInput}>
@@ -75,24 +125,8 @@ import { db, auth } from '../firebase';
         value={item.reps}
         onChangeText={text => handleRepsChange(text, exerciseIndex, index)}
       />
-      {/* <CheckBox
-        value={item.checked}
-        onValueChange={() => handleCheckedChange(exerciseIndex, index)}
-      /> */}
     </View>
   );
-
-  function handleRemoveExercise(index) {
-    setExercises(prevExercises => {
-      const newExercises = prevExercises.filter((_, i) => i !== index);
-      
-      // Save to Firestore
-      saveToFirestore(newExercises, user);
-
-      
-      return newExercises;
-    });
-  }
 
   const renderExerciseItem = ({ item, index }) => (
     <View style={styles.exerciseItem}>
@@ -113,13 +147,29 @@ import { db, auth } from '../firebase';
     </View>
   );
 
+  const endWorkout = async () => {
+    // move this line inside endWorkout
+    await saveToFirestore(exercises, workoutName);
+    Alert.alert("Success", "Exercises saved successfully!", [
+      { text: "OK", onPress: () => console.log("OK Pressed") }
+    ]);
+    setExercises([]);
+    setWorkoutName(''); // reset workout name
+    await AsyncStorage.removeItem('@workout'); // clear the AsyncStorage
+  };
+  
 
   return (
     <View style={styles.screen}>
       <View style={styles.topBar}>
         <BackButton />
         <View style={styles.header}>
-          <Text style={styles.workoutName}>Workout Name</Text>
+          <TextInput 
+            style={styles.workoutNameInput} 
+            placeholder="Enter Workout Name" 
+            value={workoutName}
+            onChangeText={setWorkoutName}
+          />
           <Text style={styles.dateTime}>{currentDate}</Text>
         </View>
       </View>
@@ -135,7 +185,7 @@ import { db, auth } from '../firebase';
         />
         <Button
           title="End Workout"
-          onPress={() => saveToFirestore(exercises)}
+          onPress={endWorkout}
         />
       </View>
     </View>
@@ -193,6 +243,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+  },
+  workoutNameInput: {
+    color: '#fff',
+    fontSize: 16,
+    borderBottomColor: '#fff',
+    borderBottomWidth: 1,
   },
   exerciseItem: {
     backgroundColor: '#2e2e2e',

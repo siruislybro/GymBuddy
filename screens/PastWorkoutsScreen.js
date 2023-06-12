@@ -1,69 +1,45 @@
-import React, { useState } from 'react';
-import { StyleSheet, View, Text, TextInput, FlatList, Button } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, View, Text, TextInput, FlatList, TouchableOpacity} from 'react-native';
 import DatePicker from 'react-native-datepicker';
+import { db, auth } from '../firebase'; // Import Firebase configuration
+import BackButton from '../components/BackButton';
 
 const PastWorkoutsScreen = ({navigation}) => {
-  function backButtonHandler() {
-    navigation.goBack();
-  }
-  const [date, setDate] = useState(new Date());
-  const [workoutName, setWorkoutName] = useState('');
-  const [duration, setDuration] = useState('');
   const [pastWorkouts, setPastWorkouts] = useState([]);
 
-  const addWorkout = () => {
-    setPastWorkouts(prevWorkouts => [
-      ...prevWorkouts, 
-      { 
-        date: date.toString(), 
-        workoutName, 
-        duration, 
-        id: Math.random().toString() 
-      }
-    ]);
-    setDate(new Date());
-    setWorkoutName('');
-    setDuration('');
-  };
+  useEffect(() => {
+    const fetchWorkouts = async () => {
+      const user = auth.currentUser;
+      const workoutsRef = db.collection('workouts').doc(user.uid).collection('userWorkouts');
+      const snapshot = await workoutsRef.get();
+
+      const workouts = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+
+      setPastWorkouts(workouts);
+    }
+
+    fetchWorkouts();
+  }, []);
 
   return (
     <View style={styles.container}>
-      <Button
-        title='Back to profile'
-        onPress={backButtonHandler}
-      /> 
-      <Text style={styles.title}>Past Workouts</Text>
-      <View style={styles.inputContainer}>
-        <DatePicker
-          style={styles.datePicker}
-          date={date}
-          mode="date"
-          format="YYYY-MM-DD"
-          confirmBtnText="Confirm"
-          cancelBtnText="Cancel"
-          onDateChange={setDate}
-        />
-        <TextInput 
-          style={styles.input}
-          placeholder="Workout Name"
-          value={workoutName}
-          onChangeText={setWorkoutName}
-        />
-        <TextInput 
-          style={styles.input}
-          placeholder="Duration (in minutes)"
-          value={duration}
-          onChangeText={setDuration}
-        />
-        <Button title="Add Workout" onPress={addWorkout} />
+      <View style={styles.topBar}>
+      <BackButton />
       </View>
+      <Text style={styles.title}>Past Workouts</Text>
       <FlatList 
         data={pastWorkouts}
         keyExtractor={item => item.id}
         renderItem={({ item }) => (
-          <View style={styles.listItem}>
-            <Text>{item.date} - {item.workoutName} - {item.duration} minutes</Text>
-          </View>
+          <TouchableOpacity 
+            style={styles.listItem}
+            onPress={() => navigation.navigate('WorkoutDetail', { workout: item })}
+          >
+            <Text style={styles.item}>{item.workoutName}</Text>
+          </TouchableOpacity>
         )}
       />
     </View>
@@ -75,7 +51,14 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 20,
     paddingHorizontal: 10,
-    backgroundColor: '#ffffff',
+    backgroundColor: '#010202',
+  },
+  topBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#010202',
+    borderRadius: 10,
+    marginTop: 20,
   },
   title: {
     fontSize: 24,

@@ -16,7 +16,7 @@ const ExerciseOverviewScreen = ({ navigation, route }) => {
   const [searchQuery, setSearchQuery] = useState('');
 
   const majorParts = {
-    'Arms': ['biceps', 'forearms', 'triceps'],
+    'Arms': ['biceps', 'forearms', 'triceps', 'shoulders'],
     'Chest': ['chest'],
     'Back': ['lats', 'lower_back', 'middle_back', 'traps', 'neck'],
     'Core': ['abdominals', 'abductors', 'adductors'],
@@ -31,7 +31,7 @@ const ExerciseOverviewScreen = ({ navigation, route }) => {
 
   useEffect(() => {
     // Limit simultaneous API requests
-    const muscleGroups = Object.values(majorParts).flat();
+    const muscleGroups = route.params.muscles || [];
     const fetchAllExercises = async () => {
       for (let muscleGroup of muscleGroups) {
         await fetchExercises(muscleGroup);
@@ -40,16 +40,22 @@ const ExerciseOverviewScreen = ({ navigation, route }) => {
     fetchAllExercises();
   }, []);
   
-
+  // Filtering
   useEffect(() => {
+    const muscles = route.params?.muscles || [];
     if (searchQuery) {
       setFilteredExercises(exercises.filter(exercise => 
-        exercise.name.toLowerCase().includes(searchQuery.toLowerCase())
+        exercise.name.toLowerCase().includes(searchQuery.toLowerCase()) && 
+        muscles.includes(exercise.muscle.toLowerCase())
       ));
     } else {
-      setFilteredExercises(exercises);
+      setFilteredExercises(exercises.filter(exercise =>
+        muscles.includes(exercise.muscle.toLowerCase())
+      ));
     }
   }, [searchQuery, exercises]);
+  
+  
 
   return (
     <View style={styles.container}>

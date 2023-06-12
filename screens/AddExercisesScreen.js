@@ -8,11 +8,13 @@ const AddExercisesScreen = ({ navigation, route }) => {
   const exercises = route.params?.exercises || [];
 
   const muscleGroups = {
-    'Arms': ['biceps', 'triceps', 'forearms'],
-    'Legs': ['quadriceps', 'calves', 'hamstrings'],
+    'Arms': ['biceps', 'triceps', 'forearms', 'shoulders'],
+    'Legs': ['quadriceps', 'calves', 'hamstrings', 'glutes'],
     'Chest': ['chest'],
-    'Back': ['lower_back', 'upper_back'],
+    'Back': ['lats', 'lower_back', 'middle_back', 'traps', 'neck'],
+    'Core': ['abdominals', 'abductors', 'adductors'],
   };
+  
 
   const addExercise = useCallback((exercise) => {
     setExerciseName(exercise);
@@ -39,11 +41,9 @@ const AddExercisesScreen = ({ navigation, route }) => {
 
   const handleNavigate = (category) => {
     const muscles = muscleGroups[category];
-    muscles.forEach(muscle => {
-      const cleanedMuscle = muscle.replace('_', ' ');
-      navigation.navigate('ExerciseOverview', { muscle: cleanedMuscle, addExercise });
-    });
+    navigation.navigate('ExerciseOverview', { muscles: muscles });
   };
+  
 
   return (
     <View style={styles.container}>
