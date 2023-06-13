@@ -159,7 +159,7 @@ const QuickStartScreen = ({ navigation, route }) => {
     setWorkoutEnded(true);
   
     // Navigate back to HomeScreen 
-    nav.navigate('Home');
+    nav.navigate('Home', { userName: user.displayName, workoutEnded: true });
   };
   
 
