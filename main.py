@@ -18,13 +18,17 @@ def start(update, context):
 
 def message_handler(update, context):
     msg = update.message.text
-    context.bot.send_message(chat_id=update.effective_chat.id, text=msg)
+    known_commands = ['/start', '/getdata', '/updatedata']
+    if msg not in known_commands:
+        context.bot.send_message(chat_id=update.effective_chat.id, text=msg)
+
 
 start_handler = CommandHandler('start', start)
 dispatcher.add_handler(start_handler)
 
 catchall_handler = MessageHandler(Filters.text, message_handler)
 dispatcher.add_handler(catchall_handler)
+
 
 updater.start_polling()
 updater.idle()

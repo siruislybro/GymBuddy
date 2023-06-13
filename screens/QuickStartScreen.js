@@ -1,27 +1,31 @@
-import React, { useState, useEffect } from 'react';
-import { View, Button, StyleSheet, FlatList, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
+import React, { useState, useEffect, useContext } from 'react';
+import {View, Button, StyleSheet, FlatList, Text, TextInput, TouchableOpacity, Alert,} from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
-import { Icon } from 'react-native-elements';
+import { useNavigation } from '@react-navigation/native';
 import BackButton from '../components/BackButton';
 import { db, auth } from '../firebase';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { v4 as uuidv4 } from 'uuid';
 import 'react-native-get-random-values';
+import { WorkoutContext } from '../components/WorkoutContext';
 
 const QuickStartScreen = ({ navigation, route }) => {
+  const nav = useNavigation();
   const user = auth.currentUser;
   const [workoutName, setWorkoutName] = useState('');
-  const [exercises, setExercises] = useState(route.params?.exercises || [
-    {name: 'Exercise 1', sets: [{weight: '', reps: ''}]}, 
-  ]);
-  
+  const [exercises, setExercises] = useState(
+    route.params?.exercises || [{ name: 'Exercise 1', sets: [{ weight: '', reps: '' }] }]
+  );
+
+  const { setWorkoutActive, setWorkoutEnded } = useContext(WorkoutContext);
 
   useEffect(() => {
     if (route.params?.newExercise) {
-      setExercises(prevExercises => {
-        const newExercises = [...prevExercises, {name: route.params.newExercise, sets: [{weight: '', reps: ''}]}];
-        route.params.newExercise = null;
-
+      setExercises((prevExercises) => {
+        const newExercises = [
+          ...prevExercises,
+          { name: route.params.newExercise, sets: [{ weight: '', reps: '' }] },
+        ];
         return newExercises;
       });
     }
@@ -33,37 +37,35 @@ const QuickStartScreen = ({ navigation, route }) => {
       if (savedExercises) {
         setExercises(savedExercises);
       }
-  
+
       const savedWorkoutName = await getData('@workoutName');
       if (savedWorkoutName) {
         setWorkoutName(savedWorkoutName);
       }
     })();
   }, []);
-  
+
   const storeData = async (key, value) => {
     try {
-      const jsonValue = JSON.stringify(value)
-      await AsyncStorage.setItem(key, jsonValue)
+      const jsonValue = JSON.stringify(value);
+      await AsyncStorage.setItem(key, jsonValue);
     } catch (e) {
       // saving error
     }
-  }
-  
+  };
+
   const getData = async (key) => {
     try {
-      const jsonValue = await AsyncStorage.getItem(key)
+      const jsonValue = await AsyncStorage.getItem(key);
       return jsonValue != null ? JSON.parse(jsonValue) : null;
-    } catch(e) {
+    } catch (e) {
       // error reading value
     }
-  }
-  
-  // and when you change workoutName, store it in AsyncStorage
+  };
+
   useEffect(() => {
-    storeData('@workoutName', workoutName);
-  }, [workoutName]);
-  
+    storeData('@workout', exercises);
+  }, [exercises]);
 
   const saveToFirestore = async (exercises, workoutName) => {
     const currentDate = new Date().toLocaleString();
@@ -76,39 +78,34 @@ const QuickStartScreen = ({ navigation, route }) => {
       console.error('Error writing document: ', error);
     }
   };
-  
-  
-  const currentDate = new Date().toLocaleString();
 
   const handleWeightChange = (text, exerciseIndex, setIndex) => {
     let newExercises = [...exercises];
     newExercises[exerciseIndex].sets[setIndex].weight = text;
     setExercises(newExercises);
-    storeData(newExercises);
   };
 
-  const handleRepsChange = (text, exerciseIndex, setIndex) => {
+  const handleRepsChange = async (text, exerciseIndex, setIndex) => {
     let newExercises = [...exercises];
     newExercises[exerciseIndex].sets[setIndex].reps = text;
     setExercises(newExercises);
-    storeData(newExercises);
+    await storeData('@workout', newExercises);
   };
 
-  const handleAddSet = (exerciseIndex) => {
+  const handleAddSet = async (exerciseIndex) => {
     let newExercises = [...exercises];
-    newExercises[exerciseIndex].sets.push({weight: '', reps: ''});
+    newExercises[exerciseIndex].sets.push({ weight: '', reps: '' });
     setExercises(newExercises);
-    storeData(newExercises);
+    await storeData('@workout', newExercises);
   };
 
-  function handleRemoveExercise(index) {
-    setExercises(prevExercises => {
+  const handleRemoveExercise = (index) => {
+    setExercises((prevExercises) => {
       const newExercises = prevExercises.filter((_, i) => i !== index);
       storeData('@workout', newExercises); // Update stored data in AsyncStorage
       return newExercises;
     });
-  }
-  
+  };
 
   const renderSetItem = (exerciseIndex) => ({ item, index }) => (
     <View style={styles.setInput}>
@@ -117,13 +114,13 @@ const QuickStartScreen = ({ navigation, route }) => {
         placeholder="Weight (kg)"
         style={styles.setInputField}
         value={item.weight}
-        onChangeText={text => handleWeightChange(text, exerciseIndex, index)}
+        onChangeText={(text) => handleWeightChange(text, exerciseIndex, index)}
       />
       <TextInput
         placeholder="Reps"
         style={styles.setInputField}
         value={item.reps}
-        onChangeText={text => handleRepsChange(text, exerciseIndex, index)}
+        onChangeText={(text) => handleRepsChange(text, exerciseIndex, index)}
       />
     </View>
   );
@@ -133,7 +130,7 @@ const QuickStartScreen = ({ navigation, route }) => {
       <View style={styles.exerciseHeader}>
         <Text style={styles.exerciseName}>{item.name}</Text>
         <TouchableOpacity onPress={() => handleRemoveExercise(index)}>
-          <AntDesign name="close" size={24} color="red" /> 
+          <AntDesign name="close" size={24} color="red" />
         </TouchableOpacity>
       </View>
       <FlatList
@@ -141,36 +138,48 @@ const QuickStartScreen = ({ navigation, route }) => {
         keyExtractor={(item, index) => index.toString()}
         renderItem={renderSetItem(index)}
       />
-      <TouchableOpacity onPress={() => handleAddSet(index)} style = {styles.addButton}>
+      <TouchableOpacity onPress={() => handleAddSet(index)} style={styles.addButton}>
         <Text style={styles.addSetButtonText}>Add Set</Text>
       </TouchableOpacity>
     </View>
   );
 
   const endWorkout = async () => {
-    // move this line inside endWorkout
     await saveToFirestore(exercises, workoutName);
-    Alert.alert("Success", "Exercises saved successfully!", [
+    Alert.alert("Success", "Workout saved successfully!", [
       { text: "OK", onPress: () => console.log("OK Pressed") }
     ]);
+    // Reset workout
     setExercises([]);
     setWorkoutName(''); // reset workout name
     await AsyncStorage.removeItem('@workout'); // clear the AsyncStorage
+  
+    // Set workout to inactive and ended
+    setWorkoutActive(false);
+    setWorkoutEnded(true);
+  
+    // Navigate back to HomeScreen 
+    nav.navigate('Home');
   };
   
+
+  const resetWorkout = async () => {
+    setExercises([]);
+    setWorkoutName('');
+    await AsyncStorage.removeItem('@workout');
+  };
 
   return (
     <View style={styles.screen}>
       <View style={styles.topBar}>
         <BackButton />
         <View style={styles.header}>
-          <TextInput 
-            style={styles.workoutNameInput} 
-            placeholder="Enter Workout Name" 
+          <TextInput
+            style={styles.workoutNameInput}
+            placeholder="Enter Workout Name"
             value={workoutName}
             onChangeText={setWorkoutName}
           />
-          <Text style={styles.dateTime}>{currentDate}</Text>
         </View>
       </View>
       <FlatList
@@ -181,12 +190,9 @@ const QuickStartScreen = ({ navigation, route }) => {
       <View style={styles.buttonContainer}>
         <Button
           title="Add Exercises"
-          onPress={() => navigation.navigate('AddExercisesScreen', { exercises: exercises})}
+          onPress={() => navigation.navigate('AddExercisesScreen', { exercises: exercises })}
         />
-        <Button
-          title="End Workout"
-          onPress={endWorkout}
-        />
+        <Button title="End Workout" onPress={endWorkout} />
       </View>
     </View>
   );
@@ -211,16 +217,11 @@ const styles = StyleSheet.create({
     height: 50,
     alignItems: 'flex-start', // align text to the left
   },
-  workoutName: {
-    fontSize: 12,
-    fontWeight: 'bold',
+  workoutNameInput: {
     color: '#fff',
-    marginTop: 20,
-  },
-  dateTime: {
     fontSize: 16,
-    color: '#bbb',
-    marginBottom: 20,
+    borderBottomColor: '#fff',
+    borderBottomWidth: 1,
   },
   setInput: {
     flexDirection: 'row',
@@ -244,12 +245,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  workoutNameInput: {
-    color: '#fff',
-    fontSize: 16,
-    borderBottomColor: '#fff',
-    borderBottomWidth: 1,
-  },
   exerciseItem: {
     backgroundColor: '#2e2e2e',
     borderRadius: 10,
@@ -272,6 +267,11 @@ const styles = StyleSheet.create({
   addSetButtonText: {
     fontSize: 16,
     color: '#fff',
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 20,
   },
 });
 

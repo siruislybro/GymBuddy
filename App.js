@@ -24,6 +24,8 @@ import CaloriesScreen from './screens/CaloriesScreen';
 import LeaderboardScreen from './screens/LeaderboardScreen';
 import WorkoutDetailScreen from './screens/WorkoutDetailScreen';
 import { db, auth } from './firebase';
+import { WorkoutContext } from './components/WorkoutContext';
+import React, { useState } from 'react';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -59,7 +61,15 @@ const MainTabs = () => {
 
 
 export default function App() {
+  const [isWorkoutActive, setWorkoutActive] = useState(false);
+  const [workoutEnded, setWorkoutEnded] = useState(false);
   return (
+    <WorkoutContext.Provider value={{ 
+      isWorkoutActive, 
+      setWorkoutActive, 
+      workoutEnded, 
+      setWorkoutEnded 
+      }}>
     <NavigationContainer>
       <Stack.Navigator>     
         <Stack.Screen 
@@ -154,6 +164,7 @@ export default function App() {
       </Stack.Navigator>
       <StatusBar style="light" />
     </NavigationContainer>
+    </WorkoutContext.Provider>
   );
 }
 
