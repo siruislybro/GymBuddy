@@ -19,7 +19,15 @@ const SignUpScreen = ({ navigation }) => {
             writeUserData(user.uid, name, email);
             Alert.alert("Success!", "Account created successfully", [{ text: "OK", onPress: () => navigation.navigate('Login')}]);
         })
-        .catch(error => alert(error.message))
+        .catch(error => {
+            if (error.code === 'auth/email-already-in-use') {
+                Alert.alert('Error!', 'E-mail address in use', [{ text: 'OK' }]);
+            } else if (error.code === 'auth/invalid-email') {
+                Alert.alert('Error!', 'The email address is not valid', [{ text: 'OK' }]);
+            } else {
+                Alert.alert(error.code);
+            }
+        })
     }
 
     const writeUserData = async (userId, name, email) => {

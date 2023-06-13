@@ -12,15 +12,27 @@ const LoginScreen = ({ navigation }) => {
     const handleLogin = async () => {
         const trimmedEmail = email.trim();
         const trimmedPassword = password.trim();
-        await authenticateUser(trimmedEmail, trimmedPassword);
-        await fetchUsernameAndNavigate(trimmedEmail);
-      };
+        const isUserAuthenticated = await authenticateUser(trimmedEmail, trimmedPassword);
+        
+        if (isUserAuthenticated) {
+            await fetchUsernameAndNavigate(trimmedEmail);
+        }
+    };
       
       const authenticateUser = async (email, password) => {
         try {
           await auth.signInWithEmailAndPassword(email, password);
         } catch (error) {
+            if (error.code === "auth/wrong-password") {
+                alert("Error! Wrong password")
+            }             
+            else if (error.code === "auth/too-many-requests") {
+                alert("Error! Access to this account has been temporarily disabled due to many failed login attempts. Please try again later")
+            }
+            else {
           alert(error.message);
+            }
+            return false;
         }
       };
       
