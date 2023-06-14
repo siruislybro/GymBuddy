@@ -1,8 +1,12 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { StyleSheet, View, Text, Button } from 'react-native';
 import { Calendar } from 'react-native-calendars';
+import { WorkoutContext } from '../components/WorkoutContext';
+import TimerPopup from '../components/TimerPopup';
 
 const CalendarScreen = ({navigation}) => {
+
+  const { isWorkoutActive, setWorkoutActive, workoutEnded, setWorkoutEnded } = useContext(WorkoutContext);
   function backButtonHandler() {
     navigation.goBack();
   }
@@ -22,6 +26,14 @@ const CalendarScreen = ({navigation}) => {
         markedDates={{
           '2023-06-16': {selected: true, marked: true, selectedColor: 'blue'},
         }}
+      />
+      <TimerPopup
+        isVisible={isWorkoutActive}
+        onPress={() => {
+            setWorkoutEnded(false);
+            navigation.navigate('QuickStart');
+        }}
+        timerStart={new Date()}
       />
 
     </View>

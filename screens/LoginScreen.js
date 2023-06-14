@@ -22,6 +22,7 @@ const LoginScreen = ({ navigation }) => {
       const authenticateUser = async (email, password) => {
         try {
           await auth.signInWithEmailAndPassword(email, password);
+          return true;
         } catch (error) {
             if (error.code === "auth/wrong-password") {
                 alert("Error! Wrong password")
