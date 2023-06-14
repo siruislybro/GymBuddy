@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, } from 'react';
 import { View, Button, StyleSheet, FlatList, Text, TextInput, TouchableOpacity, Alert,} from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
@@ -18,6 +18,7 @@ const QuickStartScreen = ({ navigation, route }) => {
   );
 
   const { setWorkoutActive, setWorkoutEnded } = useContext(WorkoutContext);
+  
 
   useEffect(() => {
     if (route.params?.newExercise) {
@@ -145,6 +146,11 @@ const QuickStartScreen = ({ navigation, route }) => {
   );
 
   const endWorkout = async () => {
+    if (exercises.length === 0) {
+      // If empty, show an alert and do not proceed
+      Alert.alert("Alert", "You cannot end a workout without any exercises.");
+      return;
+    }
     await saveToFirestore(exercises, workoutName);
     Alert.alert("Success", "Workout saved successfully!", [
       { text: "OK", onPress: () => console.log("OK Pressed") }
@@ -161,8 +167,17 @@ const QuickStartScreen = ({ navigation, route }) => {
     // Navigate back to HomeScreen 
     nav.navigate('Home', { userName: user.displayName, workoutEnded: true });
   };
-  
 
+  const cancelWorkout = () => {
+    // Logic for ending the workout, such as resetting states, stopping timers, etc.
+    // No code for saving to Firestore here
+    setWorkoutActive(false);
+    setWorkoutEnded(true);
+    setExercises([]);
+    // Navigate back to the main screen or whatever is appropriate for your application
+    navigation.goBack();
+  };
+  
   const resetWorkout = async () => {
     setExercises([]);
     setWorkoutName('');
@@ -180,7 +195,11 @@ const QuickStartScreen = ({ navigation, route }) => {
             value={workoutName}
             onChangeText={setWorkoutName}
           />
+        <TouchableOpacity onPress={cancelWorkout}>
+            <AntDesign name="close" size={24} color="red" />
+        </TouchableOpacity>
         </View>
+
       </View>
       <FlatList
         data={exercises}
@@ -207,21 +226,24 @@ const styles = StyleSheet.create({
   topBar: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#2e2e2e',
+    backgroundColor: '#010202',
     borderRadius: 10,
     padding: 10,
     margin: 10,
   },
   header: {
-    marginLeft: 20,
+    marginHorizontal: 20,
     height: 50,
     alignItems: 'flex-start', // align text to the left
+    flexDirection: 'row',
   },
   workoutNameInput: {
     color: '#fff',
     fontSize: 16,
     borderBottomColor: '#fff',
     borderBottomWidth: 1,
+    marginHorizontal: 20,
+    width: '70%'
   },
   setInput: {
     flexDirection: 'row',
@@ -230,6 +252,7 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: '#2e2e2e',
     borderRadius: 10,
+    marginHorizontal: 20,
   },
   setInputField: {
     width: '40%',
