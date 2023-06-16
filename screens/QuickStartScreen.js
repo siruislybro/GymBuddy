@@ -145,28 +145,36 @@ const QuickStartScreen = ({ navigation, route }) => {
     </View>
   );
 
-  const endWorkout = async () => {
-    if (exercises.length === 0) {
-      // If empty, show an alert and do not proceed
-      Alert.alert("Alert", "You cannot end a workout without any exercises.");
-      return;
-    }
-    await saveToFirestore(exercises, workoutName);
-    Alert.alert("Success", "Workout saved successfully!", [
-      { text: "OK", onPress: () => console.log("OK Pressed") }
-    ]);
-    // Reset workout
-    setExercises([]);
-    setWorkoutName(''); // reset workout name
-    await AsyncStorage.removeItem('@workout'); // clear the AsyncStorage
-  
-    // Set workout to inactive and ended
-    setWorkoutActive(false);
-    setWorkoutEnded(true);
-  
-    // Navigate back to HomeScreen 
-    nav.navigate('Home', { userName: user.displayName, workoutEnded: true });
-  };
+const endWorkout = async () => {
+  if (exercises.length === 0) {
+    // If empty, show an alert and do not proceed
+    Alert.alert("Alert", "You cannot end a workout without any exercises.");
+    return;
+  }
+
+  // Store the current workout data into AsyncStorage
+  await storeData('@workout', exercises);
+  await storeData('@workoutName', workoutName);
+
+  // Save to Firestore
+  await saveToFirestore(exercises, workoutName);
+  Alert.alert("Success", "Workout saved successfully!", [
+    { text: "OK", onPress: () => console.log("OK Pressed") }
+  ]);
+
+  // Reset workout
+  setExercises([]);
+  setWorkoutName(''); // reset workout name
+  await AsyncStorage.removeItem('@workout'); // clear the AsyncStorage
+
+  // Set workout to inactive and ended
+  setWorkoutActive(false);
+  setWorkoutEnded(true);
+
+  // Navigate back to HomeScreen 
+  nav.navigate('Home', { userName: user.displayName, workoutEnded: true });
+};
+
 
   const cancelWorkout = () => {
     // Logic for ending the workout, such as resetting states, stopping timers, etc.
