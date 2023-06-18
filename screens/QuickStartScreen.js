@@ -71,7 +71,11 @@ const QuickStartScreen = ({ navigation, route }) => {
   const saveToFirestore = async (exercises, workoutName) => {
     const currentDate = new Date().toLocaleString();
     const workoutId = uuidv4();
-    const docRef = db.collection('workouts').doc(user.uid).collection('userWorkouts').doc(workoutId);
+    const docRef = db
+      .collection('users')
+      .doc(user.uid)
+      .collection('workoutId')
+      .doc(workoutId);
     try {
       await docRef.set({ workoutName, exercises, createdAt: currentDate });
       console.log('Document successfully written!');
