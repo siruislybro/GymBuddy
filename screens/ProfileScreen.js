@@ -1,11 +1,11 @@
 import React from 'react';
 import { StyleSheet, View, Text, Image, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { db, auth } from '../firebase';
 
-const ProfileScreen = ({ route, navigation }) => { 
-  const { email } = "sr@test.com";
-  console.log('Received Email:', email);
-
+const ProfileScreen = ({ navigation }) => { 
+  const user = auth.currentUser;
+  const email = user.email
   const username = "sr";
   const numWorkouts = 150;
   const numFollowers = 200;

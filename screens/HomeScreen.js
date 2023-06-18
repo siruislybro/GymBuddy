@@ -64,14 +64,14 @@ const HomeScreen = ({ navigation, route }) => {
           onPress={handleStartRoutinePress}
           activeOpacity={0.5}
         >
-          <Text style={styles.buttonText}>Start Routine</Text>
+          <Text style={styles.buttonText}>Routines</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.button}
           onPress={handleSetRemindersPress}
           activeOpacity={0.5}
         >
-          <Text style={styles.buttonText}>Set Reminders</Text>
+          <Text style={styles.buttonText}>Reminders</Text>
         </TouchableOpacity>
       </View>
       <TimerPopup
