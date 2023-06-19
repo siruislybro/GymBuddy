@@ -74,7 +74,7 @@ const QuickStartScreen = ({ navigation, route }) => {
     const docRef = db
       .collection('users')
       .doc(user.uid)
-      .collection('workoutId')
+      .collection('workouts')
       .doc(workoutId);
     try {
       await docRef.set({ workoutName, exercises, createdAt: currentDate });
@@ -82,7 +82,8 @@ const QuickStartScreen = ({ navigation, route }) => {
     } catch (error) {
       console.error('Error writing document: ', error);
     }
-  };
+};
+
 
   const handleWeightChange = (text, exerciseIndex, setIndex) => {
     let newExercises = [...exercises];
