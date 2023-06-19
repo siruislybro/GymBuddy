@@ -3,6 +3,7 @@ import { useNavigation } from '@react-navigation/native';
 import GYMAPP from '../images/GYMAPP.jpg'
 import Colors from '../colours/colors';
 
+
 function StartScreen() {
     const navigation = useNavigation();
 

@@ -4,6 +4,7 @@ import Colors from '../colours/colors';
 import TimerPopup from '../components/TimerPopup';
 import { WorkoutContext } from '../components/WorkoutContext';
 
+
 const HomeScreen = ({ navigation, route }) => {
   const { userName, email } = route.params;
   const { isWorkoutActive, setWorkoutActive, workoutEnded, setWorkoutEnded } = useContext(WorkoutContext);
