@@ -26,6 +26,7 @@ import WorkoutDetailScreen from './screens/WorkoutDetailScreen';
 import StatisticsDetailScreen from './screens/StatisticsDetailScreen';
 import { db, auth } from './firebase';
 import { WorkoutContext } from './components/WorkoutContext';
+import UserContext from './components/UserContext';
 import React, { useState } from 'react';
 import RecommendedRoutineScreen from './screens/RecommendedRoutineScreen';
 
@@ -65,119 +66,122 @@ const MainTabs = () => {
 export default function App() {
   const [isWorkoutActive, setWorkoutActive] = useState(false);
   const [workoutEnded, setWorkoutEnded] = useState(false);
+  const [user, setUser] = useState(null);
   return (
-    <WorkoutContext.Provider value={{ 
-      isWorkoutActive, 
-      setWorkoutActive, 
-      workoutEnded, 
-      setWorkoutEnded 
-      }}>
-    <NavigationContainer>
-      <Stack.Navigator>     
-        <Stack.Screen 
-          name = "Start" 
-          component = {StartScreen} 
-          options = {{headerShown: false}} 
-          initialParams={{initial : true}} 
-        />
-        <Stack.Screen 
-          name="MainTabs" 
-          component={MainTabs} 
-          options={{ headerShown: false}} 
-        />
-        <Stack.Screen
-          name="Login"
-          component={LoginScreen}
-          options={{ headerShown: false }}
-          cardstyle={backgroundColor = Colors.buttonColor}
-        />
-        <Stack.Screen 
-          name="Sign Up" 
-          component={SignUpScreen} 
-          options={{ headerShown: false }} 
-        />
-        <Stack.Screen 
-          name="QuickStart"
-          component={QuickStartScreen}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen 
-          name="UserDetail"
-          component={UserDetailScreen}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="RecommendedRoutine"
-          component={RecommendedRoutineScreen}
-          options={({ headerShown: false })}
-        />
-        <Stack.Screen 
-          name="AddExercisesScreen"
-          component={AddExercisesScreen}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="ExerciseOverview"
-          component={ExerciseOverviewScreen}
-          options={({ route, navigation }) => {
-            const title = route.params.title;
-            return {
-              title: title,
-              headerShown: false,
-            };
-          }}
-        />
-        <Stack.Screen 
-          name="StatisticsScreen"
-          component={StatisticsScreen}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen 
-          name="CalendarScreen"
-          component={CalendarScreen}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen 
-          name="PastWorkoutsScreen"
-          component={PastWorkoutsScreen}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen 
-          name="MeasurementsScreen"
-          component={MeasurementScreen}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen 
-          name="CaloriesScreen"
-          component={CaloriesScreen}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen 
-          name="LeaderboardScreen"
-          component={LeaderboardScreen}
-          options={{ headerShown: false }}
-        />  
-               
-        <Stack.Screen 
-          name="ExerciseDetails"
-          component={ExerciseDetailsScreen}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen 
-          name="WorkoutDetail"
-          component={WorkoutDetailScreen}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen 
-          name="StatisticsDetail"
-          component={StatisticsDetailScreen}
-          options={{ headerShown: false }}
-        />
+    <UserContext.Provider value={{ user, setUser }}>
+      <WorkoutContext.Provider value={{ 
+        isWorkoutActive, 
+        setWorkoutActive, 
+        workoutEnded, 
+        setWorkoutEnded 
+        }}>
+        <NavigationContainer>
+          <Stack.Navigator>     
+            <Stack.Screen 
+              name = "Start" 
+              component = {StartScreen} 
+              options = {{headerShown: false}} 
+              initialParams={{initial : true}} 
+            />
+            <Stack.Screen 
+              name="MainTabs" 
+              component={MainTabs} 
+              options={{ headerShown: false}} 
+            />
+            <Stack.Screen
+              name="Login"
+              component={LoginScreen}
+              options={{ headerShown: false }}
+              cardstyle={backgroundColor = Colors.buttonColor}
+            />
+            <Stack.Screen 
+              name="Sign Up" 
+              component={SignUpScreen} 
+              options={{ headerShown: false }} 
+            />
+            <Stack.Screen 
+              name="QuickStart"
+              component={QuickStartScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen 
+              name="UserDetail"
+              component={UserDetailScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="RecommendedRoutine"
+              component={RecommendedRoutineScreen}
+              options={({ headerShown: false })}
+            />
+            <Stack.Screen 
+              name="AddExercisesScreen"
+              component={AddExercisesScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="ExerciseOverview"
+              component={ExerciseOverviewScreen}
+              options={({ route, navigation }) => {
+                const title = route.params.title;
+                return {
+                  title: title,
+                  headerShown: false,
+                };
+              }}
+            />
+            <Stack.Screen 
+              name="StatisticsScreen"
+              component={StatisticsScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen 
+              name="CalendarScreen"
+              component={CalendarScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen 
+              name="PastWorkoutsScreen"
+              component={PastWorkoutsScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen 
+              name="MeasurementsScreen"
+              component={MeasurementScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen 
+              name="CaloriesScreen"
+              component={CaloriesScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen 
+              name="LeaderboardScreen"
+              component={LeaderboardScreen}
+              options={{ headerShown: false }}
+            />  
+                  
+            <Stack.Screen 
+              name="ExerciseDetails"
+              component={ExerciseDetailsScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen 
+              name="WorkoutDetail"
+              component={WorkoutDetailScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen 
+              name="StatisticsDetail"
+              component={StatisticsDetailScreen}
+              options={{ headerShown: false }}
+            />
 
-      </Stack.Navigator>
-      <StatusBar style="light" />
-    </NavigationContainer>
-    </WorkoutContext.Provider>
+          </Stack.Navigator>
+          <StatusBar style="light" />
+        </NavigationContainer>
+      </WorkoutContext.Provider>
+    </UserContext.Provider>
   );
 }
 

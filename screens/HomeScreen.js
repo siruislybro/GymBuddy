@@ -3,10 +3,12 @@ import { View, Text, StyleSheet, TouchableOpacity, Linking } from 'react-native'
 import Colors from '../colours/colors';
 import TimerPopup from '../components/TimerPopup';
 import { WorkoutContext } from '../components/WorkoutContext';
+import { auth } from '../firebase';
+import UserContext from '../components/UserContext';
 
 
 const HomeScreen = ({ navigation, route }) => {
-  const { userName, email } = route.params;
+  const { user } = useContext(UserContext); 
   const { isWorkoutActive, setWorkoutActive, workoutEnded, setWorkoutEnded } = useContext(WorkoutContext);
 
 
@@ -51,7 +53,7 @@ const HomeScreen = ({ navigation, route }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.welcomeText}>Welcome {userName}!</Text>
+      <Text style={styles.welcomeText}>Welcome {user?.username}!</Text>
       <View style={styles.buttons}>
         <TouchableOpacity
           style={styles.button}

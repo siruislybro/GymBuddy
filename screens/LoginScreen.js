@@ -1,14 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import Colors from '../colours/colors';
 import { View, TextInput, Button, StyleSheet, Text } from 'react-native';
 import { auth } from '../firebase';
 import { getFirestore, collection, query, where, getDocs } from "firebase/firestore";
 import BackButton from '../components/BackButton';
+import UserContext from '../components/UserContext';
 
 
 const LoginScreen = ({ navigation }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const { setUser } = useContext(UserContext);
 
     const handleLogin = async () => {
         const trimmedEmail = email.trim();
@@ -48,6 +50,9 @@ const LoginScreen = ({ navigation }) => {
           const userData = doc.data();
           const username = userData.username;
           console.log("Username:", username);
+          
+          setUser({ username, email }); // Update user context
+          
           navigation.navigate('MainTabs', 
             {screen: "Home" , params: 
               { userName: username ,
