@@ -26,6 +26,7 @@ import WorkoutDetailScreen from './screens/WorkoutDetailScreen';
 import { db, auth } from './firebase';
 import { WorkoutContext } from './components/WorkoutContext';
 import React, { useState } from 'react';
+import RecommendedRoutineScreen from './screens/RecommendedRoutineScreen';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -103,6 +104,11 @@ export default function App() {
           name="UserDetail"
           component={UserDetailScreen}
           options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="RecommendedRoutine"
+          component={RecommendedRoutineScreen}
+          options={({ headerShown: false })}
         />
         <Stack.Screen 
           name="AddExercisesScreen"
