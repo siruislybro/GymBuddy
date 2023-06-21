@@ -53,18 +53,21 @@ const SignUpScreen = ({ navigation }) => {
             <TextInput
                 style={styles.input}
                 placeholder="Name"
+                placeholderTextColor="white"
                 onChangeText={setName}
                 value={name}
             />
             <TextInput
                 style={styles.input}
                 placeholder="Email"
+                placeholderTextColor="white"
                 onChangeText={setEmail}
                 value={email}
             />
             <TextInput
                 style={styles.input}
                 placeholder="Password"
+                placeholderTextColor="white"
                 secureTextEntry
                 onChangeText={setPassword}
                 value={password}
@@ -96,6 +99,7 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         marginBottom: 12,
         paddingHorizontal: 12,
+        color: 'white',
     },
 });
 
