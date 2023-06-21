@@ -8,6 +8,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { v4 as uuidv4 } from 'uuid';
 import 'react-native-get-random-values';
 import { WorkoutContext } from '../components/WorkoutContext';
+import firebase from 'firebase/compat';
 
 const QuickStartScreen = ({ navigation, route }) => {
   const nav = useNavigation();
@@ -120,12 +121,14 @@ const QuickStartScreen = ({ navigation, route }) => {
         placeholder="Weight (kg)"
         style={styles.setInputField}
         value={item.weight}
+        keyboardType="numeric"
         onChangeText={(text) => handleWeightChange(text, exerciseIndex, index)}
       />
       <TextInput
         placeholder="Reps"
         style={styles.setInputField}
         value={item.reps}
+        keyboardType="numeric"
         onChangeText={(text) => handleRepsChange(text, exerciseIndex, index)}
       />
     </View>
@@ -150,46 +153,90 @@ const QuickStartScreen = ({ navigation, route }) => {
     </View>
   );
 
+  const updateLeaderboard = async (userId, userName, exercises) => {
+    const leaderboardRef = db.collection('leaderboard');
+  
+    for (let exercise of exercises) {
+      const maxWeight = exercise.sets.reduce((total, set) => total + Number(set.weight), 0);
+      const totalWeight = exercise.sets.reduce((total, set) => total + Number(set.weight) * Number(set.reps), 0);
+  
+      const doc = await leaderboardRef
+        .where('userId', '==', userId)
+        .where('exercise', '==', exercise.name)
+        .get();
+  
+      if (!doc.empty) {
+        doc.docs[0].ref.update({
+          maxWeight: firebase.firestore.FieldValue.increment(maxWeight),
+          totalWeight: firebase.firestore.FieldValue.increment(totalWeight),
+        });
+      } else {
+        leaderboardRef.add({
+          userId,
+          userName,
+          exercise: exercise.name,
+          maxWeight,
+          totalWeight,
+        });
+      }
+    }
+  };
+  
+
 const endWorkout = async () => {
   if (exercises.length === 0) {
-    // If empty, show an alert and do not proceed
     Alert.alert("Alert", "You cannot end a workout without any exercises.");
     return;
   }
 
-  // Store the current workout data into AsyncStorage
+  for (let exercise of exercises) {
+    for (let set of exercise.sets) {
+      if (set.weight === '' ||  set.reps === '') {
+        Alert.alert("Alert", "Cannot end if any fields are empty!");
+        return;
+      }
+      // } else if ( set.reps === '') {
+      //   Alert.alert("Alert", "Reps input for one of your exercises is missing!");
+      //   return;
+      // }
+    }
+  }
+
   await storeData('@workout', exercises);
   await storeData('@workoutName', workoutName);
-
-  // Save to Firestore
   await saveToFirestore(exercises, workoutName);
+  await updateLeaderboard(user.uid, user.displayName, exercises);
   Alert.alert("Success", "Workout saved successfully!", [
     { text: "OK", onPress: () => console.log("OK Pressed") }
   ]);
 
-  // Reset workout
   setExercises([]);
-  setWorkoutName(''); // reset workout name
-  await AsyncStorage.removeItem('@workout'); // clear the AsyncStorage
+  setWorkoutName(''); 
+  await AsyncStorage.removeItem('@workout');
+  await AsyncStorage.removeItem('@workoutName'); // This line is added
 
-  // Set workout to inactive and ended
   setWorkoutActive(false);
   setWorkoutEnded(true);
 
-  // Navigate back to HomeScreen 
   nav.navigate('Home', { userName: user.displayName, workoutEnded: true });
 };
 
 
-  const cancelWorkout = () => {
-    // Logic for ending the workout, such as resetting states, stopping timers, etc.
-    // No code for saving to Firestore here
+
+  const cancelWorkout = async () => {
     setWorkoutActive(false);
     setWorkoutEnded(true);
     setExercises([]);
-    // Navigate back to the main screen or whatever is appropriate for your application
+    setWorkoutName('');
+    try {
+      await AsyncStorage.removeItem('@workout');
+      await AsyncStorage.removeItem('@workoutName');
+    } catch (error) {
+      console.error(error);
+    }
     navigation.goBack();
   };
+
   
   const resetWorkout = async () => {
     setExercises([]);

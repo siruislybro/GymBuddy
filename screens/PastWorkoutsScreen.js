@@ -10,19 +10,20 @@ const PastWorkoutsScreen = ({navigation}) => {
   useEffect(() => {
     const fetchWorkouts = async () => {
       const user = auth.currentUser;
-      const workoutsRef = db.collection('workouts').doc(user.uid).collection('userWorkouts');
+      const workoutsRef = db.collection('users').doc(user.uid).collection('workouts');
       const snapshot = await workoutsRef.get();
-
+  
       const workouts = snapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data(),
       }));
-
+  
       setPastWorkouts(workouts);
     }
-
+  
     fetchWorkouts();
   }, []);
+  
 
   return (
     <View style={styles.container}>
