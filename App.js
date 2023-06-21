@@ -23,6 +23,7 @@ import MeasurementScreen from './screens/MeasurementsScreen';
 import CaloriesScreen from './screens/CaloriesScreen';
 import LeaderboardScreen from './screens/LeaderboardScreen';
 import WorkoutDetailScreen from './screens/WorkoutDetailScreen';
+import StatisticsDetailScreen from './screens/StatisticsDetailScreen';
 import { db, auth } from './firebase';
 import { WorkoutContext } from './components/WorkoutContext';
 import React, { useState } from 'react';
@@ -161,6 +162,12 @@ export default function App() {
           component={WorkoutDetailScreen}
           options={{ headerShown: false }}
         />
+        <Stack.Screen 
+          name="StatisticsDetail"
+          component={StatisticsDetailScreen}
+          options={{ headerShown: false }}
+        />
+
       </Stack.Navigator>
       <StatusBar style="light" />
     </NavigationContainer>

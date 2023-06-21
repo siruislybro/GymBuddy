@@ -8,6 +8,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { v4 as uuidv4 } from 'uuid';
 import 'react-native-get-random-values';
 import { WorkoutContext } from '../components/WorkoutContext';
+import firebase from 'firebase/compat';
 
 const QuickStartScreen = ({ navigation, route }) => {
   const nav = useNavigation();
@@ -152,6 +153,36 @@ const QuickStartScreen = ({ navigation, route }) => {
     </View>
   );
 
+  const updateLeaderboard = async (userId, userName, exercises) => {
+    const leaderboardRef = db.collection('leaderboard');
+  
+    for (let exercise of exercises) {
+      const maxWeight = exercise.sets.reduce((total, set) => total + Number(set.weight), 0);
+      const totalWeight = exercise.sets.reduce((total, set) => total + Number(set.weight) * Number(set.reps), 0);
+  
+      const doc = await leaderboardRef
+        .where('userId', '==', userId)
+        .where('exercise', '==', exercise.name)
+        .get();
+  
+      if (!doc.empty) {
+        doc.docs[0].ref.update({
+          maxWeight: firebase.firestore.FieldValue.increment(maxWeight),
+          totalWeight: firebase.firestore.FieldValue.increment(totalWeight),
+        });
+      } else {
+        leaderboardRef.add({
+          userId,
+          userName,
+          exercise: exercise.name,
+          maxWeight,
+          totalWeight,
+        });
+      }
+    }
+  };
+  
+
 const endWorkout = async () => {
   if (exercises.length === 0) {
     Alert.alert("Alert", "You cannot end a workout without any exercises.");
@@ -173,8 +204,8 @@ const endWorkout = async () => {
 
   await storeData('@workout', exercises);
   await storeData('@workoutName', workoutName);
-
   await saveToFirestore(exercises, workoutName);
+  await updateLeaderboard(user.uid, user.displayName, exercises);
   Alert.alert("Success", "Workout saved successfully!", [
     { text: "OK", onPress: () => console.log("OK Pressed") }
   ]);
