@@ -3,6 +3,7 @@ import { View, TextInput, Button, StyleSheet, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { auth } from '../firebase'
 import { getFirestore, doc, setDoc } from '@firebase/firestore';
+import BackButton from '../components/BackButton';
 
 const SignUpScreen = ({ navigation }) => {
     const [email, setEmail] = useState('');
@@ -46,6 +47,9 @@ const SignUpScreen = ({ navigation }) => {
 
     return (
         <View style={styles.container}>
+            <View style={styles.topBar}>
+                <BackButton />
+            </View>
             <TextInput
                 style={styles.input}
                 placeholder="Name"
@@ -75,7 +79,16 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         padding: 16,
+        backgroundColor: '#010202'
     },
+    topBar: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: '#010202',
+        borderRadius: 10,
+        padding: 10,
+        margin: 10,
+      },
     input: {
         height: 40,
         borderWidth: 1,

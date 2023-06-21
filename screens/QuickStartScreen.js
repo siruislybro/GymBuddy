@@ -120,12 +120,14 @@ const QuickStartScreen = ({ navigation, route }) => {
         placeholder="Weight (kg)"
         style={styles.setInputField}
         value={item.weight}
+        keyboardType="numeric"
         onChangeText={(text) => handleWeightChange(text, exerciseIndex, index)}
       />
       <TextInput
         placeholder="Reps"
         style={styles.setInputField}
         value={item.reps}
+        keyboardType="numeric"
         onChangeText={(text) => handleRepsChange(text, exerciseIndex, index)}
       />
     </View>
@@ -154,6 +156,19 @@ const endWorkout = async () => {
   if (exercises.length === 0) {
     Alert.alert("Alert", "You cannot end a workout without any exercises.");
     return;
+  }
+
+  for (let exercise of exercises) {
+    for (let set of exercise.sets) {
+      if (set.weight === '' ||  set.reps === '') {
+        Alert.alert("Alert", "Cannot end if any fields are empty!");
+        return;
+      }
+      // } else if ( set.reps === '') {
+      //   Alert.alert("Alert", "Reps input for one of your exercises is missing!");
+      //   return;
+      // }
+    }
   }
 
   await storeData('@workout', exercises);

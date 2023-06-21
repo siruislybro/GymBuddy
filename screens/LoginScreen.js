@@ -3,6 +3,7 @@ import Colors from '../colours/colors';
 import { View, TextInput, Button, StyleSheet, Text } from 'react-native';
 import { auth } from '../firebase';
 import { getFirestore, collection, query, where, getDocs } from "firebase/firestore";
+import BackButton from '../components/BackButton';
 
 
 const LoginScreen = ({ navigation }) => {
@@ -58,6 +59,9 @@ const LoginScreen = ({ navigation }) => {
 
     return (
         <View style={styles.container}>
+          <View style={styles.topBar}>
+          <BackButton />
+          </View>
             <Text style={styles.textInput}> EMAIL: </Text>
             <TextInput
                 style={styles.input}
@@ -72,6 +76,7 @@ const LoginScreen = ({ navigation }) => {
                 value={password}
             />
             <Button title="Login" onPress={handleLogin} />
+            
         </View>
     );
 };
@@ -85,6 +90,14 @@ const styles = StyleSheet.create({
     },
     textInput: {
         color: "white",
+    },
+    topBar: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      backgroundColor: '#010202',
+      borderRadius: 10,
+      padding: 10,
+      margin: 10,
     },
     input: {
         height: 40,
