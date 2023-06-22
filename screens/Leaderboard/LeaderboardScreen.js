@@ -37,12 +37,14 @@ const LeaderboardScreen = ({ navigation }) => {
   }
 
   const handleExerciseSelectMaxWeight = (item) => {
-    navigation.navigate('MaxWeightDetails', { item });
+    navigation.navigate('MaxWeightDetails', { exercise: item.exercise });
   };
+  
 
   const handleExerciseSelectTotalWeight = (item) => {
-    navigation.navigate('TotalWeightDetails', { item });
+    navigation.navigate('TotalWeightDetails', { exercise: item.exercise });
   };
+  
 
   const handleExerciseSelect = (item) => {
     navigation.navigate('TotalWeightDetails', { item });
@@ -71,7 +73,7 @@ const LeaderboardScreen = ({ navigation }) => {
   }
 
   const renderListItemMaxWeight = (item) => (
-    <TouchableOpacity key={item.id + 'max'} onPress={() => handleExerciseSelect(item)}>
+    <TouchableOpacity key={item.id + 'max'} onPress={() => handleExerciseSelectMaxWeight(item)}>
       <View style={styles.listItem}>
         <Text style={styles.userName}>{item.userName}</Text>
         <Text style={styles.exercise}>{item.exercise}</Text>
@@ -81,7 +83,7 @@ const LeaderboardScreen = ({ navigation }) => {
   );
 
   const renderListItemTotalWeight = (item) => (
-    <TouchableOpacity key={item.id + 'total'} onPress={() => handleExerciseSelect(item)}>
+    <TouchableOpacity key={item.id + 'total'} onPress={() => handleExerciseSelectTotalWeight(item)}>
       <View style={styles.listItem}>
         <Text style={styles.userName}>{item.userName}</Text>
         <Text style={styles.exercise}>{item.exercise}</Text>

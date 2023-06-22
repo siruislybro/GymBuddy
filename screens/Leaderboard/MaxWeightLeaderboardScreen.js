@@ -81,36 +81,55 @@ const styles = StyleSheet.create({
       fontSize: 24,
       fontWeight: 'bold',
       marginBottom: 20,
+      textAlign: 'center',
+      color: '#333',
     },
     listItem: {
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
-      padding: 15,
-      borderRadius: 5,
+      padding: 20,
+      borderRadius: 10,
       backgroundColor: '#fff',
       marginBottom: 10,
+      shadowColor: "#000",
+      shadowOffset: {
+        width: 0,
+        height: 2,
+      },
+      shadowOpacity: 0.23,
+      shadowRadius: 2.62,
+      elevation: 4,
     },
     rankText: {
-      fontSize: 18,
+      fontSize: 24,
       fontWeight: 'bold',
-      color: '#888',
+      color: '#777',
     },
     userNameText: {
-      fontSize: 16,
-      fontWeight: 'bold',
+      fontSize: 18,
+      fontWeight: '600',
       flex: 1, // take up remaining space
+      color: '#333',
+      marginLeft: 20,
     },
     itemText: {
-      fontSize: 16,
+      fontSize: 18,
+      fontWeight: '500',
+      color: '#333',
     },
     backButton: {
       marginBottom: 20,
+      backgroundColor: '#007BFF',
+      borderRadius: 5,
+      padding: 10,
+      alignItems: 'center',
     },
     backButtonText: {
-      color: '#007BFF',
+      color: '#FFF',
       fontSize: 18,
     },
   });
+
 
 export default MaxWeightLeaderboardDetailsScreen;

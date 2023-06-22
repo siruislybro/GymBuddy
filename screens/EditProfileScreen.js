@@ -28,9 +28,13 @@ const EditProfileScreen = ({ navigation }) => {
   };
 
   const handleLogout = () => {
-    auth.signOut();
+    auth.signOut().then(() => {
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'Start' }],
+      });
+    });
   };
-
   return (
     <View style={styles.container}>
       <TextInput
