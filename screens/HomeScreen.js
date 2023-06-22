@@ -106,7 +106,9 @@ const styles = StyleSheet.create({
   },
   buttons: {
     flexDirection: 'row',
+    flexDirection: 'column',
     marginTop: 10,
+    alignItems: 'center',
   },
   button: {
     flex: 0.75,

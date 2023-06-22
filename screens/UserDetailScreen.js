@@ -14,8 +14,8 @@ const UserDetailScreen = ({ navigation, route }) => {
   // Function to handle when the submit button is pressed
   const handleSubmit = async () => {
     // Construct the payload for the OpenAI API
-    const prompt = `My height is ${height}, my weight is ${weight}, I am able to workout ${numWorkouts} per week, and my goal is to ${goal}. Generate a workout plan for me.`;
-    const maxTokens = 100; // Set the desired max number of tokens in the response
+    const prompt = `My height is ${height}, my weight is ${weight}, I am able to workout ${numWorkouts} times per week, and my goal is to ${goal}. Generate a workout plan for me that includes weights.`;
+    const maxTokens = 500; // Set the desired max number of tokens in the response
     const API_KEY = "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";
     const { Configuration, OpenAIApi } = require("openai");
 
