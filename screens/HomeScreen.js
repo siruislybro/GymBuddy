@@ -111,17 +111,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   button: {
-    flex: 0.75,
-    padding: 10,
-    borderWidth: 1,
-    borderRadius: 10,
-    marginRight: 10,
     backgroundColor: '#0484fb',
+    borderRadius: 10,
+    width: 200,
+    height: 50,
+    marginBottom: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   buttonText: {
     textAlign: 'center',
     color: 'white',
     fontSize: 15,
+    fontWeight: 'bold',
   },
 });
 
