@@ -19,6 +19,15 @@ const SignUpScreen = ({ navigation }) => {
             // After successful signup, write user data to database
             writeUserData(user.uid, name, email);
             Alert.alert("Success!", "Account created successfully", [{ text: "OK", onPress: () => navigation.navigate('Login')}]);
+    
+            // Update the displayName in Firebase Auth
+            user.updateProfile({
+              displayName: name
+            }).then(() => {
+              console.log('Updated display name successfully.');
+            }).catch((error) => {
+              console.log('Error updating display name:', error);
+            });
         })
         .catch(error => {
             if (error.code === 'auth/email-already-in-use') {
@@ -30,6 +39,7 @@ const SignUpScreen = ({ navigation }) => {
             }
         })
     }
+    
 
     const writeUserData = async (userId, name, email) => {
         const db = getFirestore();

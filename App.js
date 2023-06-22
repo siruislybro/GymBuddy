@@ -13,6 +13,7 @@ import UserDetailScreen from './screens/UserDetailScreen';
 import AddExercisesScreen from './screens/AddExercisesScreen';
 import ExerciseOverviewScreen from './screens/ExerciseOverviewScreen';
 import ExerciseDetailsScreen from './screens/ExerciseDetailsScreen';
+import EditProfileScreen from './screens/EditProfileScreen';
 import { Ionicons } from '@expo/vector-icons';
 import Colors from './colours/colors';
 import Exercise from './models/Exercise';
@@ -21,7 +22,10 @@ import CalendarScreen from './screens/CalanderScreen';
 import PastWorkoutsScreen from './screens/PastWorkoutsScreen';
 import MeasurementScreen from './screens/MeasurementsScreen';
 import CaloriesScreen from './screens/CaloriesScreen';
-import LeaderboardScreen from './screens/LeaderboardScreen';
+import LeaderboardScreen from './screens/Leaderboard/LeaderboardScreen';
+import MaxWeightLeaderboardDetailsScreen from './screens/Leaderboard/MaxWeightLeaderboardScreen';
+import TotalWeightLeaderboardDetailsScreen from './screens/Leaderboard/TotalWeightLeaderboardScreen';
+import LeaderboardDetailsScreen from './screens/LeaderboardDetailsScreen';
 import WorkoutDetailScreen from './screens/WorkoutDetailScreen';
 import StatisticsDetailScreen from './screens/StatisticsDetailScreen';
 import { db, auth } from './firebase';
@@ -50,8 +54,8 @@ const MainTabs = () => {
 
           return <Ionicons name={iconName} size={size} color={color} />;
         },
-          tabBarActiveTintColor: '#c5e2fe',
-          tabBarInactiveTintColor: '#c5e2fe',
+        tabBarActiveTintColor: '#c5e2fe',
+        tabBarInactiveTintColor: '#c5e2fe',
       })}
 
     >
@@ -69,24 +73,24 @@ export default function App() {
   const [user, setUser] = useState(null);
   return (
     <UserContext.Provider value={{ user, setUser }}>
-      <WorkoutContext.Provider value={{ 
-        isWorkoutActive, 
-        setWorkoutActive, 
-        workoutEnded, 
-        setWorkoutEnded 
-        }}>
+      <WorkoutContext.Provider value={{
+        isWorkoutActive,
+        setWorkoutActive,
+        workoutEnded,
+        setWorkoutEnded
+      }}>
         <NavigationContainer>
-          <Stack.Navigator>     
-            <Stack.Screen 
-              name = "Start" 
-              component = {StartScreen} 
-              options = {{headerShown: false}} 
-              initialParams={{initial : true}} 
+          <Stack.Navigator>
+            <Stack.Screen
+              name="Start"
+              component={StartScreen}
+              options={{ headerShown: false }}
+              initialParams={{ initial: true }}
             />
-            <Stack.Screen 
-              name="MainTabs" 
-              component={MainTabs} 
-              options={{ headerShown: false}} 
+            <Stack.Screen
+              name="MainTabs"
+              component={MainTabs}
+              options={{ headerShown: false }}
             />
             <Stack.Screen
               name="Login"
@@ -94,17 +98,22 @@ export default function App() {
               options={{ headerShown: false }}
               cardstyle={backgroundColor = Colors.buttonColor}
             />
-            <Stack.Screen 
-              name="Sign Up" 
-              component={SignUpScreen} 
-              options={{ headerShown: false }} 
+            <Stack.Screen
+              name="Sign Up"
+              component={SignUpScreen}
+              options={{ headerShown: false }}
             />
-            <Stack.Screen 
+            <Stack.Screen
+              name="EditProfileScreen"
+              component={EditProfileScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
               name="QuickStart"
               component={QuickStartScreen}
               options={{ headerShown: false }}
             />
-            <Stack.Screen 
+            <Stack.Screen
               name="UserDetail"
               component={UserDetailScreen}
               options={{ headerShown: false }}
@@ -114,7 +123,7 @@ export default function App() {
               component={RecommendedRoutineScreen}
               options={({ headerShown: false })}
             />
-            <Stack.Screen 
+            <Stack.Screen
               name="AddExercisesScreen"
               component={AddExercisesScreen}
               options={{ headerShown: false }}
@@ -130,48 +139,62 @@ export default function App() {
                 };
               }}
             />
-            <Stack.Screen 
+            <Stack.Screen
               name="StatisticsScreen"
               component={StatisticsScreen}
               options={{ headerShown: false }}
             />
-            <Stack.Screen 
+            <Stack.Screen
               name="CalendarScreen"
               component={CalendarScreen}
               options={{ headerShown: false }}
             />
-            <Stack.Screen 
+            <Stack.Screen
               name="PastWorkoutsScreen"
               component={PastWorkoutsScreen}
               options={{ headerShown: false }}
             />
-            <Stack.Screen 
+            <Stack.Screen
               name="MeasurementsScreen"
               component={MeasurementScreen}
               options={{ headerShown: false }}
             />
-            <Stack.Screen 
+            <Stack.Screen
               name="CaloriesScreen"
               component={CaloriesScreen}
               options={{ headerShown: false }}
             />
-            <Stack.Screen 
+            <Stack.Screen
               name="LeaderboardScreen"
               component={LeaderboardScreen}
               options={{ headerShown: false }}
-            />  
-                  
-            <Stack.Screen 
+            />
+            <Stack.Screen
+              name="LeaderboardDetails"
+              component={LeaderboardDetailsScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="MaxWeightDetails"
+              component={MaxWeightLeaderboardDetailsScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="TotalWeightDetails"
+              component={TotalWeightLeaderboardDetailsScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
               name="ExerciseDetails"
               component={ExerciseDetailsScreen}
               options={{ headerShown: false }}
             />
-            <Stack.Screen 
+            <Stack.Screen
               name="WorkoutDetail"
               component={WorkoutDetailScreen}
               options={{ headerShown: false }}
             />
-            <Stack.Screen 
+            <Stack.Screen
               name="StatisticsDetail"
               component={StatisticsDetailScreen}
               options={{ headerShown: false }}

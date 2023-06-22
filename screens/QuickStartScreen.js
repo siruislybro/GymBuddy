@@ -8,6 +8,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { v4 as uuidv4 } from 'uuid';
 import 'react-native-get-random-values';
 import { WorkoutContext } from '../components/WorkoutContext';
+import UserContext from '../components/UserContext';
 import firebase from 'firebase/compat';
 
 const QuickStartScreen = ({ navigation, route }) => {
@@ -159,28 +160,47 @@ const QuickStartScreen = ({ navigation, route }) => {
     for (let exercise of exercises) {
       const maxWeight = exercise.sets.reduce((total, set) => total + Number(set.weight), 0);
       const totalWeight = exercise.sets.reduce((total, set) => total + Number(set.weight) * Number(set.reps), 0);
+      const totalReps = exercise.sets.reduce((total, set) => total + Number(set.reps), 0);
   
-      const doc = await leaderboardRef
-        .where('userId', '==', userId)
-        .where('exercise', '==', exercise.name)
-        .get();
+      try {
+        const doc = await leaderboardRef
+          .where('userId', '==', userId)
+          .where('exercise', '==', exercise.name)
+          .get();
   
-      if (!doc.empty) {
-        doc.docs[0].ref.update({
-          maxWeight: firebase.firestore.FieldValue.increment(maxWeight),
-          totalWeight: firebase.firestore.FieldValue.increment(totalWeight),
-        });
-      } else {
-        leaderboardRef.add({
-          userId,
-          userName,
-          exercise: exercise.name,
-          maxWeight,
-          totalWeight,
-        });
+        if (!doc.empty) {
+          try {
+            await doc.docs[0].ref.update({
+              maxWeight: firebase.firestore.FieldValue.increment(maxWeight),
+              reps: firebase.firestore.FieldValue.increment(totalReps),
+              totalWeight: firebase.firestore.FieldValue.increment(totalWeight),
+            });
+            console.log('Updated existing leaderboard entry successfully');
+          } catch (error) {
+            console.error('Error updating leaderboard entry: ', error);
+          }
+        } else {
+          try {
+            await leaderboardRef.add({
+              userId,
+              userName,
+              exercise: exercise.name,
+              maxWeight,
+              totalReps,
+              totalWeight,
+            });
+            console.log('Added new leaderboard entry successfully');
+          } catch (error) {
+            console.error('Error adding new leaderboard entry: ', error);
+          }
+        }
+      } catch (error) {
+        console.error('Error querying leaderboard: ', error);
       }
     }
-  };
+};
+
+  
   
 
 const endWorkout = async () => {
@@ -204,8 +224,8 @@ const endWorkout = async () => {
 
   await storeData('@workout', exercises);
   await storeData('@workoutName', workoutName);
-  await saveToFirestore(exercises, workoutName);
   await updateLeaderboard(user.uid, user.displayName, exercises);
+  await saveToFirestore(exercises, workoutName);
   Alert.alert("Success", "Workout saved successfully!", [
     { text: "OK", onPress: () => console.log("OK Pressed") }
   ]);
