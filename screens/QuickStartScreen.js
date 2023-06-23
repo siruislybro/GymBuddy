@@ -158,7 +158,7 @@ const QuickStartScreen = ({ navigation, route }) => {
     const leaderboardRef = db.collection('leaderboard');
   
     for (let exercise of exercises) {
-      const maxWeight = exercise.sets.reduce((total, set) => total + Number(set.weight), 0);
+      const maxWeight = exercise.sets.reduce((max, set) => Math.max(max, Number(set.weight)), 0);
       const totalWeight = exercise.sets.reduce((total, set) => total + Number(set.weight) * Number(set.reps), 0);
       const totalReps = exercise.sets.reduce((total, set) => total + Number(set.reps), 0);
   
@@ -171,7 +171,7 @@ const QuickStartScreen = ({ navigation, route }) => {
         if (!doc.empty) {
           try {
             await doc.docs[0].ref.update({
-              maxWeight: firebase.firestore.FieldValue.increment(maxWeight),
+              maxWeight, // this now holds the maximum weight lifted in any set for the exercise
               reps: firebase.firestore.FieldValue.increment(totalReps),
               totalWeight: firebase.firestore.FieldValue.increment(totalWeight),
             });
@@ -198,7 +198,8 @@ const QuickStartScreen = ({ navigation, route }) => {
         console.error('Error querying leaderboard: ', error);
       }
     }
-};
+  };
+  
 
   
   

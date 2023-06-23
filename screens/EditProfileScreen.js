@@ -1,16 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text, TextInput, TouchableOpacity } from 'react-native';
 import { auth } from '../firebase';
+import { getFirestore, doc, updateDoc } from '@firebase/firestore';
 
 const EditProfileScreen = ({ navigation }) => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  useEffect(() => {
+    setUsername(auth.currentUser.displayName);
+    setEmail(auth.currentUser.email);
+  }, []);
+
   const handleSave = async () => {
     const user = auth.currentUser;
+    const db = getFirestore();
 
     if (username) {
+      await updateDoc(doc(db, 'users', user.uid), {
+        username: username,
+      });
+
       await user.updateProfile({
         displayName: username,
       });
