@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Dimensions } from 'react-native';
 import { db, auth } from '../firebase';
 import { useNavigation } from '@react-navigation/native';
+import BackButton from '../components/BackButton';
 
 const StatisticsScreen = () => {
   const [exercisesCount, setExercisesCount] = useState({});
@@ -32,8 +33,13 @@ const StatisticsScreen = () => {
     fetchExercisesData();
   }, []);
 
+  const maxCount = Math.max(...Object.values(exercisesCount));
+
   return (
     <View style={styles.container}>
+      <View style={styles.topBar}>
+        <BackButton />
+      </View>
       <Text style={styles.title}>Main Exercises</Text>
       <FlatList 
         data={Object.entries(exercisesCount)}
@@ -42,6 +48,9 @@ const StatisticsScreen = () => {
           <TouchableOpacity onPress={() => navigation.navigate('StatisticsDetail', { exerciseName: item[0] })}>
             <View style={styles.listItem}>
               <Text style={styles.exerciseName}>{item[0]}</Text>
+              <View style={styles.barContainer}>
+                <View style={{...styles.bar, height: `${(item[1]/maxCount)*100}%`}}/>
+              </View>
               <Text style={styles.exerciseCount}>{item[1]} times</Text>
             </View>
           </TouchableOpacity>
@@ -56,13 +65,20 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     backgroundColor: '#010202',
-    
+  },
+  topBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#010202',
+    borderRadius: 10,
+    padding: 10,
+    marginTop: 10,
   },
   title: {
     color: '#fff',
     fontSize: 24,
     fontWeight: 'bold',
-    marginVertical: 20,
+    marginBottom: 20,
   },
   listItem: {
     flexDirection: 'row',
@@ -81,6 +97,16 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  barContainer: {
+    flex: 1,
+    height: 50,
+    marginHorizontal: 10,
+    backgroundColor: '#ccc',
+  },
+  bar: {
+    backgroundColor: '#f00',
+    width: '100%',
   },
 });
 

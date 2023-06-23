@@ -14,7 +14,7 @@ const LeaderboardScreen = ({ navigation }) => {
   const fetchLeaderboardData = async () => {
     setLoading(true);
     let leaderboardData = [];
-
+  
     const snapshot = await db.collection('leaderboard').get();
     snapshot.forEach((doc) => {
       let data = doc.data();
@@ -27,10 +27,28 @@ const LeaderboardScreen = ({ navigation }) => {
         totalWeight: data.totalWeight
       });
     });
-
-    setData(leaderboardData);
+  
+    let uniqueMaxWeightExercises = {};
+    let uniqueTotalWeightExercises = {};
+  
+    leaderboardData.forEach((item) => {
+      const exerciseName = item.exercise;
+      if (!uniqueMaxWeightExercises[exerciseName] || uniqueMaxWeightExercises[exerciseName].maxWeight < item.maxWeight) {
+        uniqueMaxWeightExercises[exerciseName] = item;
+      }
+      if (!uniqueTotalWeightExercises[exerciseName] || uniqueTotalWeightExercises[exerciseName].totalWeight < item.totalWeight) {
+        uniqueTotalWeightExercises[exerciseName] = item;
+      }
+    });
+  
+    setData({
+      maxWeight: Object.values(uniqueMaxWeightExercises),
+      totalWeight: Object.values(uniqueTotalWeightExercises)
+    });
+  
     setLoading(false);
   };
+  
 
   function backButtonHandler() {
     navigation.goBack();
@@ -60,17 +78,18 @@ const LeaderboardScreen = ({ navigation }) => {
           <>
             <Text style={styles.sectionHeader}>Max Weight</Text>
             <View>
-              {data.map((item) => renderListItemMaxWeight(item))}
+              {data.maxWeight.map((item) => renderListItemMaxWeight(item))}
             </View>
-
+  
             <Text style={styles.sectionHeader}>Total Weight Lifted</Text>
             <View>
-              {data.map((item) => renderListItemTotalWeight(item))}
+              {data.totalWeight.map((item) => renderListItemTotalWeight(item))}
             </View>
           </>
         );
     }
   }
+  
 
   const renderListItemMaxWeight = (item) => (
     <TouchableOpacity key={item.id + 'max'} onPress={() => handleExerciseSelectMaxWeight(item)}>
@@ -123,21 +142,20 @@ const LeaderboardScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F5F5F5',
-  },
-  scrollView: {
-    marginHorizontal: 20,
+    backgroundColor: '#010202',
   },
   loading: {
     marginTop: 50,
     fontSize: 20,
     textAlign: 'center',
+    color: '#FFF',
   },
   tabs: {
     flexDirection: 'row',
     marginVertical: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#D3D3D3',
+  },
+  noFriendsText: {
+    color: 'white',
   },
   tab: {
     flex: 1,
@@ -148,6 +166,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 10,
     margin: 5,
+    backgroundColor: '#333',
   },
   tabSelected: {
     flex: 1,
@@ -163,7 +182,7 @@ const styles = StyleSheet.create({
   tabText: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#333333',
+    color: '#FFF',
   },
   listItem: {
     flexDirection: 'row',
@@ -171,7 +190,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 15,
     borderRadius: 10,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#333',
     marginVertical: 5,
     shadowColor: '#000',
     shadowOffset: {
@@ -185,23 +204,24 @@ const styles = StyleSheet.create({
   userName: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#333333',
+    color: '#FFF',
   },
   exercise: {
     fontSize: 14,
-    color: '#666666',
+    color: '#87CEFA',
   },
   itemText: {
     fontSize: 14,
-    color: '#333333',
+    color: '#FFF',
   },
   sectionHeader: {
     fontSize: 20,
     fontWeight: 'bold',
     marginTop: 20,
     marginBottom: 5,
-    color: '#333333',
+    color: '#87CEFA',
   },
 });
+
 
 export default LeaderboardScreen;

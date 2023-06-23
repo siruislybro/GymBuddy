@@ -70,7 +70,7 @@ const LoginScreen = ({ navigation }) => {
             <Text style={styles.textInput}> EMAIL: </Text>
             <TextInput
                 style={styles.input}
-                onChangeText={setEmail}
+                onChangeText={(text) => setEmail(text.toLowerCase())}
                 value={email}
             />
             <Text style={styles.textInput}> PASSWORD: </Text>

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 import { db } from '../../firebase';
+import BackButton from '../../components/BackButton';
 
 const TotalWeightLeaderboardDetailsScreen = ({ route, navigation }) => {
   const { exercise } = route.params;
@@ -42,7 +43,7 @@ const TotalWeightLeaderboardDetailsScreen = ({ route, navigation }) => {
       <View style={styles.listItem}>
         <Text style={styles.rankText}>{index + 1}</Text>
         <Text style={styles.userNameText}>{item.userName}</Text>
-        <Text style={styles.itemText}>{item.totalWeight} kg</Text>
+        <Text style={styles.itemText}>{item.totalWeight} kg ({item.maxWeight} kg x {item.totalReps})</Text>
       </View>
     );
   };
@@ -57,6 +58,9 @@ const TotalWeightLeaderboardDetailsScreen = ({ route, navigation }) => {
 
   return (
     <View style={styles.container}>
+        <View>
+            <BackButton />
+        </View>
       <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
         <Text style={styles.backButtonText}>← Back</Text>
       </TouchableOpacity>

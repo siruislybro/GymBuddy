@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, FlatList, Dimensions } from 'react-native';
 import { db, auth } from '../firebase';
-import { LineChart } from 'react-native-chart-kit';
+import BackButton from '../components/BackButton';
+// import { LineChart } from 'react-native-chart-kit';
 
 const StatisticsDetailScreen = ({ route }) => {
   const [exercises, setExercises] = useState([]);
@@ -43,7 +44,10 @@ const StatisticsDetailScreen = ({ route }) => {
 
   return (
     <View style={styles.container}>
-        <LineChart
+        <View>
+            <BackButton />
+        </View>
+        {/* <LineChart
         data={chartData}
         width={Dimensions.get('window').width - 20} // from react-native
         height={220}
@@ -64,7 +68,7 @@ const StatisticsDetailScreen = ({ route }) => {
           marginVertical: 8,
           borderRadius: 16
         }}
-      />
+      /> */}
       <Text style={styles.title}>{exerciseName}</Text>
       <FlatList
         data={exercises}
