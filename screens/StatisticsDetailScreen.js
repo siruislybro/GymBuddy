@@ -2,36 +2,22 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, FlatList, Dimensions } from 'react-native';
 import { db, auth } from '../firebase';
 import BackButton from '../components/BackButton';
-// import { LineChart } from 'react-native-chart-kit';
 
 const StatisticsDetailScreen = ({ route }) => {
   const [exercises, setExercises] = useState([]);
   const { exerciseName } = route.params;
   const user = auth.currentUser;
 
-  const chartData = {
-    labels: ["January", "Feb", "March", "April"],
-    //exercises.map((exercise, index) => `Workout ${index + 1}`),
-    datasets: [
-      {
-        data: exercises.map(exercise => 
-          Math.max(...exercise.sets.map(set => set.weight))
-        ),
-      },
-    ],
-  };
-
   useEffect(() => {
     const fetchExerciseData = async () => {
       const docRef = db.collection('users').doc(user.uid).collection('workouts');
       const snapshot = await docRef.get();
       let exercises = [];
-
       snapshot.forEach(doc => {
         const workoutData = doc.data();
         workoutData.exercises.forEach(exercise => {
           if (exercise.name === exerciseName) {
-            exercises.push(exercise);
+            exercises.push({...exercise, createdAt: workoutData.createdAt}); // Include the creation time
           }
         });
       });
@@ -42,33 +28,12 @@ const StatisticsDetailScreen = ({ route }) => {
     fetchExerciseData();
   }, []);
 
+
   return (
     <View style={styles.container}>
-        <View>
+        <View style={styles.topBar}>
             <BackButton />
         </View>
-        {/* <LineChart
-        data={chartData}
-        width={Dimensions.get('window').width - 20} // from react-native
-        height={220}
-        yAxisLabel='Day'
-        xAxisLabel='kg'
-        chartConfig={{
-          backgroundColor: '#ffffff',
-          backgroundGradientFrom: '#ffffff',
-          backgroundGradientTo: '#ffffff',
-          decimalPlaces: 2, 
-          color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-          style: {
-            borderRadius: 16
-          }
-        }}
-        bezier
-        style={{
-          marginVertical: 8,
-          borderRadius: 16
-        }}
-      /> */}
       <Text style={styles.title}>{exerciseName}</Text>
       <FlatList
         data={exercises}
@@ -76,6 +41,8 @@ const StatisticsDetailScreen = ({ route }) => {
         renderItem={({ item, index }) => (
           <View style={styles.exerciseContainer}>
             <Text style={styles.header}>Workout {index + 1}</Text>
+            <Text style={styles.date}>{item.createdAt}</Text>
+
             {item.sets.map((set, setIndex) => (
               <View key={setIndex} style={styles.set}>
                 <Text style={styles.setText}>Set {setIndex + 1}: {set.reps} reps, {set.weight} kg</Text>
@@ -92,30 +59,47 @@ const StatisticsDetailScreen = ({ route }) => {
 const styles = StyleSheet.create({
     container: {
       flex: 1,
-      padding: 10,
+      padding: 20,
+      backgroundColor: '#010202',
     },
+    topBar: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: '#010202',
+        borderRadius: 10,
+        padding: 10,
+        marginTop: 10,
+      },
     title: {
       fontSize: 24,
       fontWeight: 'bold',
       marginBottom: 10,
+      color: '#fff',
     },
     exerciseContainer: {
-      backgroundColor: '#ddd',
-      borderRadius: 5,
-      padding: 15,
-      marginBottom: 10,
+      backgroundColor: '#2e2e2e',
+      borderRadius: 10,
+      padding: 20,
+      marginBottom: 20,
     },
-    exerciseHeader: {
+    header: {
       fontSize: 20,
       fontWeight: 'bold',
       marginBottom: 10,
+      color: '#fff',
     },
-    setContainer: {
+    date: {
+      fontSize: 16,
+      marginBottom: 10,
+      color: '#ccc',
+    },
+    set: {
       paddingLeft: 10,
       marginBottom: 5,
     },
     setText: {
       fontSize: 16,
+      color: '#fff',
     },
   });
 

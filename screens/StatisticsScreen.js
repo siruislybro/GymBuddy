@@ -49,9 +49,9 @@ const StatisticsScreen = () => {
             <View style={styles.listItem}>
               <Text style={styles.exerciseName}>{item[0]}</Text>
               <View style={styles.barContainer}>
-                <View style={{...styles.bar, height: `${(item[1]/maxCount)*100}%`}}/>
+                <View style={{...styles.bar, width: `${(item[1]/maxCount)*100}%`}}/>
               </View>
-              <Text style={styles.exerciseCount}>{item[1]} times</Text>
+              <Text style={styles.exerciseCount}>{item[1]} time(s)</Text>
             </View>
           </TouchableOpacity>
         )}
@@ -79,19 +79,21 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
+    marginLeft: 10,
   },
   listItem: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 10,
+    padding: 20,
     backgroundColor: '#2e2e2e',
     borderRadius: 10,
-    marginBottom: 10,
+    marginBottom: 20,
   },
   exerciseName: {
     color: '#fff',
     fontSize: 16,
+    width: '30%',
   },
   exerciseCount: {
     color: '#fff',
@@ -100,14 +102,17 @@ const styles = StyleSheet.create({
   },
   barContainer: {
     flex: 1,
-    height: 50,
+    height: 20,
     marginHorizontal: 10,
-    backgroundColor: '#ccc',
+    backgroundColor: '#666',
+    borderRadius: 10,
   },
   bar: {
-    backgroundColor: '#f00',
-    width: '100%',
+    backgroundColor: '#87CEFA',
+    height: '100%',
+    borderRadius: 10,
   },
 });
+
 
 export default StatisticsScreen;
