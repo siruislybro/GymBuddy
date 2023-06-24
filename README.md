@@ -165,6 +165,31 @@ We are developing a holistic mobile application that goes beyond tracking workou
 
 See the [open issues](https://github.com/github_username/repo_name/issues) for a full list of proposed features (and known issues).
 
+## Design
+
+### Software Architecture
+
+### Workflow
+&nbsp;
+<p align="center">
+  <img src="images/GymBuddyDesignDiagramsOverallFlow.jpg" alt="Overall Workflow">
+  <br>
+  <em>Overall Workflow</em>
+</p>
+&nbsp;
+<p align="center">
+  <img src="images/GymBuddyDesignDiagramsUserAuthentication.jpg" alt="Authentication Flow">
+  <br>
+  <em>Authentication Flow</em>
+</p>
+
+### Entity-Relationship Diagram
+&nbsp;
+<p align="center">
+  <img src="images/GymBuddyDesignDiagramsERDiagram.jpg" alt="ER Diagram">
+  <br>
+  <em>ER Diagram</em>
+</p>
 
 ## Timeline
 
