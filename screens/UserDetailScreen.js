@@ -17,13 +17,8 @@ const UserDetailScreen = ({ navigation, route }) => {
     const prompt = `My height is ${height}, my weight is ${weight}, I am able to workout ${numWorkouts} times per week, and my goal is to ${goal}. Generate a workout plan for me that includes weights.`;
     const maxTokens = 500; // Set the desired max number of tokens in the response
     const API_KEY = "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";
-    const { Configuration, OpenAIApi } = require("openai");
 
     console.log(API_KEY)
-
-    const configuration = new Configuration({
-      apiKey: API_KEY,
-    });
 
     const APIBODY = {
       model: "text-davinci-003",
@@ -92,13 +87,16 @@ const UserDetailScreen = ({ navigation, route }) => {
         value={height}
         onChangeText={setHeight}
         placeholderTextColor="#FFF"
+        keyboardType='numeric'
       />
+      <Text style={styles.unit}>cm</Text>
       <TextInput
         style={styles.input}
         placeholder="Weight"
         value={weight}
         onChangeText={setWeight}
         placeholderTextColor="#FFF"
+        keyboardType='numeric'
       />
       <View style={styles.dropdownContainer1}>
         <Text style={styles.label}>Goal</Text>
@@ -211,6 +209,10 @@ const styles = StyleSheet.create({
   },
   dropdownItemContainer: {
     zIndex: 9999,
+  },
+  unit: {
+    marginLeft: 5,
+    color: '#FFF',
   },
 });
 
