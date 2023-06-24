@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { ScrollView, Text, View } from 'react-native';
 import BackButton from '../components/BackButton';
 
 const RecommendedRoutineScreen = ({ route }) => {
@@ -7,13 +7,13 @@ const RecommendedRoutineScreen = ({ route }) => {
   const { recommendedRoutine } = route.params;
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <View style={styles.topBar}>
         <BackButton />
       </View>
       <Text style={styles.heading}>Recommended Routine</Text>
       <Text style={styles.routine}>{recommendedRoutine}</Text>
-    </View>
+    </ScrollView>
   );
 };
 

@@ -101,39 +101,43 @@ const UserDetailScreen = ({ navigation, route }) => {
       <View style={styles.dropdownContainer1}>
         <Text style={styles.label}>Goal</Text>
         <View style={styles.dropdownWrapper}>
-        <DropDownPicker
-            open={openGoal}
-            value={goal}
-            items={goalOptions}
-            setOpen={handleOpenGoalDropdown}
-            setValue={setGoal}
-            placeholder="Select Goal"
-            placeholderStyle={{ color: '#FFF' }}
-            containerStyle={styles.dropdown}
-            style={styles.dropdown}
-            dropDownStyle={styles.dropdown}
-            labelStyle={styles.dropdownLabel}
-            listItemContainerStyle={styles.dropdownItemContainer}
-          />
+          {openNumWorkouts ? null :
+            <DropDownPicker
+              open={openGoal}
+              value={goal}
+              items={goalOptions}
+              setOpen={handleOpenGoalDropdown}
+              setValue={setGoal}
+              placeholder="Select Goal"
+              placeholderStyle={{ color: '#FFF' }}
+              containerStyle={styles.dropdown}
+              style={styles.dropdown}
+              dropDownStyle={styles.dropdown}
+              labelStyle={styles.dropdownLabel}
+              listItemContainerStyle={styles.dropdownItemContainer}
+            />
+          }
         </View>
       </View>
       <View style={styles.dropdownContainer2}>
         <Text style={styles.label}>Number of Workouts per Week</Text>
         <View style={styles.dropdownWrapper}>
-          <DropDownPicker
-            open={openNumWorkouts}
-            value={numWorkouts}
-            items={numWorkoutsOptions}
-            setOpen={handleOpenNumWorkoutsDropdown}
-            setValue={setNumWorkouts}
-            placeholder="Select Number of Workouts"
-            placeholderStyle={{ color: '#FFF' }}
-            containerStyle={styles.dropdown}
-            style={styles.dropdown}
-            dropDownStyle={styles.dropdown}
-            labelStyle={styles.dropdownLabel}
-            listItemContainerStyle={styles.dropdownItemContainer}
-          />
+          {openGoal ? null :
+            <DropDownPicker
+              open={openNumWorkouts}
+              value={numWorkouts}
+              items={numWorkoutsOptions}
+              setOpen={handleOpenNumWorkoutsDropdown}
+              setValue={setNumWorkouts}
+              placeholder="Select Number of Workouts"
+              placeholderStyle={{ color: '#FFF' }}
+              containerStyle={styles.dropdown}
+              style={styles.dropdown}
+              dropDownStyle={styles.dropdown}
+              labelStyle={styles.dropdownLabel}
+              listItemContainerStyle={styles.dropdownItemContainer}
+            />
+          }
         </View>
       </View>
       <TouchableOpacity style={styles.button} onPress={handleSubmit}>
