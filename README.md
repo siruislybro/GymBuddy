@@ -188,11 +188,13 @@ See the [open issues](https://github.com/github_username/repo_name/issues) for a
   <em>ER Diagram</em>
 </p>
 
+## Software Engineering Practices 
 
-## Project Management
+### Project Management
 
 
-## Testing
+
+### Testing
 
 
 ## Timeline
@@ -234,7 +236,7 @@ Prototype Demo - Showcase of User Authentication and Quick Start Feature
 | UX Improvements | Improved the logic and aesthetic of the app | Si Rui,           Kin Tat | 26 June |          
 
 #### Milestone 2 - Poster Submission
-
+![Alt text](images/GymBuddyMilestone2Poster.png)
 #### Milestone 2 - Project Video 
 
 
