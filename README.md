@@ -53,34 +53,26 @@
 
 
 <!-- TABLE OF CONTENTS -->
-<details>
-  <summary>Table of Contents</summary>
-  <ol>
-    <li>
-      <a href="#about-the-project">Team Gym Connoisseurs</a>
-    <li>
-      <a href="#getting-started">About the project</a>
-      <ul>
-        <li><a href="#prerequisites">Motivation</a></li>
-        <li><a href="#installation">Objectives</a></li>
-      </ul>
-    </li>
-    <li><a href="#usage">User Story</a></li>
-    <li><a href="#roadmap">Features</a></li>
-    <li>
-      <a href="#contributing">Timeline</a>
-      <ul>
-        <li><a href="#prerequisites">Milestone 1 - Ideation (29 May)</a>
-        <ul>
-          <li><a href="#Poster Submission">Milestone 1 - Project Submission</a></li>
-        <li><a href="#Project Log">Milestone 1 - Project Log</a></li>
-        <li><a href="#Project Log">Milestone 1 - Project Video</a></li>
-      </ul>
-    <li><a href="#license">Milestone 2 - Prototype</a></li>
-    <li><a href="#contact">Milestone 3 - Extension</a></li>
-    <li><a href="#acknowledgments">Acknowledgments</a></li>
-  </ol>
-</details>
+## Table of Contents
+- [About The Project](#about-the-project)
+  - [Motivation](#motivation)
+  - [Objectives](#objectives)
+- [User Stories](#user-stories)
+- [Features](#features)
+  - [Workout Tracker](#workout-tracker)
+  - [Workout Routines](#workout-routines)
+  - [Workout Analysis](#workout-analysis)
+  - [Weight & Calorie Tracker](#weight--calorie-tracker)
+  - [Social Features](#social-features)
+- [Design](#design)
+  - [Software Architecture](#software-architecture)
+  - [Workflow](#workflow)
+  - [Entity-Relationship Diagram](#entity-relationship-diagram)
+- [Timeline](#timeline)
+  - [Milestone 1 - Ideation (Completed)](#milestone-1---ideation-29-may)
+  - [Milestone 1 - Ideation (Completed)](#milestone-1---ideation-29-may)
+  - [Milestone 2 - Prototype ](#miletsone)
+  - [Tech Stack](#tech-stack)
 
 
 
@@ -97,7 +89,6 @@ Proposed Level of Achievement: Apollo 11
 ## About The Project
 
 ### Motivation
-
 As fitness enthusiasts, we've always found tracking our workouts crucial in making consistent progress. It's not just about tracking duration or intensity; it's about seeing advancements in specific exercises and adjusting routines for optimal training. It keeps us accountable, gives a clear measure of our progress, and motivates us to push our limits. However, the challenge we've often encountered is the lack of convenience and personalization in existing workout apps.
 
 Drawing from our personal experiences and a desire to help others on their fitness journey, we envision an app that offers more than just workout tracking. Imagine an app that not only logs your fitness progress but also provides you with personalized workout routines tailored to your unique characteristics such as height, weight, and body type. Think of it as your personal trainer, guiding you step-by-step and helping you make sense of the vast world of fitness.
@@ -168,6 +159,12 @@ See the [open issues](https://github.com/github_username/repo_name/issues) for a
 ## Design
 
 ### Software Architecture
+&nbsp;
+<p align="center">
+  <img src="images/GymBuddyDesignDiagramsSoftwareArchitecture.jpg" alt="Software Architecture">
+  <br>
+  <em>Software Architecture </em>
+</p>
 
 ### Workflow
 &nbsp;
@@ -191,12 +188,19 @@ See the [open issues](https://github.com/github_username/repo_name/issues) for a
   <em>ER Diagram</em>
 </p>
 
+
+## Project Management
+
+
+## Testing
+
+
 ## Timeline
 
 ### Milestone 1 - Ideation (29 May)
 | Task                          | Description                                | Handled By                          | Complete By     |                                                                                                                                                   
 |-------------------------------|--------------------------------------------|-------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------|
-| System Design | Create a workable system and workflow | Si Rui,          Kin Tat | 17 May |                                        
+| System Design | Planned a workable system and workflow | Si Rui,          Kin Tat | 17 May |                                        
 | Familiarisation | Completed courses on React Native, Firebase etc.     | Si Rui,           Kin Tat            | 22 May  | 
 | Familiarise with React Native | Researched on optimal ways to implement React Native | Kin Tat  | 22 May                          |
 | Familiarise with Firebase | Researched on optimal ways to implement Firebase | Si Rui | 22 May | 
@@ -218,8 +222,24 @@ Prototype Demo - Showcase of User Authentication and Quick Start Feature
 <a href="https://drive.google.com/file/d/1mjbVRUisS3vfPTLoTEgFqM_g6A9ZXDwS/view?usp=sharing"><img src="images/Milestone1Thumbnail.png">
 </a>
 
+### Milestone 2 - Prototype (26 June)
+| Task                          | Description                                | Handled By                          | Complete By     |                                                                                                                                                   
+|-------------------------------|--------------------------------------------|-------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Setting up of database | Integrated app with FireStore NoSQL database | Si Rui | 4 June |  
+| API Implementation | Implemented Exercise API and OpenAI API | Si Rui,          Kin Tat | 10 June |                                        
+| Workout Tracker | Implementation of key feature     | Kin Tat            | 12 June  | 
+| Recommended Routine | Implementation of key feature | Si Rui  | 15 June                          |
+| Weight and Calorie tracker | Implementation of key feature | Si Rui | 22 June | 
+| Leaderboard  | Implementation of key feature | Kin Tat | 23 June           | 
+| UX Improvements | Improved the logic and aesthetic of the app | Si Rui,           Kin Tat | 26 June |          
 
-### Tech Stack
+#### Milestone 2 - Poster Submission
+
+#### Milestone 2 - Project Video 
+
+
+
+## Tech Stack
 
 <p align="center">
   <img src="images/GymBuddyTechStack.png" alt="Tech Stack">
