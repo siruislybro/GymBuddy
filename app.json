@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "FirebaseAuth",
-    "slug": "FirebaseAuth",
+    "name": "GymBuddy",
+    "slug": "GymBuddy",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -21,10 +21,16 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.siruisly.GymBuddy"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "9e2189d1-5002-4854-8b33-fd711c0f0c5b"
+      }
     }
   }
 }
