@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { StyleSheet, View, Text, Image, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { db, auth } from '../../../../firebase';
@@ -7,21 +7,9 @@ const ProfileScreen = ({ navigation }) => {
   const user = auth.currentUser;
   const email = user.email
   const username = "sr";
-
-  const [numFollowers, setNumFollowers] = useState(0);
-  const [numFollowing, setNumFollowing] = useState(0);
-
-  useEffect(() => {
-    const fetchFollowData = async () => {
-      const followersSnapshot = await db.collection('users').doc(user.uid).collection('followers').get();
-      const followingSnapshot = await db.collection('users').doc(user.uid).collection('following').get();
-      
-      setNumFollowers(followersSnapshot.size);
-      setNumFollowing(followingSnapshot.size);
-    }
-
-    fetchFollowData();
-  }, []);
+  const numWorkouts = 150;
+  const numFollowers = 200;
+  const numFollowing = 100;
   
   return (
     <View style={styles.container}>
@@ -38,7 +26,6 @@ const ProfileScreen = ({ navigation }) => {
         />
       </View>
       <Text style={styles.email}>{email}</Text>
-      <Text style={styles.stats}>Followers: {numFollowers}  Following: {numFollowing}</Text>
       <TouchableOpacity 
         style={styles.editProfileButton}
         onPress={() => navigation.navigate('EditProfileScreen')}
@@ -146,11 +133,6 @@ const styles = StyleSheet.create({
     height: '70%',
     marginBottom: 5, 
     resizeMode : 'contain',
-  },
-  stats: {
-    color: 'white',
-    fontSize: 16,
-    marginBottom: 20,
   },
 });
 
