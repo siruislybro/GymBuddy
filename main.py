@@ -2,6 +2,15 @@ from telegram import Update
 from telegram.ext import Updater, CommandHandler, CallbackContext
 from datetime import time
 import random
+import os
+from google.cloud import firestore
+
+# Set the environment variable for Firestore authentication
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"]="/path/to/your/serviceAccount.json"
+
+# Set up Firestore client
+db = firestore.Client()
+
 
 bot_token = "6114234628:AAHu-Us5-oVB1MOW5cvLXz1f3ppKbhrPCVo"
 bot_username = '@YourGymBuddyBot'
