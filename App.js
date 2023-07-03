@@ -8,8 +8,6 @@ import { StyleSheet } from 'react-native';
 import Colors from './colours/colors';
 import UserContext from './src/components/UserContext';
 import { WorkoutContext } from './src/components/WorkoutContext';
-import { auth, db } from './firebase';
-import Exercise from './models/Exercise';
 import AddExercisesScreen from './src/features/workoutTracker/screens/AddExercisesScreen';
 import CalendarScreen from './src/features/calander/screens/CalanderScreen';
 import CaloriesScreen from './src/features/calorieTracker/screens/CaloriesScreen';
@@ -17,6 +15,8 @@ import EditProfileScreen from './src/features/authentication/screens/EditProfile
 import ExerciseDetailsScreen from './src/features/workoutTracker/screens/ExerciseDetailsScreen';
 import ExerciseOverviewScreen from './src/features/workoutTracker/screens/ExerciseOverviewScreen';
 import HomeScreen from './src/features/authentication/screens/HomeScreen';
+import UserProfileScreen from './src/features/authentication/screens/UserProfileScreen';
+import WorkoutScreen from './src/features/workoutTracker/screens/WorkoutScreen';
 import LeaderboardScreen from './src/features/leaderboard/screens/LeaderboardScreen';
 import MaxWeightLeaderboardDetailsScreen from './src/features/leaderboard/screens/MaxWeightLeaderboardScreen';
 import TotalWeightLeaderboardDetailsScreen from './src/features/leaderboard/screens/TotalWeightLeaderboardScreen';
@@ -36,6 +36,8 @@ import WorkoutDetailScreen from './src/features/pastWorkouts/screens/WorkoutDeta
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
+export const FollowingContext = React.createContext();
+export const FollowersContext = React.createContext();
 
 const MainTabs = () => {
   return (
@@ -43,13 +45,14 @@ const MainTabs = () => {
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
+          size = focused ? 28 : 24;
 
           if (route.name === 'Home') {
             iconName = focused ? 'home' : 'home-outline';
-            size = focused ? 28 : 24;
           } else if (route.name === 'Profile') {
             iconName = focused ? 'person' : 'person-outline';
-            size = focused ? 28 : 24;
+          } else if (route.name === 'Workout') {
+            iconName = focused ? 'barbell' : 'barbell-outline'; // Change to the icon you want
           }
 
           return <Ionicons name={iconName} size={size} color={color} />;
@@ -57,9 +60,9 @@ const MainTabs = () => {
         tabBarActiveTintColor: '#c5e2fe',
         tabBarInactiveTintColor: '#c5e2fe',
       })}
-
     >
       <Tab.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
+      <Tab.Screen name="Workout" component={WorkoutScreen} options={{ headerShown: false }} /> 
       <Tab.Screen name="Profile" component={ProfileScreen} options={{ headerShown: false }} />
     </Tab.Navigator>
   );
@@ -67,12 +70,17 @@ const MainTabs = () => {
 
 
 
+
 export default function App() {
   const [isWorkoutActive, setWorkoutActive] = useState(false);
   const [workoutEnded, setWorkoutEnded] = useState(false);
   const [user, setUser] = useState(null);
+  const [following, setFollowing] = useState([]);
+  const [followers, setFollowers] = useState([]);
   return (
     <UserContext.Provider value={{ user, setUser }}>
+      <FollowingContext.Provider value={{ following, setFollowing }}>
+      <FollowersContext.Provider value={{ followers, setFollowers }}>     
       <WorkoutContext.Provider value={{
         isWorkoutActive,
         setWorkoutActive,
@@ -98,6 +106,11 @@ export default function App() {
               options={{ headerShown: false }}
               cardstyle={backgroundColor = Colors.buttonColor}
             />
+            <Stack.Screen
+              name="UserProfile"
+              component={UserProfileScreen}
+              options={{ headerShown: false }}
+            />            
             <Stack.Screen
               name="Sign Up"
               component={SignUpScreen}
@@ -204,6 +217,8 @@ export default function App() {
           <StatusBar style="light" />
         </NavigationContainer>
       </WorkoutContext.Provider>
+      </FollowersContext.Provider>
+      </FollowingContext.Provider>      
     </UserContext.Provider>
   );
 }

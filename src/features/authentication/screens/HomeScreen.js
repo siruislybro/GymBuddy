@@ -1,90 +1,94 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Linking } from 'react-native';
-import Colors from '../../../colours/colors';
-import TimerPopup from '../../../components/TimerPopup';
-import { WorkoutContext } from '../../../components/WorkoutContext';
-import { auth } from '../../../../firebase';
+import { View, Text, StyleSheet, Modal, TouchableOpacity, TextInput, FlatList } from 'react-native';
+import { db } from '../../../../firebase';
 import UserContext from '../../../components/UserContext';
-
+import Icon from 'react-native-vector-icons/FontAwesome';
+import Colors from '../../../colours/colors';
 
 const HomeScreen = ({ navigation, route }) => {
-  const { user } = useContext(UserContext); 
-  const { isWorkoutActive, setWorkoutActive, workoutEnded, setWorkoutEnded } = useContext(WorkoutContext);
+  const { user } = useContext(UserContext);
 
+  const [modalVisible, setModalVisible] = useState(false);
+  const [query, setQuery] = useState('');
+  const [users, setUsers] = useState([]);
+  const [filteredUsers, setFilteredUsers] = useState([]);
 
   useEffect(() => {
-    // If workoutEnded is true, remove the popup
-    if (route.params?.workoutEnded) {
-      setWorkoutActive(false);
-    }
-  }, [route.params?.workoutEnded]);
+    const fetchUsers = async () => {
+      const querySnapshot = await db.collection('users').get();
+      const usersData = querySnapshot.docs.map((doc) => doc.data().username);
+      setUsers(usersData);
+    };
 
-  const handleQuickStartPress = () => {
-    const exercises = [];
-    navigation.navigate('QuickStart', { exercises });
-    setWorkoutActive(true);
-    console.log('Quick Start pressed');
+    fetchUsers();
+  }, []);
+
+  useEffect(() => {
+    setFilteredUsers(filterUsers(query));
+  }, [query]);
+
+  const filterUsers = (query) => {
+    if (query === '') {
+      return [];
+    }
+
+    const lowerCaseQuery = query.toLowerCase();
+
+    return users.filter((user) => user.toLowerCase().includes(lowerCaseQuery));
   };
 
-  const handleStartRoutinePress = () => {
-    const hasAnsweredQuestions = false; // Replace this with the actual condition
-
-    if (hasAnsweredQuestions) {
-      navigation.navigate('RecommendedRoutineScreen');
-    } else {
-      navigation.navigate('UserDetail');
-    }
+  const navigateToUserProfile = (username) => {
+    navigation.navigate('UserProfile', { username });
+    setModalVisible(false);
   };
 
-  const handleSetRemindersPress = () => {
-    const botUsername = 'YourGymBuddyBot';
-    const telegramUrlApp = `tg://resolve?domain=${botUsername}`;
-    const telegramUrlWeb = `https://t.me/${botUsername}`;
-
-    Linking.canOpenURL(telegramUrlApp).then((supported) => {
-      if (supported) {
-        Linking.openURL(telegramUrlApp);
-      } else {
-        // If the Telegram app is not installed, open in web browser
-        Linking.openURL(telegramUrlWeb);
-      }
-    });
+  const renderUserItem = ({ item }) => {
+    return (
+      <TouchableOpacity
+        onPress={() => navigateToUserProfile(item)}
+        style={styles.autocompleteItem}>
+        <Text>{item}</Text>
+      </TouchableOpacity>
+    );
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.welcomeText}>Welcome {user?.username}!</Text>
-      <View style={styles.buttons}>
+      <View style={styles.header}>
+        <Text style={styles.welcomeText}>Home</Text>
         <TouchableOpacity
-          style={styles.button}
-          onPress={handleQuickStartPress}
-          activeOpacity={0.5}
-        >
-          <Text style={styles.buttonText}>Quick Start</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={handleStartRoutinePress}
-          activeOpacity={0.5}
-        >
-          <Text style={styles.buttonText}>Routines</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={handleSetRemindersPress}
-          activeOpacity={0.5}
-        >
-          <Text style={styles.buttonText}>Reminders</Text>
+          style={styles.searchIcon}
+          onPress={() => setModalVisible(true)}>
+          <Icon name="search" size={30} color="#000" />
         </TouchableOpacity>
       </View>
-      <TimerPopup
-        isVisible={isWorkoutActive}
-        onPress={() => {
-            setWorkoutEnded(false);
-            navigation.navigate('QuickStart');
-        }}
-        timerStart={new Date()}
-        />
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(!modalVisible)}>
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <TextInput
+              style={styles.input}
+              value={query}
+              onChangeText={(text) => setQuery(text)}
+              placeholder="Search for a user"
+            />
+            <FlatList
+              data={filteredUsers}
+              renderItem={renderUserItem}
+              keyExtractor={(item) => item}
+            />
+            <TouchableOpacity
+              style={{ ...styles.openButton, backgroundColor: '#2196F3' }}
+              onPress={() => setModalVisible(false)}>
+              <Text style={styles.textStyle}>Close</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -92,38 +96,71 @@ const HomeScreen = ({ navigation, route }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
     backgroundColor: Colors.bgColor,
   },
+  header: {
+    height: 60,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    backgroundColor: '#fff',
+    borderBottomWidth: 1,
+    borderBottomColor: '#ddd',
+  },
   welcomeText: {
-    color: 'white',
-    position: 'absolute',
-    top: 70,
-    left: 20,
-    fontSize: 24,
+    color: '#000',
+    fontSize: 20,
     fontWeight: 'bold',
   },
-  buttons: {
-    flexDirection: 'row',
-    flexDirection: 'column',
-    marginTop: 10,
-    alignItems: 'center',
+  searchIcon: {
+    padding: 5,
   },
-  button: {
-    backgroundColor: '#0484fb',
-    borderRadius: 10,
-    width: 200,
-    height: 50,
-    marginBottom: 20,
+  input: {
+    borderWidth: 1,
+    borderColor: '#ddd',
+    padding: 10,
+    marginBottom: 10,
+    borderRadius: 5,
+  },
+  centeredView: {
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    marginTop: 22,
   },
-  buttonText: {
-    textAlign: 'center',
+  modalView: {
+    margin: 20,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 35,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  openButton: {
+    backgroundColor: '#F194FF',
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+    marginTop: 15,
+  },
+  textStyle: {
     color: 'white',
-    fontSize: 15,
     fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  autocompleteItem: {
+    backgroundColor: 'lightgray',
+    padding: 10,
+    marginBottom: 5,
+    borderRadius: 5,
   },
 });
 

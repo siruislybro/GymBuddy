@@ -43,17 +43,22 @@ const SignUpScreen = ({ navigation }) => {
 
     const writeUserData = async (userId, name, email) => {
         const db = getFirestore();
-
+        const defaultProfilePic = '../../../assets/images/GYMAPP.jpg'; // Set the path to the default profile picture
+    
         try {
             await setDoc(doc(db, "users", userId), {
                 username: name,
                 email: email,
+                profile_picture: defaultProfilePic, // Add the profile_picture field
+                following: [], // Empty array for users the current user is following
+                followers: [], // Empty array for users who are following the current user
             });
             console.log('User data written to Firestore');
         } catch (error) {
             console.error('Error writing user data to Firestore: ', error);
         }
     }
+    
 
     return (
         <View style={styles.container}>

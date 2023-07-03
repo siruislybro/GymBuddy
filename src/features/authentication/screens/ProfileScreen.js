@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text, Image, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { db, auth } from '../../../../firebase';
@@ -8,24 +8,45 @@ const ProfileScreen = ({ navigation }) => {
   const email = user.email
   const username = "sr";
   const numWorkouts = 150;
-  const numFollowers = 200;
-  const numFollowing = 100;
+  const [numFollowers, setNumFollowers] = useState("loading...");
+  const [numFollowing, setNumFollowing] = useState("loading...");
+  const [profilePicture, setProfilePicture] = useState(null);
+
+  useEffect(() => {
+    // Fetch followers, following count, and profile picture from your database here
+    // Replace the following code with your own
+
+    db.collection('users').doc(user.uid).get().then(doc => {
+      const data = doc.data();
+      setNumFollowers(data.followers.length);
+      setNumFollowing(data.following.length);
+      setProfilePicture(data.profilePicture || '../../../assets/images/GYMAPP.jpg');
+    });
+  }, []);
   
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <Image
           style={styles.avatar}
-          source={require('../../../assets/images/GYMAPP.jpg')}
+          source={profilePicture ? {uri: profilePicture} : require('../../../assets/images/GYMAPP.jpg')}
         />
-        <Ionicons 
+        {/* <Ionicons 
           name="settings-outline"
           size={28} 
           color="white"
           style={styles.settings}
-        />
+        /> */}
       </View>
       <Text style={styles.email}>{email}</Text>
+      <View style={styles.followContainer}>
+        <Text style={styles.followText}>
+          Followers: {numFollowers}
+        </Text>
+        <Text style={styles.followText}>
+          Following: {numFollowing}
+        </Text>
+      </View>
       <TouchableOpacity 
         style={styles.editProfileButton}
         onPress={() => navigation.navigate('EditProfileScreen')}
@@ -80,9 +101,9 @@ const styles = StyleSheet.create({
   },
   avatar: {
     marginTop: 20,
-    width: 200,
-    height: 200,
-    borderRadius: 100,
+    width: 150,
+    height: 150,
+    borderRadius: 75,
   },
   settings: {
     position: 'absolute',
@@ -92,6 +113,17 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 16,
     marginBottom: 20,
+  },
+  followContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+    paddingHorizontal: 20,
+    marginBottom: 20,
+  },
+  followText: {
+    color: 'white',
+    fontSize: 16,
   },
   editProfileButton: {
     backgroundColor: 'lightgray',
