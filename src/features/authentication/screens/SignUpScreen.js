@@ -49,7 +49,7 @@ const SignUpScreen = ({ navigation }) => {
             await setDoc(doc(db, "users", userId), {
                 username: name,
                 email: email,
-                profile_picture: defaultProfilePic, // Add the profile_picture field
+                profilePicture: defaultProfilePic, // Add the profilePicture field
                 following: [], // Empty array for users the current user is following
                 followers: [], // Empty array for users who are following the current user
             });

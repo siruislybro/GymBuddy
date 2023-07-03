@@ -6,8 +6,6 @@ import { db, auth } from '../../../../firebase';
 const ProfileScreen = ({ navigation }) => { 
   const user = auth.currentUser;
   const email = user.email
-  const username = "sr";
-  const numWorkouts = 150;
   const [numFollowers, setNumFollowers] = useState("loading...");
   const [numFollowing, setNumFollowing] = useState("loading...");
   const [profilePicture, setProfilePicture] = useState(null);
@@ -15,22 +13,27 @@ const ProfileScreen = ({ navigation }) => {
   useEffect(() => {
     // Fetch followers, following count, and profile picture from your database here
     // Replace the following code with your own
-
+  
     db.collection('users').doc(user.uid).get().then(doc => {
       const data = doc.data();
       setNumFollowers(data.followers.length);
       setNumFollowing(data.following.length);
-      setProfilePicture(data.profilePicture || '../../../assets/images/GYMAPP.jpg');
+      if (data.profilePicture && data.profilePicture !== '') {
+        setProfilePicture(data.profilePicture);
+      } else {
+        setProfilePicture(null);
+      }
     });
   }, []);
+  
   
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Image
-          style={styles.avatar}
-          source={profilePicture ? {uri: profilePicture} : require('../../../assets/images/GYMAPP.jpg')}
-        />
+      <Image
+        style={styles.avatar}
+        source={profilePicture && profilePicture !== '' ? {uri: profilePicture} : require('../../../assets/images/GYMAPP.jpg')}
+      />
         {/* <Ionicons 
           name="settings-outline"
           size={28} 
