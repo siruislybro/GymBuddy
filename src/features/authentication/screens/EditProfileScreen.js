@@ -9,13 +9,13 @@ const EditProfileScreen = ({ navigation }) => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [profilePicture, setProfilePicture] = useState('');
+  const [profilePicture, setProfilePicture] = useState('../../../images/GYMAPP.jpg');
 
   useEffect(() => {
     setUsername(auth.currentUser.displayName);
     setEmail(auth.currentUser.email);
     // Default image URL if user doesn't have one
-    setProfilePicture(auth.currentUser.photoURL || '../../../assets/images/GYMAPP.jpg');
+    setProfilePicture(auth.currentUser.photoURL);
   }, []);
 
   const handleSave = async () => {
@@ -27,12 +27,15 @@ const EditProfileScreen = ({ navigation }) => {
         username: username,
         profilePicture: profilePicture,
       });
-
+    
       await user.updateProfile({
         displayName: username,
         photoURL: profilePicture
       });
+    
+      await user.reload();
     }
+    
     
     if (email) {
       await user.updateEmail(email);

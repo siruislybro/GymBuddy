@@ -5,10 +5,10 @@ import { db, auth } from '../../../../firebase';
 
 const ProfileScreen = ({ navigation }) => { 
   const user = auth.currentUser;
-  const email = user.email
+  const email = user.email;
   const [numFollowers, setNumFollowers] = useState("loading...");
   const [numFollowing, setNumFollowing] = useState("loading...");
-  const [profilePicture, setProfilePicture] = useState(null);
+  const [profilePicture, setProfilePicture] = useState('../../../images/GYMAPP.jpg');
 
   useEffect(() => {
     // Fetch followers, following count, and profile picture from your database here
@@ -24,8 +24,7 @@ const ProfileScreen = ({ navigation }) => {
         setProfilePicture(null);
       }
     });
-  }, []);
-  
+  }, [profilePicture]);  
   
   return (
     <View style={styles.container}>

@@ -43,7 +43,7 @@ const SignUpScreen = ({ navigation }) => {
 
     const writeUserData = async (userId, name, email) => {
         const db = getFirestore();
-        const defaultProfilePic = '../../../assets/images/GYMAPP.jpg'; // Set the path to the default profile picture
+        const defaultProfilePic = '../../../images/GYMAPP.jpg'; // Set the path to the default profile picture
     
         try {
             await setDoc(doc(db, "users", userId), {
