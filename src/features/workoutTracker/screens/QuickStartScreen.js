@@ -14,6 +14,7 @@ import firebase from 'firebase/compat';
 const QuickStartScreen = ({ navigation, route }) => {
   const nav = useNavigation();
   const user = auth.currentUser;
+  const [startTime, setStartTime] = useState(null);
   const [workoutName, setWorkoutName] = useState('');
   const [exercises, setExercises] = useState(
     route.params?.exercises || [{ name: 'Exercise 1', sets: [{ weight: '', reps: '' }] }]
@@ -84,7 +85,7 @@ const QuickStartScreen = ({ navigation, route }) => {
     } catch (error) {
       console.error('Error writing document: ', error);
     }
-};
+  };
 
 
   const handleWeightChange = (text, exerciseIndex, setIndex) => {

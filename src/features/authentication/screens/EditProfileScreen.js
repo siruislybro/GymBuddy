@@ -9,16 +9,17 @@ const EditProfileScreen = ({ navigation }) => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [profilePicture, setProfilePicture] = useState('../../../images/GYMAPP.jpg');
+  const [profilePicture, setProfilePicture] = useState('../../../assets/images/GYMAPP.jpg');
 
   useEffect(() => {
     setUsername(auth.currentUser.displayName);
     setEmail(auth.currentUser.email);
     // Default image URL if user doesn't have one
-    setProfilePicture(auth.currentUser.photoURL);
+    setProfilePicture(auth.currentUser.profilePicture);
   }, []);
 
   const handleSave = async () => {
+    console.log("EditProfileScreen");
     const user = auth.currentUser;
     const db = getFirestore();
 

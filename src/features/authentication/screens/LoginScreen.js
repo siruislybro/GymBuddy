@@ -34,16 +34,18 @@ const LoginScreen = ({ navigation }) => {
                 alert("Error! Access to this account has been temporarily disabled due to many failed login attempts. Please try again later")
             }
             else {
-          alert(error.message);
+            alert(error.message);
             }
             return false;
         }
       };
       
       const fetchUsernameAndNavigate = async (email) => {
+        console.log("Login Screen 1");
         const db = getFirestore();
         const usersRef = collection(db, "users");
         const q = query(usersRef, where("email", "==", email));
+        console.log("login screen 2");
       
         const querySnapshot = await getDocs(q);
         querySnapshot.forEach((doc) => {
@@ -52,6 +54,7 @@ const LoginScreen = ({ navigation }) => {
           console.log("Username:", username);
           
           setUser({ username, email }); // Update user context
+          console.log("Login screen 3");
           
           navigation.navigate('MainTabs', 
             {screen: "Home" , params: 

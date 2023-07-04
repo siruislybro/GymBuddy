@@ -4,7 +4,7 @@ import DatePicker from 'react-native-datepicker';
 import { db, auth } from '../../../../firebase'; // Import Firebase configuration
 import BackButton from '../../../components/BackButton';
 
-const PastWorkoutsScreen = ({navigation}) => {
+const PastWorkoutsScreen = ({ navigation }) => {
   const [pastWorkouts, setPastWorkouts] = useState([]);
 
   useEffect(() => {
