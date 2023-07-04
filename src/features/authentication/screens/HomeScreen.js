@@ -181,7 +181,7 @@ const HomeScreen = ({ navigation, route }) => {
       <FlatList
         data={followedWorkouts}
         renderItem={renderFollowedWorkouts}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item, index) => `${item.id}_${index}`}
       />
     </View>
   );
