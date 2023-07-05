@@ -42,11 +42,21 @@ const HomeScreen = ({ navigation, route }) => {
 
   // Fetch all users
   const fetchUsers = async () => {
-    const querySnapshot = await db.collection('users').get();
-    const usersData = querySnapshot.docs.map((doc) => doc.data().username);
-    setUsers(usersData);
-    console.log("Home Screen 1");
+    console.log("DB Object:", db);
+    try {
+      console.log('Before querying Firestore');
+      const querySnapshot = await db.collection('users').get();
+      console.log('After querying Firestore');      
+      const usersData = querySnapshot.docs.map((doc) => doc.data().username);
+      console.log("No error at usersData");
+      setUsers(usersData);
+      console.log("Home Screen 1");
+    } catch (error) {
+      console.error('Error fetching users:', error);
+      // Handle the error or display an error message to the user
+    }
   };
+  
 
   // Fetch followed users and their workouts
   const fetchFollowedUsers = async () => {

@@ -27,6 +27,7 @@ import PastWorkoutsScreen from './src/features/pastWorkouts/screens/PastWorkouts
 import ProfileScreen from './src/features/authentication/screens/ProfileScreen';
 import QuickStartScreen from './src/features/workoutTracker/screens/QuickStartScreen';
 import RecommendedRoutineScreen from './src/features/routines/screens/RecommendedRoutineScreen';
+import RecommendedCaloriesScreen from './src/features/calorieTracker/screens/RecommendedCalories';
 import SignUpScreen from './src/features/authentication/screens/SignUpScreen';
 import StartScreen from './src/features/authentication/screens/StartScreen';
 import StatisticsDetailScreen from './src/features/pastWorkouts/screens/StatisticsDetailScreen';
@@ -170,6 +171,11 @@ export default function App() {
             <Stack.Screen
               name="MeasurementsScreen"
               component={MeasurementScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="RecommendedCalories"
+              component={RecommendedCaloriesScreen}
               options={{ headerShown: false }}
             />
             <Stack.Screen

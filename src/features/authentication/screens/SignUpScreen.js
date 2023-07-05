@@ -8,6 +8,23 @@ const SignUpScreen = ({ navigation }) => {
     const [password, setPassword] = useState('');
     const [name, setName] = useState('');
 
+    const writeUserData = async (userId, name, email) => {
+        const defaultProfilePic = '../../../assets/images/GYMAPP.jpg'; 
+        // Set the path to the default profile picture
+        try {
+            await db.collection('users').doc(userId).set({
+                username: name,
+                email: email,
+                profilePicture: defaultProfilePic,
+                following: [],
+                followers: [],
+            });
+            console.log('User data written to Firestore');
+            } catch (error) {
+            console.error('Error writing user data to Firestore: ', error);
+            }
+    };
+
     const checkIfUsernameExists = async (username) => {
         const userRef = db.collection("users");
         const query = userRef.where("username", "==", username);
@@ -57,22 +74,7 @@ const SignUpScreen = ({ navigation }) => {
         });
     }
 
-    const writeUserData = async (userId, name, email) => {
-        
-        const defaultProfilePic = '../../../assets/images/GYMAPP.jpg'; // Set the path to the default profile picture
-        try {
-            await db.collection('users').doc(userId).set({
-              username: name,
-              email: email,
-              profilePicture: defaultProfilePic,
-              following: [],
-              followers: [],
-            });
-            console.log('User data written to Firestore');
-          } catch (error) {
-            console.error('Error writing user data to Firestore: ', error);
-          }
-        };
+
 
     return (
         <View style={styles.container}>

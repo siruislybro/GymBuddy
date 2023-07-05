@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, Text, TextInput, FlatList, Button } from 'react-native';
 import DatePicker from 'react-native-datepicker';
+import { auth } from '../../../../firebase';
+import BackButton from '../../../components/BackButton';
+import { getFirestore, doc, updateDoc, setDoc } from '@firebase/firestore';
 
 const MeasurementScreen = ({navigation}) => {
   function backButtonHandler() {
@@ -11,7 +14,9 @@ const MeasurementScreen = ({navigation}) => {
   const [weight, setWeight] = useState('');
   const [measurements, setMeasurements] = useState([]);
 
-  const addMeasurement = () => {
+  const addMeasurement = async () => {
+    const user = auth.currentUser;
+    const db = getFirestore();
     setMeasurements(prevMeasurements => [
       ...prevMeasurements, 
       { date: date.toString(), height, weight, id: Math.random().toString() }
@@ -19,6 +24,10 @@ const MeasurementScreen = ({navigation}) => {
     setDate(new Date());
     setHeight('');
     setWeight('');
+    await setDoc(doc(db, 'users', user.uid, 'userDetails', 'details'), {
+      height: height,
+      weight: weight,
+    });
   };
 
   return (
