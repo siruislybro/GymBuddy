@@ -1,0 +1,42 @@
+├── GYMBUDDY
+    ├── App.js
+    ├── app.json
+    ├── assets
+    ├── babel.config.js
+    ├── eas.json
+    ├── firebase.js
+    ├── index.js
+    ├── main.py
+    ├── metro.config.js
+    ├── package-lock.json
+    ├── package.json
+    ├── README.md
+    ├── serviceAccountKey.json
+    ├── src
+    |  ├── assets
+    |  |  ├── images
+    |  ├── colours
+    |  ├── components
+    |  └── features
+    |     ├── authentication
+    |     |  └── screens
+    |     ├── calander
+    |     |  └── screens
+    |     ├── calorieTracker
+    |     |  └── screens
+    |     ├── leaderboard
+    |     |  └── screens
+    |     ├── measurementsTracker
+    |     |  └── screens
+    |     ├── pastWorkouts
+    |     |  └── screens
+    |     ├── routines
+    |     |  └── screens
+    |     ├── telegramBot
+    |     |  └── screens
+    |     └── workoutTracker
+    |        └── screens
+    └── __tests__
+
+
+
