@@ -20,6 +20,26 @@ const HomeScreen = ({ navigation, route }) => {
   useEffect(() => { fetchFollowedUsers(); }, []);  
   useEffect(() => { setFilteredUsers(filterUsers(query)); }, [query]);
 
+  // Format duration of workout
+  const formatDuration = (duration) => {
+    const hours = Math.floor(duration / 3600);
+    const minutes = Math.floor((duration % 3600) / 60);
+    const seconds = duration % 60;
+  
+    let formattedDuration = "";
+    if (hours > 0) {
+      formattedDuration += `${hours} hour${hours > 1 ? "s" : ""} `;
+    }
+    if (minutes > 0) {
+      formattedDuration += `${minutes} minute${minutes > 1 ? "s" : ""} `;
+    }
+    if (seconds > 0) {
+      formattedDuration += `${seconds} second${seconds > 1 ? "s" : ""}`;
+    }
+  
+    return formattedDuration.trim();
+  };
+
   // Fetch all users
   const fetchUsers = async () => {
     const querySnapshot = await db.collection('users').get();
@@ -109,8 +129,9 @@ const HomeScreen = ({ navigation, route }) => {
         {workout.exercises && workout.exercises.slice(0, 1).map((exercise, exerciseIndex) => (
           <View key={exerciseIndex}>
             <Text style={styles.exerciseName}>{exercise.name}</Text>
-            <Text style={styles.exerciseDuration}>Duration: {exercise.duration}</Text>
-  
+            <Text style={styles.exerciseDuration}>
+              Duration: {formatDuration(workout.duration)}
+            </Text>
             {exercise.sets && exercise.sets.map((set, setIndex) => (
               <View key={setIndex} style={styles.setContainer}>
                 <Text style={styles.setText}>Set {setIndex + 1}:</Text>
