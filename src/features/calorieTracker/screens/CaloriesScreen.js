@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, ActivityIndicator, TextInput, StyleSheet, Button, ScrollView, TouchableOpacity } from 'react-native';
 import axios from 'axios';
 import BackButton from '../../../components/BackButton';
-import { doc, getDoc, setDoc, updateDoc, Timestamp } from 'firebase/firestore';
+import { doc, getDoc, setDoc, updateDoc, Timestamp, arrayUnion } from 'firebase/firestore';
 import { db, auth } from '../../../../firebase';
 
 const CaloriesScreen = ( {navigation} ) => {
@@ -12,6 +12,7 @@ const CaloriesScreen = ( {navigation} ) => {
   const [recommendedCalories, setRecommendedCalories] = useState(null);
   const [manualCalories, setManualCalories] = useState('');
   const [currentCalories, setCurrentCalories] = useState(0);
+  const [foodLog, setFoodLog] = useState([]);
   const [lastUpdated, setLastUpdated] = useState(null);
   const user = auth.currentUser;
  
@@ -29,25 +30,24 @@ useEffect(() => {
       if (docSnap.exists()) {
         const data = docSnap.data();
         setRecommendedCalories(data.recommended);
-
+        
         const today = new Date();
         today.setHours(0, 0, 0, 0);
         const todayTimestamp = Timestamp.fromDate(today);
-        console.log(todayTimestamp);
 
         if (data.lastUpdated && data.lastUpdated.toDate() < today) {
           setCurrentCalories(0);
           setLastUpdated(todayTimestamp);
+          setFoodLog([]);
           await updateDoc(doc(db, 'users', user.uid, 'nutrition', 'calories'), {
             current: 0,
-            lastUpdated: todayTimestamp
+            lastUpdated: todayTimestamp,
+            foodLog: []
           });
-        } else if (data.current) {
-          setCurrentCalories(data.current);
-          setLastUpdated(data.lastUpdated ? data.lastUpdated.toDate() : null);
         } else {
-          setCurrentCalories(0);
-          setLastUpdated(null);
+          setCurrentCalories(data.current ? data.current : 0);
+          setLastUpdated(data.lastUpdated ? data.lastUpdated.toDate() : null);
+          setFoodLog(data.foodLog ? data.foodLog : []);
         }
       }
     } catch (error) {
@@ -57,9 +57,6 @@ useEffect(() => {
 
   fetchCaloriesData();
 }, []);
-
-
-
   
     // Fetch recommended calories from Firestore
     useEffect(() => {
@@ -92,13 +89,43 @@ useEffect(() => {
       }
     }
 
-    const handleItemPress = async (calories) => {
-      const newCurrent = currentCalories + calories;
+    const handleItemPress = async (item) => {
+      // Make sure the item object has the necessary properties
+      if (!item || item.name === undefined || item.calories === undefined) {
+        console.error("Invalid item:", item);
+        return;
+      }
+    
+      const newCurrent = currentCalories + item.calories;
+      const logEntry = { name: item.name, calories: item.calories, timestamp: new Date().getTime() };
       setCurrentCalories(newCurrent);
       await updateDoc(doc(db, 'users', user.uid, 'nutrition', 'calories'), {
-        current: newCurrent
+        current: newCurrent,
+        foodLog: arrayUnion(logEntry)
       });
+      setFoodLog(prevLog => [...prevLog, logEntry]);
     }
+    
+    
+    const renderFoodLogItem = ({item, index}) => {
+      let timestamp = item.timestamp ? new Date(item.timestamp).toLocaleString() : "Invalid Date";
+      return (
+        <View key={item.name.toString() + index} style={styles.foodLogItemContainer}>
+          <Text style={styles.foodLogItemName}>{item.name}</Text>
+          <Text style={styles.foodLogItemCalories}>Calories: {parseFloat(item.calories).toFixed(1)}</Text>
+          <Text style={styles.foodLogItemTime}>{new Date(item.timestamp).toLocaleTimeString()}</Text>
+        </View>
+      );
+    };
+
+    const renderSearchResultItem = ({ item, index }) => {
+      return (
+        <TouchableOpacity key={item.name.toString() + index} style={styles.foodLogItemContainer} onPress={() => handleItemPress(item)}>
+          <Text style={styles.foodLogItemName}>{item.name}</Text>
+          <Text style={styles.foodLogItemCalories}>Calories: {parseFloat(item.calories).toFixed(1)}</Text>
+        </TouchableOpacity>
+      );
+    };
 
   const fetchRecipes = async () => {
     setLoading(true);
@@ -150,9 +177,9 @@ useEffect(() => {
       </View>
       {recommendedCalories ? (
         <View>
-          <Text style={styles.title}>Recommended Daily Calories: {recommendedCalories}</Text>
-          <Text style={styles.title}>Current Calories: {currentCalories}</Text>
-          <Text style={styles.title}>Calories Left: {recommendedCalories - currentCalories}</Text>
+          <Text style={styles.title}>Recommended Daily Calories: {parseFloat(recommendedCalories).toFixed(1)}</Text>
+          <Text style={styles.title}>Current Calories: {parseFloat(currentCalories).toFixed(1)}</Text>
+          <Text style={styles.title}>Calories Left: {parseFloat(recommendedCalories - currentCalories).toFixed(1)}</Text>
         </View>
       ) : (
         <View>
@@ -167,17 +194,23 @@ useEffect(() => {
           <Button title="Know Your Calories" onPress={knowYourCalories} />
         </View>
       )}
+        <FlatList
+          data={foodLog}
+          keyExtractor={(item, index) => item.name.toString() + index}
+          renderItem={({ item }) => (
+            <View style={styles.foodLogItemContainer}>
+              <Text style={styles.foodLogItemName}>{item.name}</Text>
+              <Text style={styles.foodLogItemCalories}>Calories: {parseFloat(item.calories).toFixed(1)}</Text>
+              <Text style={styles.foodLogItemTime}>{new Date(item.timestamp).toLocaleTimeString()}</Text>
+            </View>
+          )}
+        />
       <Text style={styles.title}>Calories</Text>
       {recipes.length > 0 ? (
         <FlatList
           data={recipes}
           keyExtractor={(item) => item.name.toString()}
-          renderItem={({ item }) => (
-            <TouchableOpacity style={styles.itemContainer} onPress={() => handleItemPress(item.calories)}>
-              <Text style={styles.itemName}>{item.name}</Text>
-              <Text style={styles.itemCalories}>Calories: {item.calories}</Text>
-            </TouchableOpacity>
-          )}
+          renderItem={renderSearchResultItem}
         />
       ) : (
         <Text style={styles.noResults}>No results found.</Text>
@@ -190,7 +223,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: '#FAFAFA',
   },
   loadingContainer: {
     flex: 1,
@@ -200,19 +233,34 @@ const styles = StyleSheet.create({
   searchContainer: {
     flexDirection: 'row',
     marginBottom: 16,
+    backgroundColor: 'white',
+    borderRadius: 30,
+    paddingHorizontal: 15,
+    alignItems: 'center'
   },
   searchInput: {
     flex: 1,
     borderColor: '#DDD',
     borderWidth: 1,
     padding: 10,
-    borderRadius: 5,
+    borderRadius: 30,
+    marginRight: 10,
+    color: 'black'
   },
-  itemContainer: {
+  title: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#4caf50',
+    marginVertical: 10
+  },
+  foodLogItemContainer: {
     backgroundColor: 'white',
-    padding: 16,
-    borderRadius: 5,
-    marginBottom: 16,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 10,
+    borderRadius: 10,
+    marginVertical: 8,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -222,15 +270,24 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
   },
-  itemName: {
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  itemCalories: {
+  foodLogItemName: {
     fontSize: 16,
+    fontWeight: '500',
+    color: 'black'
+  },
+  foodLogItemCalories: {
+    fontSize: 14,
+    color: 'black'
+  },
+  foodLogItemTime: {
+    fontSize: 14,
+    color: 'gray'
   },
   noResults: {
     textAlign: 'center',
+    fontSize: 18,
+    color: '#4caf50',
+    marginTop: 20
   },
 });
 
