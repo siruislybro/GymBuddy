@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext, } from 'react';
-import { View, Button, StyleSheet, FlatList, Text, TextInput, TouchableOpacity, Alert,} from 'react-native';
+import { View, Button, StyleSheet, FlatList, Text, TextInput, TouchableOpacity, Alert, Modal} from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import BackButton from '../../../components/BackButton';
@@ -10,6 +10,8 @@ import 'react-native-get-random-values';
 import { WorkoutContext } from '../../../components/WorkoutContext';
 import UserContext from '../../../components/UserContext';
 import firebase from 'firebase/compat';
+import { Ionicons } from '@expo/vector-icons';
+
 
 const QuickStartScreen = ({ navigation, route }) => {
   const nav = useNavigation();
@@ -21,16 +23,47 @@ const QuickStartScreen = ({ navigation, route }) => {
 
   const { setWorkoutActive, setWorkoutEnded } = useContext(WorkoutContext);
   const [duration, setDuration] = useState(0);
+  const [restTime, setRestTime] = useState(60);
+  const [restInterval, setRestInterval] = useState(null);
+  const [isTimerModalVisible, setIsTimerModalVisible] = useState(false);
 
+
+
+  // Decrement rest time every second.
   useEffect(() => {
-    const timer = setInterval(() => {
-      setDuration((prevDuration) => prevDuration + 1);
-    }, 1000);
+    if (restTime > 0 && restInterval) {
+      const id = setInterval(() => {
+        setRestTime((restTime) => restTime - 1);
+      }, 1000);
+      return () => clearInterval(id);
+    } else if (restTime === 0 && restInterval) {
+      clearInterval(restInterval);
+      setRestInterval(null);
+    }
+  }, [restTime, restInterval]);
 
-    return () => {
-      clearInterval(timer);
+    // Handlers for rest timer.
+    const handleRestStart = () => {
+      const id = setInterval(() => {
+        setRestTime((restTime) => restTime - 1);
+      }, 1000);
+      setRestInterval(id);
     };
-  }, []);
+  
+    const handleRestEnd = () => {
+      clearInterval(restInterval);
+      setRestInterval(null);
+      setRestTime(60); // Reset timer.
+      setIsTimerModalVisible(false);
+    };
+  
+    const handleRestIncrease = () => {
+      if (restTime < 600) setRestTime((restTime) => restTime + 30); // Limit to 10 mins.
+    };
+  
+    const handleRestDecrease = () => {
+      if (restTime > 30) setRestTime((restTime) => restTime - 30); // Limit to 30 seconds.
+    };
 
   useEffect(() => {
     if (route.params?.newExercise) {
@@ -58,14 +91,6 @@ const QuickStartScreen = ({ navigation, route }) => {
     })();
   }, []);
 
-  const formatDuration = () => {
-    const hours = Math.floor(duration / 3600);
-    const minutes = Math.floor((duration % 3600) / 60);
-    const seconds = duration % 60;
-
-    return `${hours < 10 ? '0' + hours : hours}:${minutes < 10 ? '0' + minutes : minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
-  };
-
   const storeData = async (key, value) => {
     try {
       const jsonValue = JSON.stringify(value);
@@ -90,7 +115,7 @@ const QuickStartScreen = ({ navigation, route }) => {
 
   const saveToFirestore = async (exercises, workoutName, duration) => {
     const currentDate = new Date().toLocaleString();
-    const workoutId = uuidv4();
+    const workoutId = `${user.uid}-${workoutName}-${Date.now()}`;
     const docRef = db
       .collection('users')
       .doc(user.uid)
@@ -103,6 +128,8 @@ const QuickStartScreen = ({ navigation, route }) => {
       console.error('Error writing document: ', error);
     }
   };
+  
+  
 
 
   const handleWeightChange = (text, exerciseIndex, setIndex) => {
@@ -228,6 +255,11 @@ const endWorkout = async () => {
     return;
   }
 
+  if (!workoutName || workoutName.trim() === '') {
+    alert('Please enter a workout name before ending the workout.');
+    return;
+  }
+
   for (let exercise of exercises) {
     for (let set of exercise.sets) {
       if (set.weight === '' ||  set.reps === '') {
@@ -263,19 +295,17 @@ const endWorkout = async () => {
 
 
 
-  const cancelWorkout = async () => {
-    setWorkoutActive(false);
-    setWorkoutEnded(true);
-    setExercises([]);
-    setWorkoutName('');
-    try {
-      await AsyncStorage.removeItem('@workout');
-      await AsyncStorage.removeItem('@workoutName');
-    } catch (error) {
-      console.error(error);
-    }
-    navigation.goBack();
-  };
+const cancelWorkout = async () => {
+  setWorkoutActive(false);
+  setWorkoutEnded(true);
+  setExercises([]);
+  setWorkoutName('');
+  setDuration(0);
+  await AsyncStorage.removeItem('@workout');
+  await AsyncStorage.removeItem('@workoutName');
+  nav.navigate('Home', { userName: user.displayName });
+};
+
 
   
   const resetWorkout = async () => {
@@ -296,6 +326,36 @@ const endWorkout = async () => {
             onChangeText={setWorkoutName}
           />
         </View>
+        {/* Timer Icon which opens the Timer Modal */}
+        <TouchableOpacity onPress={() => setIsTimerModalVisible(true)}>
+          <Ionicons name="timer" size={32} color="white" />
+        </TouchableOpacity>
+
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={isTimerModalVisible}
+          onRequestClose={() => setIsTimerModalVisible(false)}
+        >
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <View style={styles.timerContainer}>
+                <Text>Rest Timer: {restTime}</Text>
+                  <Button title="-30s" onPress={handleRestDecrease} />
+                  <Button title="+30s" onPress={handleRestIncrease} />
+                  <Button title="Start" onPress={handleRestStart} />
+                  <Button title="End" onPress={handleRestEnd} />
+                </View>
+                
+                <TouchableOpacity
+                  style={styles.closeButton}
+                  onPress={() => setIsTimerModalVisible(false)}
+                >
+            <Text style={styles.textStyle}>Close</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </Modal>
 
       </View>
       <FlatList
@@ -411,6 +471,48 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginTop: 20,
+  },
+  timerContainer: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    padding: 20,
+    backgroundColor: '#eee',
+    zIndex: 999, // To ensure the timer is visible on top of other elements.
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+    width: '50%',
+    height: '50%',
+  },
+  closeButton: {
+    backgroundColor: "#2196F3",
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2
+  },
+  textStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center"
   },
 });
 

@@ -34,7 +34,7 @@ useEffect(() => {
         const today = new Date();
         today.setHours(0, 0, 0, 0);
         const todayTimestamp = Timestamp.fromDate(today);
-
+        
         if (data.lastUpdated && data.lastUpdated.toDate() < today) {
           setCurrentCalories(0);
           setLastUpdated(todayTimestamp);
@@ -44,7 +44,8 @@ useEffect(() => {
             lastUpdated: todayTimestamp,
             foodLog: []
           });
-        } else {
+        }
+         else {
           setCurrentCalories(data.current ? data.current : 0);
           setLastUpdated(data.lastUpdated ? data.lastUpdated.toDate() : null);
           setFoodLog(data.foodLog ? data.foodLog : []);
