@@ -1,15 +1,70 @@
 import React, { useState, useEffect } from 'react';
 import { ScrollView, View, Text, TouchableOpacity, StyleSheet, Button, SafeAreaView } from 'react-native';
-import { db } from '../../../../firebase';
+import { db, auth } from '../../../../firebase';
 
 const LeaderboardScreen = ({ navigation }) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedTab, setSelectedTab] = React.useState('Global');
+  const user = auth.currentUser;
 
   useEffect(() => {
-    fetchLeaderboardData();
-  }, []);
+    if (selectedTab === 'Global') {
+      fetchLeaderboardData();
+    } else if (selectedTab === 'Friends') {
+      fetchFriendsData();
+    }
+  }, [selectedTab]);
+
+  const fetchFriendsData = async () => {
+    setLoading(true);
+    let leaderboardData = [];
+  
+    // get the current user's following array
+    const userSnapshot = await db.collection('users').doc(user.uid).get();
+    const followingArray = userSnapshot.data().following;
+  
+    const snapshot = await db.collection('leaderboard').get();
+    snapshot.forEach((doc) => {
+      let data = doc.data();
+      
+      // check if the userName is in the following array
+      if (followingArray.includes(data.userName)) {
+        leaderboardData.push({
+          id: doc.id,
+          userName: data.userName,
+          exercise: data.exercise,
+          maxWeight: data.maxWeight,
+          totalReps: data.totalReps,
+          totalWeight: data.totalWeight
+        });
+      }
+    });
+
+    let uniqueMaxWeightExercises = {};
+    let uniqueTotalWeightExercises = {};
+  
+    leaderboardData.forEach((item) => {
+      const exerciseName = item.exercise;
+      if (!uniqueMaxWeightExercises[exerciseName] || uniqueMaxWeightExercises[exerciseName].maxWeight < item.maxWeight) {
+        uniqueMaxWeightExercises[exerciseName] = item;
+      }
+      if (!uniqueTotalWeightExercises[exerciseName] || uniqueTotalWeightExercises[exerciseName].totalWeight < item.totalWeight) {
+        uniqueTotalWeightExercises[exerciseName] = item;
+      }
+    });
+  
+    setData({
+      maxWeight: Object.values(uniqueMaxWeightExercises),
+      totalWeight: Object.values(uniqueTotalWeightExercises)
+    });
+  
+    setLoading(false);
+    
+  };
+  
+
+  
 
   const fetchLeaderboardData = async () => {
     setLoading(true);
@@ -72,7 +127,22 @@ const LeaderboardScreen = ({ navigation }) => {
   const renderContent = () => {
     switch (selectedTab) {
       case 'Friends':
-        return <Text style={styles.noFriendsText}>You don't have any friends yet.</Text>
+        if (!data || data.maxWeight.length === 0) {
+          return <Text style={styles.noFriendsText}>You don't have any friends yet.</Text>
+        }
+        return (
+          <>
+            <Text style={styles.sectionHeader}>Max Weight</Text>
+            <View>
+              {data.maxWeight.map((item) => renderListItemMaxWeight(item))}
+            </View>
+  
+            <Text style={styles.sectionHeader}>Total Weight Lifted</Text>
+            <View>
+              {data.totalWeight.map((item) => renderListItemTotalWeight(item))}
+            </View>
+          </>
+        );
       case 'Global':
         return (
           <>
