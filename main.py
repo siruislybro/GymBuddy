@@ -22,13 +22,11 @@ dispatcher = updater.dispatcher
 job_queue = updater.job_queue
 
 def start(update: Update, context: CallbackContext):
-    context.bot.send_message(chat_id=update.effective_chat.id, text="Hello, please set a reminder by using the command /set_reminder <Time> <message>.")
+    context.bot.send_message(chat_id=update.effective_chat.id, text="Hello, I am Gym Buddy Bot, I am your personalized gym buddy here to help! Click /help for more!")
 
 def help_command(update: Update, context: CallbackContext):
     help_text = """
 Here are the available commands:
-/start - Start the bot.
-/help - Display this help message.
 /set_reminder <Time> <message> - Set a daily reminder with the given message at the specified time (24-hour format, like 14:30 for 2:30 PM).
 /motivation - Get a motivational quote or tip.
     """

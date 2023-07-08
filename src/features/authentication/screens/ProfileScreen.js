@@ -1,32 +1,38 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text, Image, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { db, auth } from '../../../../firebase';
+import { db } from '../../../../firebase';
+import { auth } from '../../../../firebase';
+
 
 const ProfileScreen = ({ navigation }) => { 
   const user = auth.currentUser;
-  const email = user.email
+  const email = user.email;
   const [numFollowers, setNumFollowers] = useState("loading...");
   const [numFollowing, setNumFollowing] = useState("loading...");
-  const [profilePicture, setProfilePicture] = useState(null);
+  const [profilePicture, setProfilePicture] = useState('../../../assets/images/GYMAPP.jpg');
 
   useEffect(() => {
-    // Fetch followers, following count, and profile picture from your database here
-    // Replace the following code with your own
-  
-    db.collection('users').doc(user.uid).get().then(doc => {
-      const data = doc.data();
-      setNumFollowers(data.followers.length);
-      setNumFollowing(data.following.length);
-      if (data.profilePicture && data.profilePicture !== '') {
-        setProfilePicture(data.profilePicture);
-      } else {
-        setProfilePicture(null);
-      }
-    });
-  }, []);
-  
-  
+    // Create a real-time listener
+    console.log("profilescreen")
+    const unsubscribe = db.collection('users').doc(user.uid)
+        .onSnapshot(doc => {
+            const data = doc.data();
+            setNumFollowers(data.followers ? data.followers.length : 0);
+            setNumFollowing(data.following ? data.following.length : 0);
+            console.log("Profile Screen 0");
+            if (data.profilePicture && data.profilePicture !== '') {
+              setProfilePicture(data.profilePicture);
+              console.log("Profile Screen 1");
+            }
+        }, error => {
+            console.error("Error fetching user data: ", error);
+        });
+
+    // Clean up the subscription on unmount
+    return () => unsubscribe();
+}, []); // Empty array as the second parameter
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -44,10 +50,10 @@ const ProfileScreen = ({ navigation }) => {
       <Text style={styles.email}>{email}</Text>
       <View style={styles.followContainer}>
         <Text style={styles.followText}>
-          Followers: {numFollowers}
-        </Text>
-        <Text style={styles.followText}>
           Following: {numFollowing}
+        </Text>        
+        <Text style={styles.followText}>
+          Followers: {numFollowers}
         </Text>
       </View>
       <TouchableOpacity 

@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { View, TextInput, Button, StyleSheet, Alert } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { auth } from '../../../../firebase'
-import { getFirestore, doc, setDoc } from '@firebase/firestore';
+import { auth, db } from '../../../../firebase'
 import BackButton from '../../../components/BackButton';
 
 const SignUpScreen = ({ navigation }) => {
@@ -10,55 +8,73 @@ const SignUpScreen = ({ navigation }) => {
     const [password, setPassword] = useState('');
     const [name, setName] = useState('');
 
-    const handleSignUp = () => {
-        auth
-        .createUserWithEmailAndPassword(email, password)
-        .then(userCredentials => {
-            const user = userCredentials.user;
-            console.log(user.email);
-            // After successful signup, write user data to database
-            writeUserData(user.uid, name, email);
-            Alert.alert("Success!", "Account created successfully", [{ text: "OK", onPress: () => navigation.navigate('Login')}]);
-    
-            // Update the displayName in Firebase Auth
-            user.updateProfile({
-              displayName: name
-            }).then(() => {
-              console.log('Updated display name successfully.');
-            }).catch((error) => {
-              console.log('Error updating display name:', error);
-            });
-        })
-        .catch(error => {
-            if (error.code === 'auth/email-already-in-use') {
-                Alert.alert('Error!', 'E-mail address in use', [{ text: 'OK' }]);
-            } else if (error.code === 'auth/invalid-email') {
-                Alert.alert('Error!', 'The email address is not valid', [{ text: 'OK' }]);
-            } else {
-                Alert.alert(error.code);
-            }
-        })
-    }
-    
-
     const writeUserData = async (userId, name, email) => {
-        const db = getFirestore();
-        const defaultProfilePic = '../../../assets/images/GYMAPP.jpg'; // Set the path to the default profile picture
-    
+        const defaultProfilePic = '../../../assets/images/GYMAPP.jpg'; 
+        // Set the path to the default profile picture
         try {
-            await setDoc(doc(db, "users", userId), {
+            await db.collection('users').doc(userId).set({
                 username: name,
                 email: email,
-                profilePicture: defaultProfilePic, // Add the profilePicture field
-                following: [], // Empty array for users the current user is following
-                followers: [], // Empty array for users who are following the current user
+                profilePicture: defaultProfilePic,
+                following: [],
+                followers: [],
             });
             console.log('User data written to Firestore');
-        } catch (error) {
+            } catch (error) {
             console.error('Error writing user data to Firestore: ', error);
-        }
+            }
+    };
+
+    const checkIfUsernameExists = async (username) => {
+        const userRef = db.collection("users");
+        const query = userRef.where("username", "==", username);
+        const querySnapshot = await query.get();
+        return !querySnapshot.empty; // Returns true if username already exists
+      }
+
+    // const fetchUsers = async () => {
+    //     const querySnapshot = await db.collection('users').get();
+    //     const usersData = querySnapshot.docs.map((doc) => doc.data().username);
+    //     setUsers(usersData);
+    //   };
+      
+    const handleSignUp = () => {
+        checkIfUsernameExists(name).then((usernameExists) => {
+            if (usernameExists) {
+                Alert.alert('Error!', 'Username already in use', [{ text: 'OK' }]);
+            } else {
+                auth
+                .createUserWithEmailAndPassword(email, password)
+                .then(userCredentials => {
+                    const user = userCredentials.user;
+                    console.log(user.email);
+                    // After successful signup, write user data to database
+                    writeUserData(user.uid, name, email);
+                    Alert.alert("Success!", "Account created successfully", [{ text: "OK", onPress: () => navigation.navigate('Login')}]);
+            
+                    // Update the displayName in Firebase Auth
+                    user.updateProfile({
+                      displayName: name
+                    }).then(() => {
+                      console.log('Updated display name successfully.');
+                    }).catch((error) => {
+                      console.log('Error updating display name:', error);
+                    });
+                })
+                .catch(error => {
+                    if (error.code === 'auth/email-already-in-use') {
+                        Alert.alert('Error!', 'E-mail address in use', [{ text: 'OK' }]);
+                    } else if (error.code === 'auth/invalid-email') {
+                        Alert.alert('Error!', 'The email address is not valid', [{ text: 'OK' }]);
+                    } else {
+                        Alert.alert(error.code);
+                    }
+                });
+            }
+        });
     }
-    
+
+
 
     return (
         <View style={styles.container}>

@@ -7,66 +7,90 @@ import { arrayUnion, arrayRemove } from '@firebase/firestore';
 const UserProfileScreen = ({ route, navigation }) => {
   const [userData, setUserData] = useState(null);
   const [isFollowing, setIsFollowing] = useState(false);
+  const [currentUsername, setCurrentUsername] = useState(null);
   const { username } = route.params;
   const currentUserId = auth.currentUser.uid;
 
   useEffect(() => {
-    db.collection('users')
+    const unsubscribe = db.collection('users')
       .where('username', '==', username)
-      .get()
-      .then(querySnapshot => {
+      .onSnapshot(querySnapshot => {
         if (!querySnapshot.empty) {
           const doc = querySnapshot.docs[0];
           const data = doc.data();
           setUserData({
-            id: doc.id,  // add the document id here
+            id: doc.id,  
             ...data,
           });
-          setIsFollowing(data.followers.includes(currentUserId));
+          setIsFollowing(data.followers.includes(currentUsername));
         } else {
           console.log("No user data found");
         }
       });
-  }, []);
+
+    db.collection('users').doc(currentUserId).get().then((doc) => {
+      setCurrentUsername(doc.data().username);
+    });
+
+    // Clean up the subscription on unmount
+    return () => unsubscribe();
+  }, [username, currentUserId, currentUsername]); 
+
   
 
   const handleFollow = () => {
-    // Fetch the current user's username
-    db.collection('users').doc(currentUserId).get().then((doc) => {
-      const currentUsername = doc.data().username;
-      // Update the followers array of the user being followed
-      const userRef = db.collection('users').doc(userData.id);
-      userRef.update({
-        followers: arrayUnion(currentUsername)
+    const userRef = db.collection('users').doc(userData.id);
+    userRef.update({
+      followers: arrayUnion(currentUsername)
+    })
+    .then(() => {
+      console.log("User successfully followed!");
+      setIsFollowing(true);
+  
+      // Update the current user's following array
+      const currentUserRef = db.collection('users').doc(currentUserId);
+      currentUserRef.update({
+        following: arrayUnion(username)
       })
       .then(() => {
-        console.log("User successfully followed!");
-        setIsFollowing(true);
+        console.log("Updated current user's following array!");
       })
       .catch((error) => {
-        console.error("Error following user: ", error);
+        console.error("Error updating current user's following array: ", error);
       });
+    })
+    .catch((error) => {
+      console.error("Error following user: ", error);
     });
   };
-
+  
   const handleUnfollow = () => {
-    // Fetch the current user's username
-    db.collection('users').doc(currentUserId).get().then((doc) => {
-      const currentUsername = doc.data().username;
-      // Update the followers array of the user being followed
-      const userRef = db.collection('users').doc(userData.id);
-      userRef.update({
-        followers: arrayRemove(currentUsername)
+    const userRef = db.collection('users').doc(userData.id);
+    userRef.update({
+      followers: arrayRemove(currentUsername)
+    })
+    .then(() => {
+      console.log("User successfully unfollowed!");
+      setIsFollowing(false);
+  
+      // Update the current user's following array
+      const currentUserRef = db.collection('users').doc(currentUserId);
+      currentUserRef.update({
+        following: arrayRemove(username)
       })
       .then(() => {
-        console.log("User successfully unfollowed!");
-        setIsFollowing(false);
+        console.log("Updated current user's following array!");
       })
       .catch((error) => {
-        console.error("Error unfollowing user: ", error);
+        console.error("Error updating current user's following array: ", error);
       });
+    })
+    .catch((error) => {
+      console.error("Error unfollowing user: ", error);
     });
   };
+  
+  
   
 
   return userData ? (
@@ -91,13 +115,13 @@ const UserProfileScreen = ({ route, navigation }) => {
         onPress={isFollowing ? handleUnfollow : handleFollow} 
         style={styles.followButton} 
       />
-    </View>
-  ) : (
-    <View style={styles.container}>
-      <Text>Loading...</Text>
-    </View>
-  );
-};
+      </View>
+    ) : (
+      <View style={styles.container}>
+        <Text>Loading...</Text>
+      </View>
+    );  
+  };
 
 const styles = StyleSheet.create({
   container: {

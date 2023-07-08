@@ -20,7 +20,17 @@ const QuickStartScreen = ({ navigation, route }) => {
   );
 
   const { setWorkoutActive, setWorkoutEnded } = useContext(WorkoutContext);
-  
+  const [duration, setDuration] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setDuration((prevDuration) => prevDuration + 1);
+    }, 1000);
+
+    return () => {
+      clearInterval(timer);
+    };
+  }, []);
 
   useEffect(() => {
     if (route.params?.newExercise) {
@@ -48,6 +58,14 @@ const QuickStartScreen = ({ navigation, route }) => {
     })();
   }, []);
 
+  const formatDuration = () => {
+    const hours = Math.floor(duration / 3600);
+    const minutes = Math.floor((duration % 3600) / 60);
+    const seconds = duration % 60;
+
+    return `${hours < 10 ? '0' + hours : hours}:${minutes < 10 ? '0' + minutes : minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
+  };
+
   const storeData = async (key, value) => {
     try {
       const jsonValue = JSON.stringify(value);
@@ -70,7 +88,7 @@ const QuickStartScreen = ({ navigation, route }) => {
     storeData('@workout', exercises);
   }, [exercises]);
 
-  const saveToFirestore = async (exercises, workoutName) => {
+  const saveToFirestore = async (exercises, workoutName, duration) => {
     const currentDate = new Date().toLocaleString();
     const workoutId = uuidv4();
     const docRef = db
@@ -79,12 +97,12 @@ const QuickStartScreen = ({ navigation, route }) => {
       .collection('workouts')
       .doc(workoutId);
     try {
-      await docRef.set({ workoutName, exercises, createdAt: currentDate });
+      await docRef.set({ workoutName, exercises, createdAt: currentDate , duration});
       console.log('Document successfully written!');
     } catch (error) {
       console.error('Error writing document: ', error);
     }
-};
+  };
 
 
   const handleWeightChange = (text, exerciseIndex, setIndex) => {
@@ -225,8 +243,9 @@ const endWorkout = async () => {
 
   await storeData('@workout', exercises);
   await storeData('@workoutName', workoutName);
+  // await storeData('@duration', duration);
   await updateLeaderboard(user.uid, user.displayName, exercises);
-  await saveToFirestore(exercises, workoutName);
+  await saveToFirestore(exercises, workoutName, duration);
   Alert.alert("Success", "Workout saved successfully!", [
     { text: "OK", onPress: () => console.log("OK Pressed") }
   ]);
@@ -276,9 +295,6 @@ const endWorkout = async () => {
             value={workoutName}
             onChangeText={setWorkoutName}
           />
-        <TouchableOpacity onPress={cancelWorkout}>
-            <AntDesign name="close" size={24} color="red" />
-        </TouchableOpacity>
         </View>
 
       </View>
@@ -288,11 +304,18 @@ const endWorkout = async () => {
         renderItem={renderExerciseItem}
       />
       <View style={styles.buttonContainer}>
+        <View style={styles.addExercisesContainer}>
         <Button
           title="Add Exercises"
           onPress={() => navigation.navigate('AddExercisesScreen', { exercises: exercises })}
         />
+        </View>
+        <View style={styles.endWorkoutContainer}>
         <Button title="End Workout" onPress={endWorkout} />
+        </View>
+        <View style={styles.cancelWorkoutContainer}>
+        <Button title="Cancel Workout" onPress={cancelWorkout} />
+        </View>
       </View>
     </View>
   );
@@ -324,7 +347,7 @@ const styles = StyleSheet.create({
     borderBottomColor: '#fff',
     borderBottomWidth: 1,
     marginHorizontal: 20,
-    width: '70%'
+    width: '80%'
   },
   setInput: {
     flexDirection: 'row',
@@ -371,6 +394,18 @@ const styles = StyleSheet.create({
   addSetButtonText: {
     fontSize: 16,
     color: '#fff',
+  },
+  addExercisesContainer: {
+    flex: 1,
+    marginTop: 50,
+  },
+  endWorkoutContainer: {
+    flex: 1,
+    marginBottom: 70,
+  },
+  cancelWorkoutContainer: {
+    flex: 1,
+    marginTop: 50,
   },
   buttonContainer: {
     flexDirection: 'row',

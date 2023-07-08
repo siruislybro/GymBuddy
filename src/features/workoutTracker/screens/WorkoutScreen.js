@@ -3,7 +3,6 @@ import { View, Text, StyleSheet, TouchableOpacity, Linking } from 'react-native'
 import Colors from '../../../colours/colors';
 import TimerPopup from '../../../components/TimerPopup';
 import { WorkoutContext } from '../../../components/WorkoutContext';
-import { auth } from '../../../../firebase';
 import UserContext from '../../../components/UserContext';
 
 

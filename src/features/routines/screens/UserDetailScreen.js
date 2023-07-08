@@ -14,7 +14,9 @@ const UserDetailScreen = ({ navigation, route }) => {
   // Function to handle when the submit button is pressed
   const handleSubmit = async () => {
     // Construct the payload for the OpenAI API
-    const prompt = `My height is ${height} cm, my weight is ${weight}kg and my goal is to ${goal}. Generate ${numWorkouts} weightlifting workout plans for me.`;
+    const BMI = {weight} / ({height} * {height});
+    console.log(BMI);
+    const prompt = `My height is ${height} cm, my weight is ${weight}kg ,my BMI is ${BMI} and my goal is to ${goal}. Generate ${numWorkouts} weightlifting workout plans and calories to consume in a day for me.`;
     console.log(prompt)
     const maxTokens = 500; // Set the desired max number of tokens in the response
     const API_KEY = "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";
@@ -54,6 +56,7 @@ const UserDetailScreen = ({ navigation, route }) => {
   const goalOptions = [
     { label: 'Lose Weight', value: 'loseWeight' },
     { label: 'Build Muscle', value: 'buildMuscle' },
+    { label: 'Lose Weight & Build Muscle', value: 'loseWeight&buildMuscle' },
   ];
 
   const numWorkoutsOptions = [
@@ -90,7 +93,6 @@ const UserDetailScreen = ({ navigation, route }) => {
         placeholderTextColor="#FFF"
         keyboardType='numeric'
       />
-      <Text style={styles.unit}>cm</Text>
       <TextInput
         style={styles.input}
         placeholder="Weight"

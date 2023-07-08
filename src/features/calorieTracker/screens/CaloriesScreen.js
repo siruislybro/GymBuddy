@@ -1,48 +1,127 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, FlatList } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, FlatList, ActivityIndicator, TextInput, StyleSheet, Button, ScrollView } from 'react-native';
+import axios from 'axios';
+import BackButton from '../../../components/BackButton';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { db, auth } from '../../../../firebase';
 
-const CaloriesScreen = ({navigation}) => {
-  function backButtonHandler() {
-    navigation.goBack();
+const CaloriesScreen = ( {navigation} ) => {
+  const [loading, setLoading] = useState(false);
+  const [query, setQuery] = useState('');
+  const [recipes, setRecipes] = useState([]);
+  const [recommendedCalories, setRecommendedCalories] = useState(null);
+  const [manualCalories, setManualCalories] = useState('');
+  const user = auth.currentUser;
+
+  const knowYourCalories = () => {
+    navigation.navigate("RecommendedCalories")
   }
-  const [calorieInput, setCalorieInput] = useState('');
-  const [caloriesData, setCaloriesData] = useState([]);
 
-  const addCaloriesData = () => {
+    // Fetch recommended calories from Firestore
+    useEffect(() => {
+      const fetchRecommendedCalories = async () => {
+        try {
+          const docSnap = await getDoc(doc(db, 'users', user.uid, 'nutrition', 'calories'));
+          if (docSnap.exists()) {
+            setRecommendedCalories(docSnap.data().recommended);
+          }
+        } catch (error) {
+          console.error("Error fetching recommended calories:", error);
+        }
+      }
+  
+      fetchRecommendedCalories();
+    }, []);
 
-    setCaloriesData(currentData => [
-      ...currentData,
-      { id: Math.random().toString(), value: calorieInput, date: new Date().toLocaleDateString() }
-    ]);
-    setCalorieInput('');
+    const handleManualSubmit = async () => {
+      try {
+        await setDoc(doc(db, 'users', user.uid, 'nutrition', 'calories'), {
+          recommended: manualCalories
+        });
+        setRecommendedCalories(manualCalories);
+      } catch (error) {
+        console.error("Error setting recommended calories:", error);
+      }
+    }
+
+  const fetchRecipes = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get(
+        'https://api.api-ninjas.com/v1/nutrition',
+        {
+          params: { query },
+          headers: {
+            'X-Api-Key': 'DIPsRHPESoUC2bCJ8qjDvw==0CkuC18ovLG4RD1a',
+          },
+        }
+      );
+      setRecipes(response.data);
+      setLoading(false);
+    } catch (error) {
+      console.error(error);
+      setLoading(false);
+    }
   };
+
+  const onSearch = () => {
+    if (query) {
+      fetchRecipes();
+    }
+  };
+
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
-      <Button
-        title='Back to profile'
-        onPress={backButtonHandler}
-      />           
-      <Text style={styles.title}>Calories Input</Text>
-      <View style={styles.inputContainer}>
-        <TextInput 
-          placeholder="Enter Calories"
-          style={styles.input}
-          onChangeText={setCalorieInput}
-          value={calorieInput}
-          keyboardType="numeric"
+      <BackButton />
+      <View style={styles.searchContainer}>
+        <TextInput
+          style={styles.searchInput}
+          onChangeText={text => setQuery(text)}
+          value={query}
+          placeholder="Search food..."
+          returnKeyType="search"
+          onSubmitEditing={onSearch}
         />
-        <Button title="Add" onPress={addCaloriesData} />
+        <Button title="Search" onPress={onSearch} />
       </View>
-      <FlatList
-        data={caloriesData}
-        renderItem={itemData => (
-          <View style={styles.listItem}>
-            <Text style={styles.itemText}>{itemData.item.date}</Text>
-            <Text style={styles.itemText}>{itemData.item.value} Calories</Text>
-          </View>
-        )}
-      />
+      {recommendedCalories ? (
+        <Text style={styles.title}>Recommended Daily Calories: {recommendedCalories}</Text>
+      ) : (
+        <View>
+          <Text>No recommended calories set.</Text>
+          <TextInput
+            value={manualCalories}
+            onChangeText={text => setManualCalories(text)}
+            placeholder="Enter your calories..."
+            keyboardType="numeric"
+          />
+          <Button title="Set Calories" onPress={handleManualSubmit} />
+          <Button title="Know Your Calories" onPress={knowYourCalories} />
+        </View>
+      )}
+      <Text style={styles.title}>Calories</Text>
+      {recipes.length > 0 ? (
+        <FlatList
+          data={recipes}
+          keyExtractor={(item) => item.name.toString()}
+          renderItem={({ item }) => (
+            <View style={styles.itemContainer}>
+              <Text style={styles.itemName}>{item.name}</Text>
+              <Text style={styles.itemCalories}>Calories: {item.calories}</Text>
+            </View>
+          )}
+        />
+      ) : (
+        <Text style={styles.noResults}>No results found.</Text>
+      )}
     </View>
   );
 };
@@ -50,52 +129,48 @@ const CaloriesScreen = ({navigation}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#010202',
-    padding: 20,
+    padding: 16,
+    backgroundColor: '#F5F5F5',
   },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
-    textAlign: 'center',
-    color: '#FFF',
-  },
-  inputContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 20,
-    padding: 15,
-    borderRadius: 10,
-    backgroundColor: '#333',
   },
-  input: {
-    width: '80%',
-    borderColor: '#87CEFA',
+  searchContainer: {
+    flexDirection: 'row',
+    marginBottom: 16,
+  },
+  searchInput: {
+    flex: 1,
+    borderColor: '#DDD',
     borderWidth: 1,
     padding: 10,
-    color: '#FFF',
+    borderRadius: 5,
   },
-  listItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 15,
-    borderRadius: 10,
-    backgroundColor: '#333',
-    marginVertical: 5,
+  itemContainer: {
+    backgroundColor: 'white',
+    padding: 16,
+    borderRadius: 5,
+    marginBottom: 16,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
-      height: 1,
+      height: 2,
     },
-    shadowOpacity: 0.22,
-    shadowRadius: 2.22,
-    elevation: 3,
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
-  itemText: {
-    fontSize: 14,
-    color: '#87CEFA',
+  itemName: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  itemCalories: {
+    fontSize: 16,
+  },
+  noResults: {
+    textAlign: 'center',
   },
 });
 
