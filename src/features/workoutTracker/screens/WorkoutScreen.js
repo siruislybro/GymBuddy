@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Linking } from 'react-native';
-import Colors from '../../../colours/colors';
+import Colors from '../../../utils/colors';
 import TimerPopup from '../../../components/TimerPopup';
 import { WorkoutContext } from '../../../components/WorkoutContext';
 import UserContext from '../../../components/UserContext';
@@ -31,7 +31,7 @@ const WorkoutScreen = ({ navigation, route }) => {
     if (hasAnsweredQuestions) {
       navigation.navigate('RecommendedRoutineScreen');
     } else {
-      navigation.navigate('UserDetail');
+      navigation.navigate('RoutineCalibration');
     }
   };
 

@@ -5,8 +5,10 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
 import { StyleSheet } from 'react-native';
+import { DefaultTheme, DarkTheme, Provider as PaperProvider } from 'react-native-paper'
 import Colors from './colours/colors';
 import UserContext from './src/components/UserContext';
+import { themes } from './src/utils/themes';
 import { WorkoutContext } from './src/components/WorkoutContext';
 import AddExercisesScreen from './src/features/workoutTracker/screens/AddExercisesScreen';
 import CalendarScreen from './src/features/calander/screens/CalanderScreen';
@@ -32,8 +34,9 @@ import SignUpScreen from './src/features/authentication/screens/SignUpScreen';
 import StartScreen from './src/features/authentication/screens/StartScreen';
 import StatisticsDetailScreen from './src/features/pastWorkouts/screens/StatisticsDetailScreen';
 import StatisticsScreen from './src/features/pastWorkouts/screens/StatisticsScreen';
-import UserDetailScreen from './src/features/routines/screens/UserDetailScreen';
+import RoutineCalibrationSceen from './src/features/routines/screens/RoutineCalibrationScreen';
 import WorkoutDetailScreen from './src/features/pastWorkouts/screens/WorkoutDetailScreen';
+import SettingsScreen from './src/features/authentication/screens/SettingsScreen';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -58,8 +61,9 @@ const MainTabs = () => {
 
           return <Ionicons name={iconName} size={size} color={color} />;
         },
-        tabBarActiveTintColor: '#c5e2fe',
-        tabBarInactiveTintColor: '#c5e2fe',
+        tabBarActiveTintColor: '#2196F3', // Active tab icon color
+        tabBarInactiveTintColor: '#757575', // Inactive tab icon color
+        tabBarStyle: { backgroundColor: '#FFFFFF' }, // Tab bar background color
       })}
     >
       <Tab.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
@@ -78,8 +82,13 @@ export default function App() {
   const [user, setUser] = useState(null);
   const [following, setFollowing] = useState([]);
   const [followers, setFollowers] = useState([]);
+  const [isDarkTheme, setIsDarkTheme] = useState(false);
+  const toggleTheme = () => {
+    setIsDarkTheme(!isDarkTheme);
+  };
+  const theme = isDarkTheme ? DefaultTheme.dark : DefaultTheme.light;
   return (
-    <UserContext.Provider value={{ user, setUser }}>
+    <UserContext.Provider value= {{user, setUser }}>
       <FollowingContext.Provider value={{ following, setFollowing }}>
       <FollowersContext.Provider value={{ followers, setFollowers }}>     
       <WorkoutContext.Provider value={{
@@ -88,6 +97,7 @@ export default function App() {
         workoutEnded,
         setWorkoutEnded
       }}>
+        <PaperProvider theme={theme}>
         <NavigationContainer>
           <Stack.Navigator>
             <Stack.Screen
@@ -128,8 +138,8 @@ export default function App() {
               options={{ headerShown: false }}
             />
             <Stack.Screen
-              name="UserDetail"
-              component={UserDetailScreen}
+              name="RoutineCalibration"
+              component={RoutineCalibrationSceen}
               options={{ headerShown: false }}
             />
             <Stack.Screen
@@ -218,10 +228,16 @@ export default function App() {
               component={StatisticsDetailScreen}
               options={{ headerShown: false }}
             />
+            <Stack.Screen
+              name="Settings"
+              component={SettingsScreen}
+              options={{ headerShown: false }}
+            />
 
           </Stack.Navigator>
           <StatusBar style="light" />
         </NavigationContainer>
+        </PaperProvider>
       </WorkoutContext.Provider>
       </FollowersContext.Provider>
       </FollowingContext.Provider>      
@@ -229,14 +245,14 @@ export default function App() {
   );
 }
 
-const styles = StyleSheet.create({
-  buttons: {
-    backgroundColor: Colors.buttonColor,
-  },
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+// const styles = StyleSheet.create({
+//   buttons: {
+//     backgroundColor: Colors.buttonColor,
+//   },
+//   container: {
+//     flex: 1,
+//     backgroundColor: '#fff',
+//     alignItems: 'center',
+//     justifyContent: 'center',
+//   },
+// });

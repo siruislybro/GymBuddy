@@ -40,12 +40,14 @@ const ProfileScreen = ({ navigation }) => {
         style={styles.avatar}
         source={profilePicture && profilePicture !== '' ? {uri: profilePicture} : require('../../../assets/images/GYMAPP.jpg')}
       />
-        {/* <Ionicons 
+      <TouchableOpacity onPress={() => navigation.navigate('Settings')}>
+        <Ionicons 
           name="settings-outline"
           size={28} 
           color="white"
           style={styles.settings}
-        /> */}
+        />
+      </TouchableOpacity>
       </View>
       <Text style={styles.email}>{email}</Text>
       <View style={styles.followContainer}>
@@ -104,9 +106,10 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     width: '100%',
     marginBottom: 20,
+    paddingRight: 10,
   },
   avatar: {
     marginTop: 20,
@@ -115,8 +118,6 @@ const styles = StyleSheet.create({
     borderRadius: 75,
   },
   settings: {
-    position: 'absolute',
-    right: 10,
   },
   email: {
     color: 'white',

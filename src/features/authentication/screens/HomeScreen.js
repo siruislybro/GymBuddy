@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { View, Text, StyleSheet, Modal, TouchableOpacity, TextInput, FlatList } from 'react-native';
+import { View, Text, StyleSheet, Modal, TouchableOpacity, TextInput, FlatList, ActivityIndicator } from 'react-native';
 import { db, auth } from '../../../../firebase';
 import UserContext from '../../../components/UserContext';
 import Icon from 'react-native-vector-icons/FontAwesome';
+
 
 const HomeScreen = ({ navigation, route }) => {
   // User context
@@ -14,6 +15,7 @@ const HomeScreen = ({ navigation, route }) => {
   const [users, setUsers] = useState([]);
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [followedWorkouts, setFollowedWorkouts] = useState([]);
+  const [isLoading, setLoading] = useState(true); 
 
   // Effects
   useEffect(() => { fetchUsers(); }, []);
@@ -43,6 +45,7 @@ const HomeScreen = ({ navigation, route }) => {
   // Fetch all users
   const fetchUsers = async () => {
     console.log("DB Object:", db);
+    setLoading(true);
     try {
       console.log('Before querying Firestore');
       const querySnapshot = await db.collection('users').get();
@@ -54,6 +57,8 @@ const HomeScreen = ({ navigation, route }) => {
     } catch (error) {
       console.error('Error fetching users:', error);
       // Handle the error or display an error message to the user
+    } finally {
+      setLoading(false);
     }
   };
   
@@ -169,6 +174,10 @@ const HomeScreen = ({ navigation, route }) => {
   // Component rendering
   return (
     <View style={styles.container}>
+      {isLoading ? (
+        <ActivityIndicator size="large" color="#00ff00" />
+      ) : (
+      <>
       {/* Header */}
       <View style={styles.header}>
         <Text style={styles.welcomeText}>Home</Text>
@@ -214,6 +223,8 @@ const HomeScreen = ({ navigation, route }) => {
         renderItem={renderFollowedWorkouts}
         keyExtractor={(item, index) => `${item.id}_${index}`}
       />
+      </>
+      )}
     </View>
   );
 };
