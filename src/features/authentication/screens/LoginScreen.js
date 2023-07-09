@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import Colors from '../../../../colours/colors';
-import { View, TextInput, Button, StyleSheet, Text } from 'react-native';
+import { View, TextInput, Button, StyleSheet, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { auth } from '../../../../firebase';
 import { getFirestore, collection, query, where, getDocs } from "firebase/firestore";
 import BackButton from '../../../components/BackButton';
@@ -11,8 +11,10 @@ const LoginScreen = ({ navigation }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const { setUser } = useContext(UserContext);
+    const [isLoading, setLoading] = useState(false); 
 
     const handleLogin = async () => {
+        setLoading(true);
         const trimmedEmail = email.trim();
         const trimmedPassword = password.trim();
         const isUserAuthenticated = await authenticateUser(trimmedEmail, trimmedPassword);
@@ -37,6 +39,8 @@ const LoginScreen = ({ navigation }) => {
             alert(error.message);
             }
             return false;
+        } finally {
+          setLoading(false);
         }
       };
       
@@ -83,9 +87,14 @@ const LoginScreen = ({ navigation }) => {
                 onChangeText={setPassword}
                 value={password}
             />
-            <Button title="Login" onPress={handleLogin} />
-            
-        </View>
+      <TouchableOpacity style={styles.button} onPress={handleLogin} disabled={isLoading}>
+        {isLoading ? (
+          <ActivityIndicator size="small" color="#FFF" />
+        ) : (
+        <Text style={styles.buttonText}>Login</Text>
+        )}
+      </TouchableOpacity>
+    </View>
     );
 };
 
@@ -115,6 +124,17 @@ const styles = StyleSheet.create({
         marginBottom: 12,
         paddingHorizontal: 12,
         color: "white",
+    },  
+    button: {
+      backgroundColor: '#0484fb',
+      padding: 10,
+      borderRadius: 5,
+      marginBottom: 20,
+    },
+    buttonText: {
+      color: '#fff',
+      textAlign: 'center',
+      fontSize: 18,
     },
 });
 
