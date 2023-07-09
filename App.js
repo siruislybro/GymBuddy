@@ -34,7 +34,7 @@ import SignUpScreen from './src/features/authentication/screens/SignUpScreen';
 import StartScreen from './src/features/authentication/screens/StartScreen';
 import StatisticsDetailScreen from './src/features/pastWorkouts/screens/StatisticsDetailScreen';
 import StatisticsScreen from './src/features/pastWorkouts/screens/StatisticsScreen';
-import BuildRoutineScreen from './src/features/routines/screens/BuiltRoutineScreen';
+import BuildRoutineScreen from './src/features/routines/screens/BuildRoutineScreen';
 import WorkoutDetailScreen from './src/features/pastWorkouts/screens/WorkoutDetailScreen';
 import SettingsScreen from './src/features/authentication/screens/SettingsScreen';
 import SavedWorkoutsScreen from './src/features/routines/screens/SavedWorkoutsScreen';

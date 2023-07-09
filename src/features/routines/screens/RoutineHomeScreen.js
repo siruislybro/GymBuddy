@@ -7,11 +7,11 @@ const RoutineHomeScreen = () => {
   const navigation = useNavigation();
 
   const handleRoutineCalibration = () => {
-    navigation.navigate('RoutineCalibrationScreen');
+    navigation.navigate('BuildRoutine');
   };
 
   const handleViewSavedWorkouts = () => {
-    navigation.navigate('SavedWorkoutsScreen');
+    navigation.navigate('SavedWorkouts');
   };
 
   return (
