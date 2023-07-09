@@ -34,9 +34,11 @@ import SignUpScreen from './src/features/authentication/screens/SignUpScreen';
 import StartScreen from './src/features/authentication/screens/StartScreen';
 import StatisticsDetailScreen from './src/features/pastWorkouts/screens/StatisticsDetailScreen';
 import StatisticsScreen from './src/features/pastWorkouts/screens/StatisticsScreen';
-import RoutineCalibrationSceen from './src/features/routines/screens/RoutineCalibrationScreen';
+import BuildRoutineScreen from './src/features/routines/screens/BuiltRoutineScreen';
 import WorkoutDetailScreen from './src/features/pastWorkouts/screens/WorkoutDetailScreen';
 import SettingsScreen from './src/features/authentication/screens/SettingsScreen';
+import SavedWorkoutsScreen from './src/features/routines/screens/SavedWorkoutsScreen';
+import RoutineHomeScreen from './src/features/routines/screens/RoutineHomeScreen';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -138,8 +140,18 @@ export default function App() {
               options={{ headerShown: false }}
             />
             <Stack.Screen
-              name="RoutineCalibration"
-              component={RoutineCalibrationSceen}
+              name="RoutineHome"
+              component={RoutineHomeScreen}
+              options={{ headerShown: true }}
+            />
+            <Stack.Screen
+              name="SavedWorkouts"
+              component={SavedWorkoutsScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="BuildRoutine"
+              component={BuildRoutineScreen}
               options={{ headerShown: false }}
             />
             <Stack.Screen

@@ -4,7 +4,7 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import BackButton from '../../../components/BackButton';
 import { set } from 'date-fns';
 
-const RoutineCalibrationSceen = ({ navigation, route }) => {
+const BuildRoutineScreen = ({ navigation, route }) => {
   const [height, setHeight] = useState('');
   const [weight, setWeight] = useState('');
   const [openNumWorkouts, setOpenNumWorkouts] = useState(false);
@@ -246,4 +246,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default RoutineCalibrationSceen;
+export default BuildRoutineScreen;

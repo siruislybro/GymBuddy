@@ -26,13 +26,7 @@ const WorkoutScreen = ({ navigation, route }) => {
   };
 
   const handleStartRoutinePress = () => {
-    const hasAnsweredQuestions = false; // Replace this with the actual condition
-
-    if (hasAnsweredQuestions) {
-      navigation.navigate('RecommendedRoutineScreen');
-    } else {
-      navigation.navigate('RoutineCalibration');
-    }
+      navigation.navigate('RoutineHome');
   };
 
   const handleSetRemindersPress = () => {
