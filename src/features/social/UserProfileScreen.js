@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, Image, StyleSheet, Button } from 'react-native';
-import { db, auth } from '../../../../firebase';
-import BackButton from '../../../components/BackButton';
+import { db, auth } from '../../../firebase';
+import BackButton from '../../components/BackButton';
 import { arrayUnion, arrayRemove } from '@firebase/firestore';
 
 const UserProfileScreen = ({ route, navigation }) => {
   const [userData, setUserData] = useState(null);
   const [isFollowing, setIsFollowing] = useState(false);
+  const [isFriend, setIsFriend] = useState(false);
+  const [isFollowed, setIsFollowed] = useState(false);
   const [currentUsername, setCurrentUsername] = useState(null);
   const { username } = route.params;
   const currentUserId = auth.currentUser.uid;
@@ -19,10 +21,12 @@ const UserProfileScreen = ({ route, navigation }) => {
           const doc = querySnapshot.docs[0];
           const data = doc.data();
           setUserData({
-            id: doc.id,  
+            id: doc.id,
             ...data,
           });
           setIsFollowing(data.followers.includes(currentUsername));
+          setIsFriend(data.following.includes(currentUsername));
+          setIsFollowed(data.following.includes(currentUsername)); // New line
         } else {
           console.log("No user data found");
         }
@@ -34,64 +38,76 @@ const UserProfileScreen = ({ route, navigation }) => {
 
     // Clean up the subscription on unmount
     return () => unsubscribe();
-  }, [username, currentUserId, currentUsername]); 
+  }, [username, currentUserId, currentUsername]);
 
-  
+  // Adjust the button title based on the state variables
+  const getButtonTitle = () => {
+    if (isFollowing) return "Unfollow";
+    if (isFollowed) return "Follow back";
+    return "Follow";
+  };
+
 
   const handleFollow = () => {
     const userRef = db.collection('users').doc(userData.id);
     userRef.update({
       followers: arrayUnion(currentUsername)
     })
-    .then(() => {
-      console.log("User successfully followed!");
-      setIsFollowing(true);
-  
-      // Update the current user's following array
-      const currentUserRef = db.collection('users').doc(currentUserId);
-      currentUserRef.update({
-        following: arrayUnion(username)
-      })
       .then(() => {
-        console.log("Updated current user's following array!");
+        console.log("User successfully followed!");
+        setIsFollowing(true);
+
+        // Update the current user's following array
+        const currentUserRef = db.collection('users').doc(currentUserId);
+        currentUserRef.update({
+          following: arrayUnion(username)
+        })
+          .then(() => {
+            console.log("Updated current user's following array!");
+          })
+          .catch((error) => {
+            console.error("Error updating current user's following array: ", error);
+          });
       })
       .catch((error) => {
-        console.error("Error updating current user's following array: ", error);
+        console.error("Error following user: ", error);
       });
-    })
-    .catch((error) => {
-      console.error("Error following user: ", error);
-    });
   };
-  
+
   const handleUnfollow = () => {
     const userRef = db.collection('users').doc(userData.id);
     userRef.update({
       followers: arrayRemove(currentUsername)
     })
-    .then(() => {
-      console.log("User successfully unfollowed!");
-      setIsFollowing(false);
-  
-      // Update the current user's following array
-      const currentUserRef = db.collection('users').doc(currentUserId);
-      currentUserRef.update({
-        following: arrayRemove(username)
-      })
       .then(() => {
-        console.log("Updated current user's following array!");
+        console.log("User successfully unfollowed!");
+        setIsFollowing(false);
+        setIsFriend(false);
+
+        // Update the current user's following array
+        const currentUserRef = db.collection('users').doc(currentUserId);
+        currentUserRef.update({
+          following: arrayRemove(username)
+        })
+          .then(() => {
+            console.log("Updated current user's following array!");
+          })
+          .catch((error) => {
+            console.error("Error updating current user's following array: ", error);
+          });
       })
       .catch((error) => {
-        console.error("Error updating current user's following array: ", error);
+        console.error("Error unfollowing user: ", error);
       });
-    })
-    .catch((error) => {
-      console.error("Error unfollowing user: ", error);
-    });
   };
-  
-  
-  
+
+  const handleSendMessage = () => {
+    navigation.navigate('Chat', { otherUserId: userData.id });
+  };
+
+
+
+
 
   return userData ? (
     <View style={styles.container}>
@@ -100,8 +116,11 @@ const UserProfileScreen = ({ route, navigation }) => {
         style={styles.profileImage}
         source={{ uri: userData.profilePicture }}
       />
-      <Text style={styles.username}>{userData.username}</Text>
-      <Text style={styles.email}>{userData.email}</Text> 
+      <View style={styles.usernameContainer}>
+        <Text style={styles.username}>{userData.username}</Text>
+        {isFriend && <Text style={styles.friendLabel}>Friends</Text>}
+      </View>
+      <Text style={styles.email}>{userData.email}</Text>
       <View style={styles.followContainer}>
         <Text style={styles.followers}>
           Followers: {userData.followers ? userData.followers.length : 0}
@@ -110,18 +129,25 @@ const UserProfileScreen = ({ route, navigation }) => {
           Following: {userData.following ? userData.following.length : 0}
         </Text>
       </View>
-      <Button 
-        title={isFollowing ? "Unfollow" : "Follow"} 
-        onPress={isFollowing ? handleUnfollow : handleFollow} 
-        style={styles.followButton} 
+      <Button
+        title={getButtonTitle()}  // Use the new function for the title
+        onPress={isFollowing ? handleUnfollow : handleFollow}
+        style={styles.followButton}
       />
-      </View>
-    ) : (
-      <View style={styles.container}>
-        <Text>Loading...</Text>
-      </View>
-    );  
-  };
+      {isFriend ? (
+        <Button
+          title="Send Message"
+          onPress={handleSendMessage}
+          style={styles.sendMessageButton}
+        />
+      ) : null}
+    </View>
+  ) : (
+    <View style={styles.container}>
+      <Text>Loading...</Text>
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -129,6 +155,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#f8f8f8',
+  },
+  usernameContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 10,
+  },
+  friendLabel: {
+    marginLeft: 8,
+    backgroundColor: '#3498db',
+    color: '#fff',
+    padding: 4,
+    borderRadius: 4,
+    fontSize: 14,
   },
   username: {
     fontSize: 24,
