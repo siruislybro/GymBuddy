@@ -16,6 +16,11 @@ const UserProfileScreen = ({ route, navigation }) => {
   const currentUserId = auth.currentUser.uid;
 
   useEffect(() => {
+    setIsFriend(isFollowing && isFollowed);
+  }, [isFollowing, isFollowed]);
+
+
+  useEffect(() => {
     const unsubscribe = db.collection('users')
       .where('username', '==', username)
       .onSnapshot(querySnapshot => {
@@ -31,26 +36,27 @@ const UserProfileScreen = ({ route, navigation }) => {
             .where('username', '==', currentUsername)
             .onSnapshot(followersSnapshot => {
               setIsFollowing(!followersSnapshot.empty);
-            });
+          });
   
           // Subscribe to real-time updates for followers count
           const followersCountUnsub = doc.ref.collection('followers')
             .onSnapshot((querySnapshot) => {
               setFollowersCount(querySnapshot.size);
-            });
+          });
   
           // Subscribe to real-time updates for following count
           const followingCountUnsub = doc.ref.collection('following')
             .onSnapshot((querySnapshot) => {
               setFollowingCount(querySnapshot.size);
-            });
+          });
 
           const followingUnsub = doc.ref.collection('following')
           .where('username', '==', currentUsername)
           .onSnapshot(followingSnapshot => {
             setIsFollowed(!followingSnapshot.empty);
-            setIsFriend(isFollowing && !followingSnapshot.empty);
           });
+        
+        
   
           // Cleanup the subscription on unmount
           return () => {
@@ -63,17 +69,27 @@ const UserProfileScreen = ({ route, navigation }) => {
           console.log("No user data found");
         }
       });
-  
-      db.collection('users')
-      .doc(currentUserId)
-      .get()
-      .then((doc) => {
+
+      // console.log(currentUsername);
+      // db.collection('users')
+      // .doc(currentUserId)
+      // .get()
+      // .then((doc) => {
+      //   setCurrentUsername(doc.data().username);
+      //   handleFollowedByUser(); // Check if user is a friend
+      // });
+      db.collection('users').doc(currentUserId).get().then((doc) => {
         setCurrentUsername(doc.data().username);
-        handleFollowedByUser(); // Check if user is a friend
       });
+      // console.log(currentUsername);
     // Clean up the subscription on unmount
     return () => unsubscribe();
   }, [username, currentUserId, currentUsername]);
+
+  useEffect(() => {
+    setIsFriend(isFollowing && isFollowed);
+  }, [isFollowing, isFollowed]);
+
   
   
   const handleFollowBack = () => {
@@ -82,15 +98,47 @@ const UserProfileScreen = ({ route, navigation }) => {
   };
 
   const handleFollowedByUser = () => {
-    const followingRef = db.collection('users').doc(currentUserId).collection('following');
-    followingRef
-      .where('username', '==', username)
-      .onSnapshot((querySnapshot) => {
-        setIsFriend(!querySnapshot.empty);
-      }, (error) => {
-        console.error("Error listening for changes in user's following collection: ", error);
+    const followingRef = db.collection('users').doc(currentUserId).collection('followers');
+    
+    followingRef.doc(userData.id).set({
+      username: userData.username,
+      isNew: true
+    })
+    .then(() => {
+      console.log("User successfully followed back!");
+      setIsFollowing(true);
+      setIsFriend(true);
+  
+      const currentUserRef = db.collection('users').doc(currentUserId);
+      
+      currentUserRef.update({
+        following: arrayUnion(userData.username)
+      })
+      .then(() => {
+        console.log("Updated current user's following array!");
+  
+        const followingRef = db.collection('users').doc(currentUserId).collection('following');
+        
+        followingRef.doc(userData.id).set({
+          username: userData.username,
+          isNew: true
+        })
+        .then(() => {
+          console.log("Updated current user's following subcollection!");
+        })
+        .catch((error) => {
+          console.error("Error updating current user's following subcollection: ", error);
+        });
+      })
+      .catch((error) => {
+        console.error("Error updating current user's following array: ", error);
       });
+    })
+    .catch((error) => {
+      console.error("Error following back user: ", error);
+    });
   };
+  
   
   
 

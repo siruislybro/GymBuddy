@@ -1,10 +1,16 @@
 from telegram import Update
-from telegram.ext import Updater, CommandHandler, CallbackContext
+from telegram.ext import Updater, CommandHandler, CallbackContext, MessageHandler, Filters
 from datetime import time
 import random
+import firebase_admin
+from firebase_admin import credentials
+from firebase_admin import firestore
 
 bot_token = "6114234628:AAHu-Us5-oVB1MOW5cvLXz1f3ppKbhrPCVo"
 bot_username = '@YourGymBuddyBot'
+
+cred = credentials.Certificate("./gymbuddy-69-firebase-adminsdk-4pj1r-59d15f26f0.json")
+firebase_admin.initialize_app(cred)
 
 quotes_and_tips = [
     "The only bad workout is the one that didn't happen.",
