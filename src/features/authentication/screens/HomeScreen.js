@@ -119,9 +119,16 @@ const fetchFollowedUsers = async () => {
 
   // Navigation functions
   const navigateToUserProfile = (username) => {
-    navigation.navigate('UserProfile', { username });
+    if (username === user.username) {
+      // If the selected username is the current user's username, navigate to own profile
+      navigation.navigate('Profile');
+    } else {
+      // If the selected username is not the current user's username, navigate to selected user's profile
+      navigation.navigate('UserProfile', { username });
+    }
     setModalVisible(false);
   };
+
 
   const navigateToWorkoutDetail = (workout) => {
     navigation.navigate('WorkoutDetail', { workout })

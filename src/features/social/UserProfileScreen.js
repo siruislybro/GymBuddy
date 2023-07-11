@@ -133,6 +133,15 @@ const UserProfileScreen = ({ route, navigation }) => {
       .catch((error) => {
         console.error("Error updating current user's following array: ", error);
       });
+
+      // Add new follower notification
+      const notificationsRef = db.collection('users').doc(userData.id).collection('notifications');
+      notificationsRef.add({
+        type: 'newFollower',
+        username: currentUsername,
+        isNew: true,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+      });
     })
     .catch((error) => {
       console.error("Error following back user: ", error);
@@ -182,6 +191,15 @@ const UserProfileScreen = ({ route, navigation }) => {
       .catch((error) => {
         console.error("Error updating current user's following array: ", error);
       });
+
+      const notificationsRef = db.collection('users').doc(userData.id).collection('notifications');
+      notificationsRef.add({
+        type: 'newFollower',
+        username: currentUsername,
+        isNew: true,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+      });
+
     })
     .catch((error) => {
       console.error("Error following user: ", error);

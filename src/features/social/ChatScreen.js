@@ -32,6 +32,15 @@ const ChatScreen = ({ route }) => {
       timestamp: firebase.firestore.FieldValue.serverTimestamp(),
     })
     .then(() => {
+    // Add new message notification
+    const notificationsRef = db.collection('users').doc(userId).collection('notifications');
+    notificationsRef.add({
+      type: 'newMessage',
+      senderId: auth.currentUser.uid,
+      message: newMessage,
+      isNew: true,
+      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+    });
       setNewMessage('');
     })
     .catch((error) => {
