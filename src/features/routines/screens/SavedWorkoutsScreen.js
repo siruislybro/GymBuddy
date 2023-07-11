@@ -38,7 +38,7 @@ const SavedWorkoutsScreen = () => {
   };
 
   const handleStartWorkout = (workout) => {
-    navigation.navigate('QuickStartScreen', { exercises: workout.exercises });
+    navigation.navigate('QuickStart', { exercises: workout.exercises });
   };
 
   const renderWorkoutItem = ({ item }) => (
@@ -58,7 +58,7 @@ const SavedWorkoutsScreen = () => {
       />
       <TouchableOpacity
         style={styles.addButton}
-        onPress={() => navigation.navigate('QuickStartScreen', { exercises: [] })}
+        onPress={() => navigation.navigate('QuickStart', { exercises: [] })}
       >
         <Text style={styles.addButtonText}>Create New Workout</Text>
       </TouchableOpacity>
