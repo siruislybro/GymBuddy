@@ -63,46 +63,52 @@ const HomeScreen = ({ navigation, route }) => {
   };
   
 
-  // Fetch followed users and their workouts
-  const fetchFollowedUsers = async () => {
-    console.log('its work ');
-    const querySnapshot = await db.collection('users').get();
-    const currentUser = auth.currentUser;
-    console.log("Home Screen 2");
-    // Retrieve the followed users
-    const followedUsersSnapshot = await db
+  
+// Fetch followed users and their workouts
+const fetchFollowedUsers = async () => {
+  console.log('Fetching followed users and workouts...');
+  const currentUser = auth.currentUser;
+
+  // Retrieve the followed users
+  const followedUsersSnapshot = await db
+    .collection('users')
+    .doc(currentUser.uid)
+    .get();
+
+  const followedUsernames = followedUsersSnapshot.data().following || [];
+  const usersData = [];
+
+  for (const username of followedUsernames) {
+    // Get the user document for this username
+    const userQuerySnapshot = await db
       .collection('users')
-      .doc(currentUser.uid)
+      .where('username', '==', username)
       .get();
+      
+    // Check if a user with this username exists
+    if (!userQuerySnapshot.empty) {
+      const userDoc = userQuerySnapshot.docs[0];
+      const userData = userDoc.data();
 
-    const followedUsers = followedUsersSnapshot.data().following || [];
-    const usersData = [];
+      // Get this user's workouts
+      const workoutsSnapshot = await userDoc.ref
+        .collection('workouts')
+        .orderBy('createdAt', 'desc')
+        .get();
 
-    for (const doc of querySnapshot.docs) {
-      const userData = doc.data();
-      const username = userData.username;
+      const workoutsData = workoutsSnapshot.docs.map((workoutDoc) => ({
+        id: workoutDoc.id,
+        ...workoutDoc.data(),
+      }));
 
-      // Check if the user is followed
-      if (followedUsers.includes(username)) {
-        const workoutsSnapshot = await db
-          .collection('users')
-          .doc(doc.id)
-          .collection('workouts')
-          .orderBy('createdAt', 'desc')
-          .get();
-
-        const workoutsData = workoutsSnapshot.docs.map((workoutDoc) => ({
-          id: workoutDoc.id,
-          ...workoutDoc.data(),
-        }));
-
-        usersData.push({ username, workouts: workoutsData });
-        console.log("home screen 3");
-      }
+      // Add this user and their workouts to the data array
+      usersData.push({ ...userData, workouts: workoutsData });
     }
-    setFollowedWorkouts(usersData);
-    console.log('homescreen 4');
-  };
+  }
+
+  setFollowedWorkouts(usersData);
+};
+
 
   // Filter users based on query
   const filterUsers = (query) => {

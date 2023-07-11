@@ -10,6 +10,8 @@ const UserProfileScreen = ({ route, navigation }) => {
   const [isFriend, setIsFriend] = useState(false);
   const [isFollowed, setIsFollowed] = useState(false);
   const [currentUsername, setCurrentUsername] = useState(null);
+  const [followersCount, setFollowersCount] = useState(0);
+  const [followingCount, setFollowingCount] = useState(0);
   const { username } = route.params;
   const currentUserId = auth.currentUser.uid;
 
@@ -24,90 +26,159 @@ const UserProfileScreen = ({ route, navigation }) => {
             id: doc.id,
             ...data,
           });
-          setIsFollowing(data.followers.includes(currentUsername));
-          setIsFriend(data.following.includes(currentUsername));
-          setIsFollowed(data.following.includes(currentUsername)); // New line
+  
+          const followersUnsub = doc.ref.collection('followers')
+            .where('username', '==', currentUsername)
+            .onSnapshot(followersSnapshot => {
+              setIsFollowing(!followersSnapshot.empty);
+            });
+  
+          // Subscribe to real-time updates for followers count
+          const followersCountUnsub = doc.ref.collection('followers')
+            .onSnapshot((querySnapshot) => {
+              setFollowersCount(querySnapshot.size);
+            });
+  
+          // Subscribe to real-time updates for following count
+          const followingCountUnsub = doc.ref.collection('following')
+            .onSnapshot((querySnapshot) => {
+              setFollowingCount(querySnapshot.size);
+            });
+
+          const followingUnsub = doc.ref.collection('following')
+          .where('username', '==', currentUsername)
+          .onSnapshot(followingSnapshot => {
+            setIsFollowed(!followingSnapshot.empty);
+            setIsFriend(isFollowing && !followingSnapshot.empty);
+          });
+  
+          // Cleanup the subscription on unmount
+          return () => {
+            followersUnsub();
+            followersCountUnsub();
+            followingCountUnsub();
+            followingUnsub();
+          };
         } else {
           console.log("No user data found");
         }
       });
-
-    db.collection('users').doc(currentUserId).get().then((doc) => {
-      setCurrentUsername(doc.data().username);
-    });
-
+  
+      db.collection('users')
+      .doc(currentUserId)
+      .get()
+      .then((doc) => {
+        setCurrentUsername(doc.data().username);
+        handleFollowedByUser(); // Check if user is a friend
+      });
     // Clean up the subscription on unmount
     return () => unsubscribe();
   }, [username, currentUserId, currentUsername]);
+  
+  
+  const handleFollowBack = () => {
+    handleFollow();
+    handleFollowedByUser(); // Implement this function based on your Firebase schema
+  };
 
-  // Adjust the button title based on the state variables
+  const handleFollowedByUser = () => {
+    const followingRef = db.collection('users').doc(currentUserId).collection('following');
+    followingRef
+      .where('username', '==', username)
+      .onSnapshot((querySnapshot) => {
+        setIsFriend(!querySnapshot.empty);
+      }, (error) => {
+        console.error("Error listening for changes in user's following collection: ", error);
+      });
+  };
+  
+  
+
   const getButtonTitle = () => {
     if (isFollowing) return "Unfollow";
     if (isFollowed) return "Follow back";
     return "Follow";
   };
 
-
   const handleFollow = () => {
-    const userRef = db.collection('users').doc(userData.id);
-    userRef.update({
-      followers: arrayUnion(currentUsername)
+    const followersRef = db.collection('users').doc(userData.id).collection('followers');
+    followersRef.doc(currentUserId).set({
+      username: currentUsername,
+      isNew: true
     })
+    .then(() => {
+      console.log("User successfully followed!");
+      setIsFollowing(true);
+  
+      const currentUserRef = db.collection('users').doc(currentUserId);
+      currentUserRef.update({
+        following: arrayUnion(username)
+      })
       .then(() => {
-        console.log("User successfully followed!");
-        setIsFollowing(true);
-
-        // Update the current user's following array
-        const currentUserRef = db.collection('users').doc(currentUserId);
-        currentUserRef.update({
-          following: arrayUnion(username)
+        console.log("Updated current user's following array!");
+  
+        // Add the user being followed to the 'following' subcollection of the current user
+        const followingRef = db.collection('users').doc(currentUserId).collection('following');
+        followingRef.doc(userData.id).set({
+          username: username,
+          isNew: true
         })
-          .then(() => {
-            console.log("Updated current user's following array!");
-          })
-          .catch((error) => {
-            console.error("Error updating current user's following array: ", error);
-          });
+        .then(() => {
+          console.log("Updated current user's following subcollection!");
+        })
+        .catch((error) => {
+          console.error("Error updating current user's following subcollection: ", error);
+        });
+  
       })
       .catch((error) => {
-        console.error("Error following user: ", error);
+        console.error("Error updating current user's following array: ", error);
       });
+    })
+    .catch((error) => {
+      console.error("Error following user: ", error);
+    });
   };
+  
 
   const handleUnfollow = () => {
-    const userRef = db.collection('users').doc(userData.id);
-    userRef.update({
-      followers: arrayRemove(currentUsername)
-    })
+    const followersRef = db.collection('users').doc(userData.id).collection('followers');
+    followersRef.doc(currentUserId).delete()
+    .then(() => {
+      console.log("User successfully unfollowed!");
+      setIsFollowing(false);
+      setIsFriend(false);
+  
+      const currentUserRef = db.collection('users').doc(currentUserId);
+      currentUserRef.update({
+        following: arrayRemove(username)
+      })
       .then(() => {
-        console.log("User successfully unfollowed!");
-        setIsFollowing(false);
-        setIsFriend(false);
-
-        // Update the current user's following array
-        const currentUserRef = db.collection('users').doc(currentUserId);
-        currentUserRef.update({
-          following: arrayRemove(username)
+        console.log("Updated current user's following array!");
+  
+        // Remove the user from the 'following' subcollection of the current user
+        const followingRef = db.collection('users').doc(currentUserId).collection('following');
+        followingRef.doc(userData.id).delete()
+        .then(() => {
+          console.log("Updated current user's following subcollection!");
         })
-          .then(() => {
-            console.log("Updated current user's following array!");
-          })
-          .catch((error) => {
-            console.error("Error updating current user's following array: ", error);
-          });
+        .catch((error) => {
+          console.error("Error updating current user's following subcollection: ", error);
+        });
+  
       })
       .catch((error) => {
-        console.error("Error unfollowing user: ", error);
+        console.error("Error updating current user's following array: ", error);
       });
+    })
+    .catch((error) => {
+      console.error("Error unfollowing user: ", error);
+    });
   };
-
+  
   const handleSendMessage = () => {
     navigation.navigate('Chat', { otherUserId: userData.id });
   };
-
-
-
-
 
   return userData ? (
     <View style={styles.container}>
@@ -123,15 +194,15 @@ const UserProfileScreen = ({ route, navigation }) => {
       <Text style={styles.email}>{userData.email}</Text>
       <View style={styles.followContainer}>
         <Text style={styles.followers}>
-          Followers: {userData.followers ? userData.followers.length : 0}
+          Followers: {followersCount}
         </Text>
         <Text style={styles.following}>
-          Following: {userData.following ? userData.following.length : 0}
+          Following: {followingCount}
         </Text>
       </View>
       <Button
-        title={getButtonTitle()}  // Use the new function for the title
-        onPress={isFollowing ? handleUnfollow : handleFollow}
+        title={getButtonTitle()}
+        onPress={isFollowing ? handleUnfollow : (isFollowed ? handleFollowBack : handleFollow)}
         style={styles.followButton}
       />
       {isFriend ? (
@@ -198,6 +269,13 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   followButton: {
+    backgroundColor: '#3498db',
+    color: '#fff',
+    padding: 10,
+    borderRadius: 20,
+    marginTop: 30,
+  },
+  sendMessageButton: {
     backgroundColor: '#3498db',
     color: '#fff',
     padding: 10,

@@ -8,23 +8,34 @@ import { auth } from '../../../../firebase';
 const ProfileScreen = ({ navigation }) => { 
   const user = auth.currentUser;
   const email = user.email;
-  const [numFollowers, setNumFollowers] = useState("loading...");
-  const [numFollowing, setNumFollowing] = useState("loading...");
+  const [numFollowers, setNumFollowers] = useState(0);
+  const [numFollowing, setNumFollowing] = useState(0);
   const [profilePicture, setProfilePicture] = useState('../../../assets/images/GYMAPP.jpg');
 
   useEffect(() => {
     // Create a real-time listener
-    console.log("profilescreen")
     const unsubscribe = db.collection('users').doc(user.uid)
         .onSnapshot(doc => {
-            const data = doc.data();
-            setNumFollowers(data.followers ? data.followers.length : 0);
-            setNumFollowing(data.following ? data.following.length : 0);
-            console.log("Profile Screen 0");
-            if (data.profilePicture && data.profilePicture !== '') {
-              setProfilePicture(data.profilePicture);
-              console.log("Profile Screen 1");
+            // Getting following and followers count in real-time
+            const followersUnsub = doc.ref.collection('followers')
+            .onSnapshot((querySnapshot) => {
+              setNumFollowers(querySnapshot.size);
+            });
+
+            const followingCountUnsub = doc.ref.collection('following')
+            .onSnapshot((querySnapshot) => {
+              setNumFollowing(querySnapshot.size);
+            });
+
+            if (doc.data().profilePicture && doc.data().profilePicture !== '') {
+              setProfilePicture(doc.data().profilePicture);
             }
+
+            // Clean up the subscription on unmount
+            return () => {
+                followersUnsub();
+                followingCountUnsub();
+            };
         }, error => {
             console.error("Error fetching user data: ", error);
         });
