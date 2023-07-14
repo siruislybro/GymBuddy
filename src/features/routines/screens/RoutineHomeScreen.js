@@ -10,8 +10,8 @@ const RoutineHomeScreen = () => {
     navigation.navigate('BuildRoutine');
   };
 
-  const handleViewSavedWorkouts = () => {
-    navigation.navigate('SavedWorkouts');
+  const handleViewWorkoutPlans = () => {
+    navigation.navigate('WorkoutPlans');
   };
 
   return (
@@ -26,10 +26,10 @@ const RoutineHomeScreen = () => {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.button}
-          onPress={handleViewSavedWorkouts}
+          onPress={handleViewWorkoutPlans}
           activeOpacity={0.5}
         >
-          <Text style={styles.buttonText}>View Saved Workouts</Text>
+          <Text style={styles.buttonText}>View Workout Plans</Text>
         </TouchableOpacity>
       </View>
     </View>

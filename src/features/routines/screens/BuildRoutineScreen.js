@@ -20,7 +20,8 @@ const BuildRoutineScreen = ({ navigation, route }) => {
     // Construct the payload for the OpenAI API
     const BMI = {weight} / ({height} * {height});
     console.log(BMI);
-    const prompt = `My height is ${height} cm, my weight is ${weight}kg ,my BMI is ${BMI} and my goal is to ${goal}. Generate ${numWorkouts} weightlifting workout plans and calories to consume in a day for me. Take note of ${additionalNotes}`;
+    const prompt = `My height is ${height} cm, my weight is ${weight}kg and my goal is to ${goal}. Generate ${numWorkouts} weightlifting workout plans for me, each with 5 exercises. Start every workout plan with "Workout Plan X" and list each exercise as "• Exercise Name: Sets sets of Reps reps".
+    ${additionalNotes}`;
     console.log(prompt)
     const maxTokens = 500; // Set the desired max number of tokens in the response
     const API_KEY = "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";

@@ -1,58 +1,55 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
+import firestore from '@react-native-firebase/firestore';
+import { db, auth } from '../../../../firebase';
 
 
-const SavedWorkoutsScreen = () => {
-  const [savedWorkouts, setSavedWorkouts] = useState([]);
+const WorkoutPlansScreen = () => {
+  const [workoutPlans, setWorkoutPlans] = useState([]);
   const navigation = useNavigation();
 
   useEffect(() => {
-    fetchSavedWorkouts();
+    fetchWorkoutPlans();
   }, []);
 
-  const fetchSavedWorkouts = async () => {
+  const fetchWorkoutPlans = async () => {
     try {
-      const workouts = await AsyncStorage.getItem('@savedWorkouts');
-      if (workouts) {
-        setSavedWorkouts(JSON.parse(workouts));
-      }
+      const user = auth.currentUser; // Assuming you have authenticated the user
+      const snapshot = await 
+        db.collection('users')
+        .doc(user.uid)
+        .collection('workoutPlans')
+        .get();
+      print(snapshot.docs)
+      const workouts = snapshot.docs.map((doc) => ({
+      id: doc.id,
+      exercises: doc.data().exercises,
+    }));
+      console.log('Workouts:', workouts);
+      setWorkoutPlans(workouts);
     } catch (error) {
       console.log('Error fetching saved workouts:', error);
     }
   };
 
-  const storeSavedWorkouts = async (workouts) => {
-    try {
-      await AsyncStorage.setItem('@savedWorkouts', JSON.stringify(workouts));
-    } catch (error) {
-      console.log('Error storing saved workouts:', error);
-    }
-  };
-
-  const handleAddWorkout = (workout) => {
-    const updatedWorkouts = [...savedWorkouts, workout];
-    setSavedWorkouts(updatedWorkouts);
-    storeSavedWorkouts(updatedWorkouts);
-  };
-
   const handleStartWorkout = (workout) => {
-    navigation.navigate('QuickStart', { exercises: workout.exercises });
+    const exerciseNames = workout.exercises.map((exercise) => exercise.name);
+    console.log(exerciseNames)
+    navigation.navigate('QuickStart', { exercises: exerciseNames });
   };
 
   const renderWorkoutItem = ({ item }) => (
     <TouchableOpacity style={styles.workoutItem} onPress={() => handleStartWorkout(item)}>
-      <Text style={styles.workoutName}>{item.name}</Text>
-      <Text style={styles.workoutDescription}>{item.description}</Text>
+      <Text style={styles.workoutName}>{item.id}</Text>
     </TouchableOpacity>
   );
 
   return (
     <View style={styles.container}>
       <FlatList
-        data={savedWorkouts}
-        keyExtractor={(item, index) => index.toString()}
+        data={workoutPlans}
+        keyExtractor={(item) => item.id}
         renderItem={renderWorkoutItem}
         ListEmptyComponent={<Text>No saved workouts</Text>}
       />
@@ -60,7 +57,7 @@ const SavedWorkoutsScreen = () => {
         style={styles.addButton}
         onPress={() => navigation.navigate('QuickStart', { exercises: [] })}
       >
-        <Text style={styles.addButtonText}>Create New Workout</Text>
+        <Text style={styles.addButtonText}>Start New Workout</Text>
       </TouchableOpacity>
     </View>
   );
@@ -74,13 +71,14 @@ const styles = StyleSheet.create({
   },
   workoutItem: {
     marginBottom: 10,
-    padding: 10,
+    padding: 20,
     borderRadius: 5,
     backgroundColor: '#f0f0f0',
   },
   workoutName: {
     fontSize: 16,
     fontWeight: 'bold',
+    color: '#000',
   },
   workoutDescription: {
     fontSize: 14,
@@ -100,4 +98,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SavedWorkoutsScreen;
+export default WorkoutPlansScreen;

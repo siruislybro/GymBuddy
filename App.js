@@ -38,7 +38,7 @@ import StatisticsScreen from './src/features/pastWorkouts/screens/StatisticsScre
 import BuildRoutineScreen from './src/features/routines/screens/BuildRoutineScreen';
 import WorkoutDetailScreen from './src/features/pastWorkouts/screens/WorkoutDetailScreen';
 import SettingsScreen from './src/features/authentication/screens/SettingsScreen';
-import SavedWorkoutsScreen from './src/features/routines/screens/SavedWorkoutsScreen';
+import WorkoutPlansScreen from './src/features/routines/screens/WorkoutPlansScreen';
 import RoutineHomeScreen from './src/features/routines/screens/RoutineHomeScreen';
 
 const Tab = createBottomTabNavigator();
@@ -151,9 +151,9 @@ export default function App() {
                     options={{ headerShown: true }}
                   />
                   <Stack.Screen
-                    name="SavedWorkouts"
-                    component={SavedWorkoutsScreen}
-                    options={{ headerShown: false }}
+                    name="WorkoutPlans"
+                    component={WorkoutPlansScreen}
+                    options={{ headerShown: true }}
                   />
                   <Stack.Screen
                     name="BuildRoutine"

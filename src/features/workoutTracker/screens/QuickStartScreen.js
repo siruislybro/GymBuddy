@@ -17,17 +17,21 @@ const QuickStartScreen = ({ navigation, route }) => {
   const nav = useNavigation();
   const user = auth.currentUser;
   const [workoutName, setWorkoutName] = useState('');
-  const [exercises, setExercises] = useState(
-    route.params?.exercises || [{ name: 'Exercise 1', sets: [{ weight: '', reps: '' }] }]
-  );
-
+  const [exercises, setExercises] = useState([]);
   const { setWorkoutActive, setWorkoutEnded } = useContext(WorkoutContext);
   const [duration, setDuration] = useState(0);
   const [restTime, setRestTime] = useState(60);
   const [restInterval, setRestInterval] = useState(null);
   const [isTimerModalVisible, setIsTimerModalVisible] = useState(false);
+  
+  console.log(route.params?.exercises);
+  
 
+  useEffect(() => {
+    setExercises(route.params?.exercises || [{ name: 'Exercise 1', sets: [{ weight: '', reps: '' }] }]);
+  }, [route.params?.exercises]);
 
+  console.log('exercise', exercises);
 
   // Decrement rest time every second.
   useEffect(() => {
