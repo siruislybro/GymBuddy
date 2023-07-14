@@ -9,7 +9,7 @@ from firebase_admin import firestore
 bot_token = "6114234628:AAHu-Us5-oVB1MOW5cvLXz1f3ppKbhrPCVo"
 bot_username = '@YourGymBuddyBot'
 
-cred = credentials.Certificate("./gymbuddy-69-firebase-adminsdk-4pj1r-59d15f26f0.json")
+cred = credentials.Certificate("./telegram.json")
 firebase_admin.initialize_app(cred)
 
 quotes_and_tips = [
