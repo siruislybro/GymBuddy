@@ -3,6 +3,7 @@ import { View, Text, Image, StyleSheet, Button } from 'react-native';
 import { db, auth } from '../../../firebase';
 import BackButton from '../../components/BackButton';
 import { arrayUnion, arrayRemove } from '@firebase/firestore';
+import firebase from 'firebase/compat';
 
 const UserProfileScreen = ({ route, navigation }) => {
   const [userData, setUserData] = useState(null);
@@ -135,7 +136,7 @@ const UserProfileScreen = ({ route, navigation }) => {
       });
 
       // Add new follower notification
-      const notificationsRef = db.collection('users').doc(userData.id).collection('notifications');
+      const notificationsRef = db.collection('users').doc(currentUserId).collection('notifications');
       notificationsRef.add({
         type: 'newFollower',
         username: currentUsername,

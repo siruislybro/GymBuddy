@@ -16,11 +16,13 @@ const HomeScreen = ({ navigation, route }) => {
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [followedWorkouts, setFollowedWorkouts] = useState([]);
   const [isLoading, setLoading] = useState(true); 
+  const [notifications, setNotifications] = useState([]);
 
   // Effects
   useEffect(() => { fetchUsers(); }, []);
   useEffect(() => { fetchFollowedUsers(); }, []);  
   useEffect(() => { setFilteredUsers(filterUsers(query)); }, [query]);
+  useEffect(() => { fetchNotifications(); }, []);
 
   // Format duration of workout
   const formatDuration = (duration) => {
@@ -182,6 +184,66 @@ const fetchFollowedUsers = async () => {
       </TouchableOpacity>
     ));
   };
+
+  // Function to transform notification type to user-friendly message
+  const transformNotificationType = (type) => {
+    switch (type) {
+      case 'newFollower':
+        return 'You have a new follower!';
+      // Add more cases as needed
+      case 'newMessage':
+        return 'You have a new message!';
+    }
+  };
+
+
+  // Fetch notifications for the current user
+  const fetchNotifications = async () => {
+    console.log('Fetching notifications...');
+    const currentUser = auth.currentUser;
+
+    const notificationsSnapshot = await db
+      .collection('users')
+      .doc(currentUser.uid)
+      .collection('notifications')
+      .where('isNew', '==', true)
+      .get();
+
+    const notificationsData = notificationsSnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+
+    setNotifications(notificationsData);
+  };
+
+  // Function to handle press on a notification item
+  const handlePressNotificationItem = async (notificationId) => {
+    const currentUser = auth.currentUser;
+
+    await db
+      .collection('users')
+      .doc(currentUser.uid)
+      .collection('notifications')
+      .doc(notificationId)
+      .update({ isNew: false });
+
+    // Refetch the notifications to reflect the change
+    fetchNotifications();
+  };
+
+  // Render function for notification items
+  const renderNotificationItem = ({ item }) => (
+    <TouchableOpacity
+      onPress={() => handlePressNotificationItem(item.id)}
+      style={styles.notificationItem}
+    >
+      <Text style={styles.notificationType}>{transformNotificationType(item.type)}</Text>
+      <Text style={styles.notificationMessage}>{item.message}</Text> 
+    </TouchableOpacity>
+  );
+
+
   
 
   // Component rendering
@@ -200,6 +262,14 @@ const fetchFollowedUsers = async () => {
         >
           <Icon name="search" size={30} color="white" />
         </TouchableOpacity>
+      </View>
+      <View style={styles.notificationsContainer}>
+        <Text style={styles.notificationsTitle}>Notifications</Text>
+        <FlatList
+          data={notifications}
+          renderItem={renderNotificationItem}
+          keyExtractor={(item) => item.id}
+        />
       </View>
       {/* Modal for search */}
       <Modal
@@ -367,6 +437,30 @@ const styles = StyleSheet.create({
   seeMoreText: {
     color: '#333',
     textAlign: 'center',
+  },
+  notificationsContainer: {
+    padding: 10,
+  },
+  notificationsTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  notificationItem: {
+    backgroundColor: '#f5f5f5',
+    padding: 10,
+    borderRadius: 10,
+    marginBottom: 10,
+    borderWidth: 1,
+    borderColor: '#e0e0e0',
+  },
+  notificationMessage: {
+    fontSize: 16,
+    color: '#333',
+    marginBottom: 5,
+  },
+  notificationType: {
+    fontSize: 14,
+    color: '#888',
   },
 });
 
