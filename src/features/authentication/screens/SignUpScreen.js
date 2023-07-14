@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, TextInput, Button, StyleSheet, Alert } from 'react-native';
+import { View, TextInput, Button, Text, StyleSheet, Alert, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { auth, db } from '../../../../firebase'
 import BackButton from '../../../components/BackButton';
 
@@ -7,6 +7,7 @@ const SignUpScreen = ({ navigation }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [name, setName] = useState('');
+    const [isLoading, setLoading] = useState(false); 
 
     const writeUserData = async (userId, name, email) => {
         const defaultProfilePic = '../../../assets/images/GYMAPP.jpg'; 
@@ -39,6 +40,7 @@ const SignUpScreen = ({ navigation }) => {
     //   };
       
     const handleSignUp = () => {
+        setLoading(true);
         checkIfUsernameExists(name).then((usernameExists) => {
             if (usernameExists) {
                 Alert.alert('Error!', 'Username already in use', [{ text: 'OK' }]);
@@ -69,8 +71,10 @@ const SignUpScreen = ({ navigation }) => {
                     } else {
                         Alert.alert(error.code);
                     }
-                });
+                })
             }
+        }).finally(() => {
+            setLoading(false);
         });
     }
 
@@ -103,7 +107,13 @@ const SignUpScreen = ({ navigation }) => {
                 onChangeText={setPassword}
                 value={password}
             />
-            <Button title="Sign Up" onPress={handleSignUp} />
+            <TouchableOpacity style={styles.button} onPress={handleSignUp} disabled={isLoading}>
+                {isLoading ? (
+                    <ActivityIndicator size="small" color="#FFF" />
+                ) : (
+                <Text style={styles.buttonText}>Sign Up</Text>
+                )}
+            </TouchableOpacity>
         </View>
     );
 };
@@ -131,6 +141,17 @@ const styles = StyleSheet.create({
         marginBottom: 12,
         paddingHorizontal: 12,
         color: 'white',
+    },
+    button: {
+        backgroundColor: '#0484fb',
+        padding: 10,
+        borderRadius: 5,
+        marginBottom: 20,
+    },
+    buttonText: {
+    color: '#fff',
+    textAlign: 'center',
+    fontSize: 18,
     },
 });
 
