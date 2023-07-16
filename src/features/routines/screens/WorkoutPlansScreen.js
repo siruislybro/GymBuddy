@@ -26,24 +26,37 @@ const WorkoutPlansScreen = () => {
       id: doc.id,
       exercises: doc.data().exercises,
     }));
-      console.log('Workouts:', workouts);
       setWorkoutPlans(workouts);
+//       workoutPlans.forEach((workoutPlan) => {
+//   console.log('Workout Plan:', workoutPlan.id);
+//   workoutPlan.exercises.forEach((exercise) => {
+//     console.log('Exercise Name:', exercise.name);
+//     exercise.sets.forEach((set) => {
+//       console.log('Set:', set);
+//       console.log('Weight:', set.weight);
+//       console.log('Reps:', set.reps);
+//     });
+//   });
+// });
     } catch (error) {
       console.log('Error fetching saved workouts:', error);
     }
   };
 
-  const handleStartWorkout = (workout) => {
-    const exerciseNames = workout.exercises.map((exercise) => exercise.name);
-    console.log(exerciseNames)
-    navigation.navigate('QuickStart', { exercises: exerciseNames });
-  };
+  const renderWorkoutItem = ({ item }) => {
+    console.log('item', item);
 
-  const renderWorkoutItem = ({ item }) => (
-    <TouchableOpacity style={styles.workoutItem} onPress={() => handleStartWorkout(item)}>
-      <Text style={styles.workoutName}>{item.id}</Text>
-    </TouchableOpacity>
-  );
+    const handleStartWorkout = (exercises) => {
+      console.log('exercises', exercises)
+      navigation.navigate('QuickStart', { exercises });
+    };
+
+    return (
+      <TouchableOpacity style={styles.workoutItem} onPress={() => handleStartWorkout(item.exercises)}>
+        <Text style={styles.workoutName}>{item.id}</Text>
+      </TouchableOpacity>
+    );
+  };
 
   return (
     <View style={styles.container}>

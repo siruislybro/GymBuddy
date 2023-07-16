@@ -36,7 +36,12 @@ const RecommendedRoutineScreen = ({ route }) => {
 
     if (currentPlan) {
       // Push the exercise to the current workout plan
-      currentPlan.exercises.push({ name: exerciseName, sets:[{weight: '', reps: reps}] });
+      const exercise = { name: exerciseName, sets: [] };
+
+      for (let i = 0; i < sets; i++) {
+        exercise.sets.push({ weight: '', reps: reps });
+      }
+      currentPlan.exercises.push(exercise);
     }
     }
   });

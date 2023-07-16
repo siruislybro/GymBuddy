@@ -19,6 +19,7 @@ const PastWorkoutsScreen = ({ navigation }) => {
       }));
   
       setPastWorkouts(workouts);
+      console.log(pastWorkouts)
     }
   
     fetchWorkouts();

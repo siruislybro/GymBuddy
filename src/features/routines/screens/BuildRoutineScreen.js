@@ -90,7 +90,7 @@ const BuildRoutineScreen = ({ navigation, route }) => {
     <View style={styles.container}>
         <View style={styles.innerContainer}>
         <BackButton />
-        <Text style={styles.title}>RoutineCalibration</Text>
+        <Text style={styles.title}>Routine Calibration</Text>
       </View>
       <Text style={styles.text}>Enter Height: </Text>
       <TextInput

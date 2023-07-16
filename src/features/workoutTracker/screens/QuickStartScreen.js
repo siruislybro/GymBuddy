@@ -24,14 +24,12 @@ const QuickStartScreen = ({ navigation, route }) => {
   const [restInterval, setRestInterval] = useState(null);
   const [isTimerModalVisible, setIsTimerModalVisible] = useState(false);
   
-  console.log(route.params?.exercises);
-  
-
   useEffect(() => {
-    setExercises(route.params?.exercises || [{ name: 'Exercise 1', sets: [{ weight: '', reps: '' }] }]);
+    if (route.params?.exercises) {
+      console.log('true')
+      setExercises(route.params.exercises);
+    }
   }, [route.params?.exercises]);
-
-  console.log('exercise', exercises);
 
   // Decrement rest time every second.
   useEffect(() => {
@@ -71,6 +69,7 @@ const QuickStartScreen = ({ navigation, route }) => {
 
   useEffect(() => {
     if (route.params?.newExercise) {
+      console.log('newtrue')
       setExercises((prevExercises) => {
         const newExercises = [
           ...prevExercises,
@@ -84,7 +83,9 @@ const QuickStartScreen = ({ navigation, route }) => {
   useEffect(() => {
     (async () => {
       const savedExercises = await getData('@workout');
+      console.log('command ran')
       if (savedExercises) {
+        console.log('savedExercises', savedExercises);
         setExercises(savedExercises);
       }
 
@@ -107,7 +108,8 @@ const QuickStartScreen = ({ navigation, route }) => {
   const getData = async (key) => {
     try {
       const jsonValue = await AsyncStorage.getItem(key);
-      return jsonValue != null ? JSON.parse(jsonValue) : null;
+      console.log('jsonValue', jsonValue)
+      return jsonValue !== null && jsonValue !== "[]" ? JSON.parse(jsonValue) : null;
     } catch (e) {
       // error reading value
     }
@@ -317,6 +319,8 @@ const cancelWorkout = async () => {
     setWorkoutName('');
     await AsyncStorage.removeItem('@workout');
   };
+
+  
 
   return (
     <View style={styles.screen}>
