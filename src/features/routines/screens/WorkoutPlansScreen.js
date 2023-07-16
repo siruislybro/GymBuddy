@@ -15,7 +15,7 @@ const WorkoutPlansScreen = () => {
 
   const fetchWorkoutPlans = async () => {
     try {
-      const user = auth.currentUser; // Assuming you have authenticated the user
+      const user = auth.currentUser;
       const snapshot = await 
         db.collection('users')
         .doc(user.uid)
@@ -27,17 +27,6 @@ const WorkoutPlansScreen = () => {
       exercises: doc.data().exercises,
     }));
       setWorkoutPlans(workouts);
-//       workoutPlans.forEach((workoutPlan) => {
-//   console.log('Workout Plan:', workoutPlan.id);
-//   workoutPlan.exercises.forEach((exercise) => {
-//     console.log('Exercise Name:', exercise.name);
-//     exercise.sets.forEach((set) => {
-//       console.log('Set:', set);
-//       console.log('Weight:', set.weight);
-//       console.log('Reps:', set.reps);
-//     });
-//   });
-// });
     } catch (error) {
       console.log('Error fetching saved workouts:', error);
     }
@@ -48,7 +37,7 @@ const WorkoutPlansScreen = () => {
 
     const handleStartWorkout = (exercises) => {
       console.log('exercises', exercises)
-      navigation.navigate('QuickStart', { exercises });
+      navigation.navigate('WorkoutPlanDetails', { workout: item });
     };
 
     return (

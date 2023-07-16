@@ -40,6 +40,7 @@ import WorkoutDetailScreen from './src/features/pastWorkouts/screens/WorkoutDeta
 import SettingsScreen from './src/features/authentication/screens/SettingsScreen';
 import WorkoutPlansScreen from './src/features/routines/screens/WorkoutPlansScreen';
 import RoutineHomeScreen from './src/features/routines/screens/RoutineHomeScreen';
+import WorkoutPlanDetailsScreen from './src/features/routines/screens/WorkoutPlanDetailsScreen';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -163,6 +164,11 @@ export default function App() {
                   <Stack.Screen
                     name="RecommendedRoutine"
                     component={RecommendedRoutineScreen}
+                    options={({ headerShown: false })}
+                  />
+                  <Stack.Screen
+                    name="WorkoutPlanDetails"
+                    component={WorkoutPlanDetailsScreen}
                     options={({ headerShown: false })}
                   />
                   <Stack.Screen
