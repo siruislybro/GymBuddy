@@ -39,7 +39,7 @@ const RecommendedRoutineScreen = ({ route }) => {
       const exercise = { name: exerciseName, sets: [] };
 
       for (let i = 0; i < sets; i++) {
-        exercise.sets.push({ weight: '', reps: reps });
+        exercise.sets.push({ weight: '', reps: reps.toString() });
       }
       currentPlan.exercises.push(exercise);
     }
