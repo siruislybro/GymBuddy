@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: Colors.bgColor,
+    backgroundColor: '#F5F5F5',
   },
   welcomeText: {
     color: 'white',

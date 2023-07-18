@@ -69,13 +69,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: '#fff',
+    backgroundColor: '#F5F5F5',
   },
   workoutItem: {
     marginBottom: 10,
     padding: 20,
     borderRadius: 5,
-    backgroundColor: '#f0f0f0',
+    backgroundColor: '#fff',
   },
   workoutName: {
     fontSize: 16,
