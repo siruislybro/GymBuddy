@@ -134,9 +134,6 @@ const QuickStartScreen = ({ navigation, route }) => {
       console.error('Error writing document: ', error);
     }
   };
-  
-  
-
 
   const handleWeightChange = (text, exerciseIndex, setIndex) => {
     let newExercises = [...exercises];
@@ -250,10 +247,7 @@ const QuickStartScreen = ({ navigation, route }) => {
       }
     }
   };
-  
 
-  
-  
 
 const endWorkout = async () => {
   if (exercises.length === 0) {
@@ -312,16 +306,6 @@ const cancelWorkout = async () => {
   nav.navigate('Home', { userName: user.displayName });
 };
 
-
-  
-  const resetWorkout = async () => {
-    setExercises([]);
-    setWorkoutName('');
-    await AsyncStorage.removeItem('@workout');
-  };
-
-  
-
   return (
     <View style={styles.screen}>
       <View style={styles.topBar}>
@@ -372,18 +356,15 @@ const cancelWorkout = async () => {
         renderItem={renderExerciseItem}
       />
       <View style={styles.buttonContainer}>
-        <View style={styles.addExercisesContainer}>
-        <Button
-          title="Add Exercises"
-          onPress={() => navigation.navigate('AddExercisesScreen', { exercises: exercises })}
-        />
-        </View>
-        <View style={styles.endWorkoutContainer}>
-        <Button title="End Workout" onPress={endWorkout} />
-        </View>
-        <View style={styles.cancelWorkoutContainer}>
-        <Button title="Cancel Workout" onPress={cancelWorkout} />
-        </View>
+        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('AddExercisesScreen', { exercises: exercises })}>
+          <Text style={styles.buttonText}>Add Exercises</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={endWorkout}>
+          <Text style={styles.buttonText}>End Workout</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.cancelWorkoutButton} onPress={cancelWorkout}>
+          <Text style={styles.cancelWorkoutButtonText}>Cancel Workout</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -393,26 +374,25 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
     padding: 20,
-    backgroundColor: '#010202',
+    backgroundColor: '#F5F5F5',
   },
   topBar: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#010202',
+    backgroundColor: '#F5F5F5',
     borderRadius: 10,
     padding: 10,
     margin: 10,
   },
   header: {
-    marginHorizontal: 20,
-    height: 50,
-    alignItems: 'flex-start', // align text to the left
-    flexDirection: 'row',
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   workoutNameInput: {
-    color: '#fff',
+    color: 'black',
     fontSize: 16,
-    borderBottomColor: '#fff',
+    borderBottomColor: 'black',
     borderBottomWidth: 1,
     marginHorizontal: 20,
     width: '80%'
@@ -476,9 +456,42 @@ const styles = StyleSheet.create({
     marginTop: 50,
   },
   buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
     marginTop: 20,
+    marginBottom: 20,
+  },
+  button: {
+    height: 40,
+    marginVertical: 10,
+    paddingHorizontal: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'transparent',
+    borderColor: '#007bff',
+    borderWidth: 2,
+    borderRadius: 10,
+  },
+  buttonText: {
+    fontSize: 16,
+    color: '#007bff',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  cancelWorkoutButton: {
+    height: 40,
+    marginVertical: 10,
+    paddingHorizontal: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'transparent',
+    borderColor: '#FF0000',
+    borderWidth: 2,
+    borderRadius: 10,
+  },
+  cancelWorkoutButtonText: {
+    fontSize: 16,
+    color: '#FF0000',
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
   timerContainer: {
     position: 'absolute',
