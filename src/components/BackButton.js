@@ -13,7 +13,7 @@ function BackButton() {
     <TouchableOpacity 
       style={styles.backButton} 
       onPress={backButtonHandler}>
-      <Icon name='arrow-back' color='white' />
+      <Icon name='arrow-back' color='black' />
     </TouchableOpacity>      
   );
 }

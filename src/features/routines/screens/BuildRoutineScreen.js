@@ -92,22 +92,22 @@ const BuildRoutineScreen = ({ navigation, route }) => {
         <BackButton />
         <Text style={styles.title}>Routine Calibration</Text>
       </View>
-      <Text style={styles.text}>Enter Height: </Text>
+      <Text style={styles.label}>Enter Height: </Text>
       <TextInput
         style={styles.input}
         placeholder="e.g. 175cm"
         value={height}
         onChangeText={setHeight}
-        placeholderTextColor="#D3D3D3"
+        placeholderTextColor="#a9a9a9"
         keyboardType='numeric'
       />
-      <Text style={styles.text}>Enter Weight: </Text>
+      <Text style={styles.label}>Enter Weight: </Text>
       <TextInput
         style={styles.input}
         placeholder="e.g 70kg"
         value={weight}
         onChangeText={setWeight}
-        placeholderTextColor="#D3D3D3"
+        placeholderTextColor="#a9a9a9"
         keyboardType='numeric'
       />
       <View style={styles.dropdownContainer1}>
@@ -121,7 +121,7 @@ const BuildRoutineScreen = ({ navigation, route }) => {
               setOpen={handleOpenGoalDropdown}
               setValue={setGoal}
               placeholder="Select Goal"
-              placeholderStyle={{ color: '#D3D3D3' }}
+              placeholderStyle={{ color: '#a9a9a9' }}
               containerStyle={styles.dropdown}
               style={styles.dropdown}
               dropDownStyle={styles.dropdown}
@@ -142,7 +142,7 @@ const BuildRoutineScreen = ({ navigation, route }) => {
               setOpen={handleOpenNumWorkoutsDropdown}
               setValue={setNumWorkouts}
               placeholder="Select Number of Workouts"
-              placeholderStyle={{ color: '#D3D3D3' }}
+              placeholderStyle={{ color: '#a9a9a9' }}
               containerStyle={styles.dropdown}
               style={styles.dropdown}
               dropDownStyle={styles.dropdown}
@@ -158,7 +158,7 @@ const BuildRoutineScreen = ({ navigation, route }) => {
         placeholder="e.g. right knee injury"
         value={additionalNotes}
         onChangeText={setAdditionalNotes}
-        placeholderTextColor="#D3D3D3"
+        placeholderTextColor="#a9a9a9"
       />
       <TouchableOpacity style={styles.button} onPress={handleSubmit} disabled={isLoading}>
         {isLoading ? (
@@ -176,7 +176,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     padding: 20,
-    backgroundColor: '#010202',
+    backgroundColor: '#F5F5F5',
   },
   innerContainer: {
     flexDirection: 'row',
@@ -188,15 +188,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginHorizontal: 60,
     marginBottom: 20,
-    color: '#FFF',
+    color: 'black',
   },
   input: {
     borderWidth: 1,
-    borderColor: '#FFF',
+    borderColor: 'black',
     borderRadius: 5,
     padding: 10,
     marginBottom: 20,
-    color: '#FFF',
+    color: 'black',
   },
   button: {
     backgroundColor: '#0484fb',
@@ -205,7 +205,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   buttonText: {
-    color: '#fff',
+    color: 'black',
     textAlign: 'center',
     fontSize: 18,
   },
@@ -220,7 +220,7 @@ const styles = StyleSheet.create({
     zIndex: 8000,
   },
   label: {
-    color: '#FFF',
+    color: 'black',
     marginBottom: 5,
   },
   dropdownWrapper: {
@@ -228,12 +228,11 @@ const styles = StyleSheet.create({
   },
   dropdown: {
     width: '100%',
-    backgroundColor: '#010202',
-    borderWidth: 1,
-    borderColor: '#FFF',
+    backgroundColor: '#F5F5F5',
+    borderColor: 'black',
   },
   dropdownLabel: {
-    color: '#FFF',
+    color: 'black',
   },
   dropdownItemContainer: {
     zIndex: 9999,
@@ -241,10 +240,7 @@ const styles = StyleSheet.create({
   unit: {
     marginLeft: 5,
     color: '#FFF',
-  },
-  text: {
-    color: '#FFF',
-  },
+  }
 });
 
 export default BuildRoutineScreen;
