@@ -27,6 +27,7 @@ import LeaderboardDetailsScreen from './src/features/leaderboard/screens/Leaderb
 import LoginScreen from './src/features/authentication/screens/LoginScreen';
 import MeasurementScreen from './src/features/measurementsTracker/screens/MeasurementsScreen';
 import PastWorkoutsScreen from './src/features/pastWorkouts/screens/PastWorkoutsScreen';
+import PastWorkoutsDetailsScreen from './src/features/pastWorkouts/screens/PastWorkoutsScreen';
 import ProfileScreen from './src/features/authentication/screens/ProfileScreen';
 import QuickStartScreen from './src/features/workoutTracker/screens/QuickStartScreen';
 import RecommendedRoutineScreen from './src/features/routines/screens/RecommendedRoutineScreen';
@@ -202,6 +203,11 @@ export default function App() {
                     component={PastWorkoutsScreen}
                     options={{ headerShown: false }}
                   />
+                  <Stack.Screen
+                    name="PastWorkoutsDetailsScreen"
+                    component={PastWorkoutsDetailsScreen}
+                    options={{ headerShown: false }}
+                  />                  
                   <Stack.Screen
                     name="MeasurementsScreen"
                     component={MeasurementScreen}

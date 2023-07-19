@@ -36,12 +36,12 @@ const PastWorkoutsScreen = ({ navigation }) => {
         data={pastWorkouts}
         keyExtractor={item => item.id}
         renderItem={({ item }) => (
-          <TouchableOpacity 
-            style={styles.listItem}
-            onPress={() => navigation.navigate('WorkoutDetail', { workout: item })}
-          >
-            <Text style={styles.item}>{item.workoutName}</Text>
-          </TouchableOpacity>
+        <TouchableOpacity 
+          style={styles.listItem}
+          onPress={() => navigation.navigate('PastWorkoutsDetailsScreen', { workout: item })}
+        >
+          <Text style={styles.item}>{item.workoutName}</Text>
+        </TouchableOpacity>
         )}
       />
     </View>

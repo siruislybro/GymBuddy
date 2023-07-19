@@ -2,8 +2,10 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Linking } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Colors from '../../../utils/colors';
+import { db, auth } from '../../../../firebase';
 
 const RoutineHomeScreen = () => {
+  const currUser = auth.currentUser;
   const navigation = useNavigation();
 
   const handleRoutineCalibration = () => {
@@ -11,7 +13,9 @@ const RoutineHomeScreen = () => {
   };
 
   const handleViewWorkoutPlans = () => {
-    navigation.navigate('WorkoutPlans');
+    // The navigation parameters should be passed as an object
+    console.log(currUser);
+    navigation.navigate('WorkoutPlans', { user: currUser });
   };
 
   return (
@@ -44,7 +48,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#F5F5F5',
   },
   buttons: {
-    flexDirection: 'row',
     flexDirection: 'column',
     marginTop: 10,
     alignItems: 'center',

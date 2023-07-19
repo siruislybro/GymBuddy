@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Image, StyleSheet, Button } from 'react-native';
+import { View, Text, Image, StyleSheet, Button, Alert } from 'react-native';
 import { db, auth } from '../../../firebase';
 import BackButton from '../../components/BackButton';
 import { arrayUnion, arrayRemove } from '@firebase/firestore';
@@ -13,6 +13,7 @@ const UserProfileScreen = ({ route, navigation }) => {
   const [currentUsername, setCurrentUsername] = useState(null);
   const [followersCount, setFollowersCount] = useState(0);
   const [followingCount, setFollowingCount] = useState(0);
+  const [savedWorkouts, setSavedWorkouts] = useState([]);
   const { username } = route.params;
   const currentUserId = auth.currentUser.uid;
 
@@ -247,6 +248,28 @@ const UserProfileScreen = ({ route, navigation }) => {
     navigation.navigate('Chat', { otherUserId: userData.id });
   };
 
+  const viewWorkoutPlans = () => {
+    if (isFriend) {
+      console.log(userData);
+      navigation.navigate('WorkoutPlans', { user: userData });
+    } else {
+      Alert.alert("You must be friends to view workout plans!");
+    }
+  };
+
+  // const saveWorkoutsToCurrentUser = (workouts) => {
+  //   const currentUserWorkoutsRef = db.collection('users').doc(currentUserId).collection('workoutPlans');
+  //   workouts.forEach(workout => {
+  //     currentUserWorkoutsRef.add(workout)
+  //       .then(() => {
+  //         console.log("Workout successfully added to current user's workoutPlans!");
+  //       })
+  //       .catch(error => {
+  //         console.error("Error adding workout to current user's workoutPlans: ", error);
+  //       });
+  //   });
+  // };
+
   return userData ? (
     <View style={styles.container}>
       <BackButton />
@@ -272,13 +295,20 @@ const UserProfileScreen = ({ route, navigation }) => {
         onPress={isFollowing ? handleUnfollow : (isFollowed ? handleFollowBack : handleFollow)}
         style={styles.followButton}
       />
+      
       {isFriend ? (
         <Button
           title="Send Message"
           onPress={handleSendMessage}
           style={styles.sendMessageButton}
         />
+        
       ) : null}
+      <Button
+        title="View Workout Plans"
+        onPress={viewWorkoutPlans}
+        style={styles.viewWorkoutPlansButton} // You'll need to define this style
+      />
     </View>
   ) : (
     <View style={styles.container}>
@@ -343,6 +373,13 @@ const styles = StyleSheet.create({
     marginTop: 30,
   },
   sendMessageButton: {
+    backgroundColor: '#3498db',
+    color: '#fff',
+    padding: 10,
+    borderRadius: 20,
+    marginTop: 30,
+  },
+  viewWorkoutPlansButton: {
     backgroundColor: '#3498db',
     color: '#fff',
     padding: 10,

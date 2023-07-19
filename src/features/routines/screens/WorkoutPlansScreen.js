@@ -5,9 +5,13 @@ import firestore from '@react-native-firebase/firestore';
 import { db, auth } from '../../../../firebase';
 
 
-const WorkoutPlansScreen = () => {
+const WorkoutPlansScreen = ({ route }) => {
   const [workoutPlans, setWorkoutPlans] = useState([]);
   const navigation = useNavigation();
+  
+  // Access user data from route params
+  const { user: userData } = route.params;
+  console.log(route.params);
 
   useEffect(() => {
     fetchWorkoutPlans();
@@ -15,17 +19,21 @@ const WorkoutPlansScreen = () => {
 
   const fetchWorkoutPlans = async () => {
     try {
-      const user = auth.currentUser;
+      // Use the user id from the passed userData instead of the current user
       const snapshot = await 
         db.collection('users')
-        .doc(user.uid)
+        .doc(userData.id)
         .collection('workoutPlans')
         .get();
-      print(snapshot.docs)
+
+      console.log(snapshot.docs)
+
       const workouts = snapshot.docs.map((doc) => ({
-      id: doc.id,
-      exercises: doc.data().exercises,
-    }));
+        id: doc.id,
+        exercises: doc.data().exercises,
+      }));
+      console.log(userData);
+
       setWorkoutPlans(workouts);
     } catch (error) {
       console.log('Error fetching saved workouts:', error);

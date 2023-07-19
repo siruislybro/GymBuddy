@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F5F5F5',
   },
   welcomeText: {
-    color: 'white',
+    color: '#010202',
     position: 'absolute',
     top: 70,
     left: 20,
