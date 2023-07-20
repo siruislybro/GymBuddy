@@ -11,18 +11,25 @@ const WorkoutPlansScreen = ({ route }) => {
   
   // Access user data from route params
   const { user: userData } = route.params;
-  console.log(route.params);
-
+  console.log('route params', userData);
+  console.log('user', auth.currentUser)
+  console.log(userData === auth.currentUser)
   useEffect(() => {
     fetchWorkoutPlans();
   }, []);
 
   const fetchWorkoutPlans = async () => {
     try {
-      // Use the user id from the passed userData instead of the current user
+      let userId;
+      if (userData === auth.currentUser) {
+        userId = userData.uid;
+      } else {
+        userId = userData.id;
+      }
+      
       const snapshot = await 
         db.collection('users')
-        .doc(userData.id)
+        .doc(userId)
         .collection('workoutPlans')
         .get();
 
@@ -32,7 +39,6 @@ const WorkoutPlansScreen = ({ route }) => {
         id: doc.id,
         exercises: doc.data().exercises,
       }));
-      console.log(userData);
 
       setWorkoutPlans(workouts);
     } catch (error) {
