@@ -69,16 +69,18 @@ const WorkoutScreen = ({ navigation, route }) => {
         >
           <Text style={styles.buttonText}>Reminders</Text>
         </TouchableOpacity>
-      </View>
-      <TimerPopup
-        isVisible={isWorkoutActive}
-        onPress={() => {
-            setWorkoutEnded(false);
-            navigation.navigate('QuickStart');
-        }}
-        timerStart={new Date()}
-        />
-    </View>
+        </View>
+          <View style={styles.timerContainer}>
+            <TimerPopup
+              isVisible={isWorkoutActive}
+              onPress={() => {
+                setWorkoutEnded(false);
+                navigation.navigate('QuickStart');
+              }}
+              timerStart={new Date()}
+            />
+          </View>
+        </View>
   );
 };
 
@@ -87,7 +89,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F5F5F5',
+    backgroundColor: '#C',
   },
   welcomeText: {
     color: '#010202',
@@ -118,6 +120,14 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: 'bold',
   },
+  timerContainer: {
+    position: 'absolute',
+    bottom: -60,
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+    color: 'black'
+  }
 });
 
 export default WorkoutScreen;

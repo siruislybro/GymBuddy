@@ -66,7 +66,7 @@ const RecommendedRoutineScreen = ({ route }) => {
     });
     Alert.alert('Success', 'Workout plans saved successfully!', [{
         text: 'OK',
-        onPress: () => navigation.navigate('WorkoutPlans'),
+        onPress: () => navigation.navigate('WorkoutPlans', { user: user }),
       },
     ]);
   
@@ -90,24 +90,24 @@ const styles = {
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: '#010202',
+    backgroundColor: '#F5F5F5',
   },
   heading: {
     fontSize: 24,
     fontWeight: 'bold',
     marginVertical: 20,
-    color: 'white',
+    color: 'black',
   },
   topBar: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#010202',
+    backgroundColor: '#F5F5F5',
     borderRadius: 10,
     padding: 10,
     margin: 10,
   },
   routine: {
-    color: 'white'
+    color: 'black'
   },
   button: {
     backgroundColor: '#0484fb',
