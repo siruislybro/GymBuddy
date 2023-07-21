@@ -1,11 +1,9 @@
 import React from 'react';
-import { View, Text, ScrollView } from 'react-native';
+import { View, Text, ScrollView, StyleSheet } from 'react-native';
 import { DataTable } from 'react-native-paper';
 
 const PastWorkoutsDetailsScreen = ({ route }) => {
   const { workout } = route.params;
-  console.log
-
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.content}>
@@ -34,26 +32,29 @@ const PastWorkoutsDetailsScreen = ({ route }) => {
   );
 };
 
-const styles = {
+const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#010202',
   },
   content: {
-    padding:20
+    padding:20,
   },
   workoutName: {
     fontSize: 20,
     fontWeight: 'bold',
+    color: '#EDEDED',
     marginBottom: 10,
   },
   workoutDescription: {
     fontSize: 16,
+    color: '#EDEDED',
     marginBottom: 10,
   },
   sectionTitle: {
     fontSize: 18,
     fontWeight: 'bold',
+    color: '#EDEDED',
     marginBottom: 10,
   },
   exerciseContainer: {
@@ -62,12 +63,13 @@ const styles = {
   exerciseName: {
     fontSize: 16,
     fontWeight: 'bold',
+    color: '#EDEDED',
     marginBottom: 10,
   },
   dataTable: {
     borderWidth: 1,
-    borderColor: '#000',
+    borderColor: '#EDEDED',
   },
-};
+});
 
 export default PastWorkoutsDetailsScreen;

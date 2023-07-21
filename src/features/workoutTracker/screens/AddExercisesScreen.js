@@ -1,6 +1,7 @@
 import React, { useState, useCallback } from 'react';
-import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity } from 'react-native';
 import BackButton from '../../../components/BackButton';
+import { Ionicons } from '@expo/vector-icons';
 
 const AddExercisesScreen = ({ navigation, route }) => {
   const [exerciseName, setExerciseName] = useState('');
@@ -55,25 +56,30 @@ const AddExercisesScreen = ({ navigation, route }) => {
         style={styles.input}
         value={exerciseName}
         onChangeText={setExerciseName}
+        placeholder="Enter exercise name"
+        placeholderTextColor="#ddd"
       />
 
-      <Button title="Add Exercise" onPress={handleAddExercise} />
+      <TouchableOpacity style={styles.button} onPress={handleAddExercise}>
+        <Ionicons name="add-circle-outline" size={24} color="white" />
+        <Text style={styles.buttonText}>Add Exercise</Text>
+      </TouchableOpacity>
 
       <View style={styles.buttonSpacing}></View>
+
       {!showCategoryButtons && (
-        <Button
-          title="View Exercises"
-          onPress={handleViewExercises}
-        />
+        <TouchableOpacity style={styles.button} onPress={handleViewExercises}>
+          <Ionicons name="eye-outline" size={24} color="white" />
+          <Text style={styles.buttonText}>View Exercises</Text>
+        </TouchableOpacity>
       )}
+      
       {showCategoryButtons && (
         <View style={styles.categoryButtons}>
           {Object.keys(muscleGroups).map((category) => (
-            <Button
-              key={category}
-              title={category}
-              onPress={() => handleNavigate(category)}
-            />
+            <TouchableOpacity key={category} style={styles.button} onPress={() => handleNavigate(category)}>
+              <Text style={styles.buttonText}>{category}</Text>
+            </TouchableOpacity>
           ))}
         </View>
       )}
@@ -95,7 +101,7 @@ const styles = StyleSheet.create({
   },
   label: {
     marginBottom: 16,
-    color: '#fff',
+    color: 'black',
   },
   input: {
     height: 40,
@@ -111,6 +117,20 @@ const styles = StyleSheet.create({
   },
   categoryButtons: {
     marginTop: 16,
+  },
+  button: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#007BFF',
+    borderRadius: 5,
+    padding: 10,
+    marginTop: 10,
+  },
+  buttonText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    marginLeft: 10,
   },
 });
 

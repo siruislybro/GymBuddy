@@ -1,6 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Text, ScrollView, TouchableOpacity, Button } from 'react-native';
-import { Icon } from 'react-native-elements';
+import { StyleSheet, View, Text, ScrollView, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import BackButton from '../../../components/BackButton';
 

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Text, TextInput, FlatList, TouchableOpacity} from 'react-native';
-import DatePicker from 'react-native-datepicker';
+import { StyleSheet, View, Text, FlatList, TouchableOpacity} from 'react-native';
 import { db, auth } from '../../../../firebase'; // Import Firebase configuration
 import BackButton from '../../../components/BackButton';
 
@@ -29,7 +28,7 @@ const PastWorkoutsScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.topBar}>
-      <BackButton />
+        <BackButton />
       </View>
       <Text style={styles.title}>Past Workouts</Text>
       <FlatList 
@@ -51,40 +50,32 @@ const PastWorkoutsScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 20,
-    paddingHorizontal: 10,
-    backgroundColor: '#010202',
+    padding: 20,
+    backgroundColor: '#F5F5F5',
   },
   topBar: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#010202',
-    borderRadius: 10,
-    marginTop: 20,
+    marginBottom: 10,
   },
   title: {
-    fontSize: 24,
+    fontSize: 26,
     textAlign: 'center',
     fontWeight: 'bold',
+    color: '#303030',
     marginBottom: 20,
-  },
-  inputContainer: {
-    marginBottom: 20,
-  },
-  datePicker: {
-    marginBottom: 10,
-  },
-  input: {
-    height: 40,
-    borderColor: '#cccccc',
-    borderWidth: 1,
-    marginBottom: 10,
-    padding: 10,
   },
   listItem: {
-    padding: 10,
-    backgroundColor: '#f9f9f9',
+    padding: 15,
+    backgroundColor: '#fff',
     marginBottom: 10,
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
+  },
+  item: {
+    fontSize: 18,
+    color: '#303030',
   },
 });
 

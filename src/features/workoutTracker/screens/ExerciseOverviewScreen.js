@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FlatList, StyleSheet, View, TouchableOpacity } from 'react-native';
+import { FlatList, StyleSheet, View, ActivityIndicator } from 'react-native';
 import { Button, SearchBar, Icon } from 'react-native-elements';
 import axios from 'axios';
 import BackButton from '../../../components/BackButton';
@@ -13,6 +13,13 @@ const ExerciseOverviewScreen = ({ navigation, route }) => {
   const [exercises, setExercises] = useState([]);
   const [filteredExercises, setFilteredExercises] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    setIsLoading(true);
+    // ... your code ...
+    setIsLoading(false);
+  }, []);
 
   const majorParts = {
     'Arms': ['biceps', 'forearms', 'triceps', 'shoulders'],
@@ -68,22 +75,25 @@ const ExerciseOverviewScreen = ({ navigation, route }) => {
           inputContainerStyle={styles.searchInputContainer}
         />
       </View>
-      <FlatList
-        data={filteredExercises}
-        keyExtractor={(item, index) => item.id || String(index)} 
-        renderItem={({ item }) => (
-          <ExerciseCard
-            title={item.name}
-            difficulty={item.difficulty}
-            muscle={item.muscle}
-            instructions={item.instructions}
-            item={item}
-            onPress={() => navigation.navigate('ExerciseDetails', { exercise: item })}
-            navigation={navigation}
-          />
-        )}
-      />
-
+      {isLoading ? (
+        <ActivityIndicator size="large" color="#00ff00" />
+      ) : (
+        <FlatList
+          data={filteredExercises}
+          keyExtractor={(item, index) => item.id || String(index)}
+          renderItem={({ item }) => (
+            <ExerciseCard
+              title={item.name}
+              difficulty={item.difficulty}
+              muscle={item.muscle}
+              instructions={item.instructions}
+              item={item}
+              onPress={() => navigation.navigate('ExerciseDetails', { exercise: item })}
+              navigation={navigation}
+            />
+          )}
+        />
+      )}
     </View>
   );
 };
@@ -92,13 +102,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    backgroundColor: '#010202',
+    backgroundColor: '#F5F5F5',
   },
   searchContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 20,
+    marginBottom: 20,
   },
   searchBarContainer: {
     backgroundColor: 'transparent',
@@ -107,8 +117,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   searchInputContainer: {
-    backgroundColor: '#454545',
+    backgroundColor: '#E0E0E0',
   },
 });
+
 
 export default ExerciseOverviewScreen;

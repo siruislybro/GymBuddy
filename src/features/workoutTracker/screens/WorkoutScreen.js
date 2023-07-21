@@ -62,13 +62,13 @@ const WorkoutScreen = ({ navigation, route }) => {
         >
           <Text style={styles.buttonText}>Routines</Text>
         </TouchableOpacity>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           style={styles.button}
           onPress={handleSetRemindersPress}
           activeOpacity={0.5}
         >
           <Text style={styles.buttonText}>Reminders</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         </View>
           <View style={styles.timerContainer}>
             <TimerPopup
