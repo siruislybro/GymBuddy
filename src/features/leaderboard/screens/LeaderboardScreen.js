@@ -212,7 +212,7 @@ const LeaderboardScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#010202',
+    backgroundColor: '#F5F5F5',
   },
   loading: {
     marginTop: 50,
@@ -258,11 +258,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    alignSelf: 'center',
     padding: 15,
     borderRadius: 10,
-    backgroundColor: '#333',
+    backgroundColor: 'white',
     marginVertical: 5,
     shadowColor: '#000',
+    width: '90%',
     shadowOffset: {
       width: 0,
       height: 1,
@@ -274,7 +276,7 @@ const styles = StyleSheet.create({
   userName: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#FFF',
+    color: 'black',
   },
   exercise: {
     fontSize: 14,
@@ -282,7 +284,7 @@ const styles = StyleSheet.create({
   },
   itemText: {
     fontSize: 14,
-    color: '#FFF',
+    color: 'black',
   },
   sectionHeader: {
     fontSize: 20,
