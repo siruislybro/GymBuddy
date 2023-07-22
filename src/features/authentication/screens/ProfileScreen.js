@@ -10,7 +10,7 @@ const ProfileScreen = ({ navigation }) => {
   const email = user.email;
   const [numFollowers, setNumFollowers] = useState(0);
   const [numFollowing, setNumFollowing] = useState(0);
-  const [profilePicture, setProfilePicture] = useState('../../../assets/images/GYMAPP.jpg');
+  const [profilePicture, setProfilePicture] = useState('../../../assets/images/GYMAPP.png');
 
   useEffect(() => {
     // Create a real-time listener
@@ -49,7 +49,7 @@ const ProfileScreen = ({ navigation }) => {
       <View style={styles.header}>
       <Image
         style={styles.avatar}
-        source={profilePicture && profilePicture !== '' ? {uri: profilePicture} : require('../../../assets/images/GYMAPP.jpg')}
+        source={profilePicture && profilePicture !== '' ? {uri: profilePicture} : require('../../../assets/images/GYMAPP.png')}
       />
       <TouchableOpacity onPress={() => navigation.navigate('Settings')}>
         {/* <Ionicons 
@@ -133,7 +133,7 @@ const styles = StyleSheet.create({
   //   marginLeft: 10,
   // },
   email: {
-    color: 'white',
+    color: 'black',
     fontSize: 16,
     marginBottom: 20,
   },
@@ -145,7 +145,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   followText: {
-    color: 'white',
+    color: 'black',
     fontSize: 16,
   },
   editProfileButton: {
