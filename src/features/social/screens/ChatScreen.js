@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, TextInput, Button, FlatList, Text, StyleSheet } from 'react-native';
-import { db, auth } from '../../../firebase';
+import { db, auth } from '../../../../firebase';
 import firebase from 'firebase/compat';
 
 const ChatScreen = ({ route }) => {

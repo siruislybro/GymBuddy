@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, Image, StyleSheet, Button, Alert } from 'react-native';
-import { db, auth } from '../../../firebase';
-import BackButton from '../../components/BackButton';
+import { db, auth } from '../../../../firebase';
+import BackButton from '../../../components/BackButton';
 import { arrayUnion, arrayRemove } from '@firebase/firestore';
 import firebase from 'firebase/compat';
 
