@@ -17,8 +17,8 @@ import EditProfileScreen from './src/features/authentication/screens/EditProfile
 import ExerciseDetailsScreen from './src/features/workoutTracker/screens/ExerciseDetailsScreen';
 import ExerciseOverviewScreen from './src/features/workoutTracker/screens/ExerciseOverviewScreen';
 import HomeScreen from './src/features/authentication/screens/HomeScreen';
-import UserProfileScreen from './src/features/social/UserProfileScreen';
-import ChatScreen from './src/features/social/ChatScreen';
+import UserProfileScreen from './src/features/social/screens/UserProfileScreen';
+import ChatScreen from './src/features/social/screens/ChatScreen';
 import WorkoutScreen from './src/features/workoutTracker/screens/WorkoutScreen';
 import LeaderboardScreen from './src/features/leaderboard/screens/LeaderboardScreen';
 import MaxWeightLeaderboardDetailsScreen from './src/features/leaderboard/screens/MaxWeightLeaderboardScreen';
