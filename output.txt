@@ -15,28 +15,37 @@
     ├── src
     |  ├── assets
     |  |  ├── images
-    |  ├── colours
+    |  ├── utils
     |  ├── components
+    |  |  |── __tests__
     |  └── features
     |     ├── authentication
     |     |  └── screens
+    |     |  └── __tests__
     |     ├── calander
     |     |  └── screens
+    |     |  └── __tests__
     |     ├── calorieTracker
     |     |  └── screens
+    |     |  └── __tests__
     |     ├── leaderboard
     |     |  └── screens
+    |     |  └── __tests__
     |     ├── measurementsTracker
     |     |  └── screens
+    |     |  └── __tests__
     |     ├── pastWorkouts
     |     |  └── screens
+    |     |  └── __tests__
     |     ├── routines
     |     |  └── screens
+    |     |  └── __tests__
     |     ├── telegramBot
     |     |  └── screens
+    |     |  └── __tests__
     |     └── workoutTracker
     |        └── screens
-    └── __tests__
+    |        └── __tests__
 
 
 

@@ -1,0 +1,64 @@
+import React from 'react';
+import { render, fireEvent, waitFor } from '@testing-library/react-native';
+import LoginScreen from '../screens/LoginScreen'; // Update the path to your LoginScreen component
+
+// Mock the navigation prop
+jest.mock('@react-navigation/native', () => ({
+  ...jest.requireActual('@react-navigation/native'),
+  useNavigation: () => ({
+    navigate: jest.fn(),
+  }),
+}));
+
+// Mock the authentication function
+jest.mock('../../../../firebase', () => ({
+  auth: {
+    signInWithEmailAndPassword: jest.fn((email, password) => {
+      // Simulate successful login for test case TEST001
+      if (email === 'test@example.com' && password === 'password') {
+        return Promise.resolve({ user: { email } });
+      }
+      // Simulate error for test case TEST002
+      return Promise.reject({ code: 'auth/wrong-password' });
+    }),
+  },
+}));
+
+describe('LoginScreen', () => {
+  it('should handle successful login (TEST001)', async () => {
+    const { getByPlaceholderText, getByText } = render(<LoginScreen />);
+    
+    // Enter valid email and password
+    fireEvent.changeText(getByPlaceholderText('EMAIL:'), 'test@example.com');
+    fireEvent.changeText(getByPlaceholderText('PASSWORD:'), 'password');
+    
+    // Click on the login button
+    fireEvent.press(getByText('Login'));
+    
+    // Wait for the login process to complete
+    await waitFor(() => expect(getByText('Login')).not.toBeDisabled());
+    
+    // Verify that the user is redirected to the home screen
+    expect(navigation.navigate).toHaveBeenCalledWith('MainTabs', {
+      screen: 'Home',
+      params: { userName: 'testuser', email: 'test@example.com' },
+    });
+  });
+  
+  it('should handle invalid login credentials (TEST002)', async () => {
+    const { getByPlaceholderText, getByText } = render(<LoginScreen />);
+    
+    // Enter invalid email or password
+    fireEvent.changeText(getByPlaceholderText('EMAIL:'), 'invalid@example.com');
+    fireEvent.changeText(getByPlaceholderText('PASSWORD:'), 'invalidpassword');
+    
+    // Click on the login button
+    fireEvent.press(getByText('Login'));
+    
+    // Wait for the login process to complete
+    await waitFor(() => expect(getByText('Login')).not.toBeDisabled());
+    
+    // Verify that the error message is displayed
+    expect(getByText('Error! Wrong password')).toBeTruthy();
+  });
+});
