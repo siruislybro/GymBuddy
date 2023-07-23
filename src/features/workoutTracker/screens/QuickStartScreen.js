@@ -318,11 +318,9 @@ const cancelWorkout = async () => {
             onChangeText={setWorkoutName}
           />
         </View>
-        {/* Timer Icon which opens the Timer Modal */}
         <TouchableOpacity onPress={() => setIsTimerModalVisible(true)}>
           <Ionicons name="timer" size={32} color="white" />
         </TouchableOpacity>
-
         <Modal
           animationType="slide"
           transparent={true}
@@ -332,22 +330,43 @@ const cancelWorkout = async () => {
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
               <View style={styles.timerContainer}>
-                <Text>Rest Timer: {restTime}</Text>
-                  <Button title="-30s" onPress={handleRestDecrease} />
-                  <Button title="+30s" onPress={handleRestIncrease} />
-                  <Button title="Start" onPress={handleRestStart} />
-                  <Button title="End" onPress={handleRestEnd} />
-                </View>
-                
+                <Text style={styles.timerTitle}>Rest Timer</Text>
+                <Text style={styles.timerText}>{restTime}</Text>
                 <TouchableOpacity
-                  style={styles.closeButton}
-                  onPress={() => setIsTimerModalVisible(false)}
+                  style={styles.timerButton}
+                  onPress={handleRestDecrease}
                 >
-            <Text style={styles.textStyle}>Close</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-    </Modal>
+                  <Text style={styles.timerButtonText}>-30s</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.timerButton}
+                  onPress={handleRestIncrease}
+                >
+                  <Text style={styles.timerButtonText}>+30s</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.timerButton}
+                  onPress={handleRestStart}
+                >
+                  <Text style={styles.timerButtonText}>Start</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.timerButton}
+                  onPress={handleRestEnd}
+                >
+                  <Text style={styles.timerButtonText}>End</Text>
+                </TouchableOpacity>
+              </View>
+              
+              <TouchableOpacity
+                style={[styles.timerButton, styles.closeButton]}
+                onPress={() => setIsTimerModalVisible(false)}
+              >
+                <Text style={styles.timerButtonText}>Close</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
 
       </View>
       <FlatList
@@ -516,13 +535,13 @@ const styles = StyleSheet.create({
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
-      height: 2
+      height: 4
     },
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
-    width: '50%',
-    height: '50%',
+    width: '70%',
+    height: '70%',
   },
   closeButton: {
     backgroundColor: "#2196F3",
@@ -534,6 +553,36 @@ const styles = StyleSheet.create({
     color: "white",
     fontWeight: "bold",
     textAlign: "center"
+  },
+  timerContainer: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#eee',
+    borderRadius: 10,
+    padding: 20,
+    height: '80%',
+  },
+  timerTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  timerText: {
+    fontSize: 20,
+    marginBottom: 20,
+  },
+  timerButton: {
+    backgroundColor: "#2196F3",
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 10,
+    marginVertical: 5,
+  },
+  timerButtonText: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center",
   },
 });
 

@@ -17,8 +17,8 @@ import EditProfileScreen from './src/features/authentication/screens/EditProfile
 import ExerciseDetailsScreen from './src/features/workoutTracker/screens/ExerciseDetailsScreen';
 import ExerciseOverviewScreen from './src/features/workoutTracker/screens/ExerciseOverviewScreen';
 import HomeScreen from './src/features/authentication/screens/HomeScreen';
-import UserProfileScreen from './src/features/social/UserProfileScreen';
-import ChatScreen from './src/features/social/ChatScreen';
+import UserProfileScreen from './src/features/social/screens/UserProfileScreen';
+import ChatScreen from './src/features/social/screens/ChatScreen';
 import WorkoutScreen from './src/features/workoutTracker/screens/WorkoutScreen';
 import LeaderboardScreen from './src/features/leaderboard/screens/LeaderboardScreen';
 import MaxWeightLeaderboardDetailsScreen from './src/features/leaderboard/screens/MaxWeightLeaderboardScreen';
@@ -27,11 +27,11 @@ import LeaderboardDetailsScreen from './src/features/leaderboard/screens/Leaderb
 import LoginScreen from './src/features/authentication/screens/LoginScreen';
 import MeasurementScreen from './src/features/measurementsTracker/screens/MeasurementsScreen';
 import PastWorkoutsScreen from './src/features/pastWorkouts/screens/PastWorkoutsScreen';
-import PastWorkoutsDetailsScreen from './src/features/pastWorkouts/screens/PastWorkoutsScreen';
+import PastWorkoutsDetailsScreen from './src/features/pastWorkouts/screens/PastWorkoutsDetailsScreen';
 import ProfileScreen from './src/features/authentication/screens/ProfileScreen';
 import QuickStartScreen from './src/features/workoutTracker/screens/QuickStartScreen';
 import RecommendedRoutineScreen from './src/features/routines/screens/RecommendedRoutineScreen';
-import RecommendedCaloriesScreen from './src/features/calorieTracker/screens/RecommendedCalories';
+import RecommendedCaloriesScreen from './src/features/calorieTracker/screens/RecommendedCaloriesScreen';
 import SignUpScreen from './src/features/authentication/screens/SignUpScreen';
 import StartScreen from './src/features/authentication/screens/StartScreen';
 import StatisticsDetailScreen from './src/features/pastWorkouts/screens/StatisticsDetailScreen';
@@ -214,7 +214,7 @@ export default function App() {
                     options={{ headerShown: false }}
                   />
                   <Stack.Screen
-                    name="RecommendedCalories"
+                    name="RecommendedCaloriesScreen"
                     component={RecommendedCaloriesScreen}
                     options={{ headerShown: false }}
                   />

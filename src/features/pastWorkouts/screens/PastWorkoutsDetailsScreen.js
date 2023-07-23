@@ -2,8 +2,9 @@ import React from 'react';
 import { View, Text, ScrollView, StyleSheet } from 'react-native';
 import { DataTable } from 'react-native-paper';
 
-const PastWorkoutsDetailsScreen = ({ route }) => {
+const PastWorkoutsDetailsScreen = ({ route, navigation }) => {
   const { workout } = route.params;
+  
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.content}>
@@ -35,7 +36,7 @@ const PastWorkoutsDetailsScreen = ({ route }) => {
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    backgroundColor: '#010202',
+    backgroundColor: '#F5F5F5',
   },
   content: {
     padding:20,
@@ -43,18 +44,19 @@ const styles = StyleSheet.create({
   workoutName: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#EDEDED',
+    color: 'black',
     marginBottom: 10,
+    marginTop: 40
   },
   workoutDescription: {
     fontSize: 16,
-    color: '#EDEDED',
+    color: 'black',
     marginBottom: 10,
   },
   sectionTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#EDEDED',
+    color: 'black',
     marginBottom: 10,
   },
   exerciseContainer: {
@@ -63,12 +65,12 @@ const styles = StyleSheet.create({
   exerciseName: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#EDEDED',
+    color: 'black',
     marginBottom: 10,
   },
   dataTable: {
     borderWidth: 1,
-    borderColor: '#EDEDED',
+    borderColor: 'black',
   },
 });
 

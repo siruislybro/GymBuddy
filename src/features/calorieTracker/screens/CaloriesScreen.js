@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, ActivityIndicator, TextInput, StyleSheet, Button, ScrollView, TouchableOpacity } from 'react-native';
 import axios from 'axios';
 import BackButton from '../../../components/BackButton';
-import { doc, getDoc, setDoc, updateDoc, Timestamp, arrayUnion } from 'firebase/firestore';
+import { doc, getDoc, setDoc, updateDoc, Timestamp, arrayUnion, deleteDoc } from 'firebase/firestore';
 import { db, auth } from '../../../../firebase';
 
 const CaloriesScreen = ( {navigation} ) => {
@@ -18,7 +18,17 @@ const CaloriesScreen = ( {navigation} ) => {
  
 
   const knowYourCalories = () => {
-    navigation.navigate("RecommendedCalories")
+    navigation.navigate("RecommendedCaloriesScreen")
+  }
+
+
+  const changeGoal = async () => {
+    try {
+      await deleteDoc(doc(db, 'users', user.uid, 'nutrition', 'calories'));
+      setRecommendedCalories(null);
+    } catch (error) {
+      console.error("Error changing goal:", error);
+    }
   }
   
   
@@ -181,6 +191,7 @@ useEffect(() => {
           <Text style={styles.title}>Recommended Daily Calories: {parseFloat(recommendedCalories).toFixed(1)}</Text>
           <Text style={styles.title}>Current Calories: {parseFloat(currentCalories).toFixed(1)}</Text>
           <Text style={styles.title}>Calories Left: {parseFloat(recommendedCalories - currentCalories).toFixed(1)}</Text>
+          <Button title="Change Goal" onPress={changeGoal} />
         </View>
       ) : (
         <View>
@@ -203,6 +214,7 @@ useEffect(() => {
               <Text style={styles.foodLogItemName}>{item.name}</Text>
               <Text style={styles.foodLogItemCalories}>Calories: {parseFloat(item.calories).toFixed(1)}</Text>
               <Text style={styles.foodLogItemTime}>{new Date(item.timestamp).toLocaleTimeString()}</Text>
+              
             </View>
           )}
         />
