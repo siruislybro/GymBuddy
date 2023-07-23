@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert } from 'react-native';
 import axios from 'axios';
 import BackButton from '../../../components/BackButton';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { db, auth } from '../../../../firebase';
+import { useNavigation } from '@react-navigation/native';
 
 const RecommendedCaloriesScreen = () => {
     const [userDetails, setUserDetails] = useState({});
     const [calorieData, setCalorieData] = useState(null);
     const user = auth.currentUser;
+    const navigation = useNavigation();
 
     const handleGoalSelect = async (calories) => {
         try {
@@ -28,7 +30,9 @@ const RecommendedCaloriesScreen = () => {
             if (docSnap.exists()) {
               setUserDetails(docSnap.data());
             } else {
+              navigation.navigate('EditProfileScreen');
               console.log('No such document!');
+            
             }
           } catch (error) {
             console.error("Error fetching user details:", error);
@@ -63,6 +67,8 @@ const RecommendedCaloriesScreen = () => {
               setCalorieData(response.data.data);
               console.log('Calorie Data:', response.data);
             } catch (error) {
+              navigation.navigate('EditProfileScreen');
+              Alert.alert("Please fill in your details again!");
               console.error(error);
             }
           };

@@ -2,9 +2,9 @@ import React from 'react';
 import { View, Text, ScrollView, StyleSheet } from 'react-native';
 import { DataTable } from 'react-native-paper';
 
-const PastWorkoutsDetailsScreen = ({ route }) => {
+const PastWorkoutsDetailsScreen = ({ route, navigation }) => {
   const { workout } = route.params;
-  console.log('route.params', route.params)
+  
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.content}>
@@ -46,7 +46,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: 'black',
     marginBottom: 10,
-    alignSelf: 'center',
   },
   workoutDescription: {
     fontSize: 16,

@@ -5,47 +5,49 @@ import BackButton from '../../../components/BackButton';
 
 const PastWorkoutsScreen = ({ navigation }) => {
   const [pastWorkouts, setPastWorkouts] = useState([]);
-
-  const fetchWorkouts = async () => {
-    const user = auth.currentUser;
-    const workoutsRef = db.collection('users').doc(user.uid).collection('workouts');
-    const snapshot = await workoutsRef.get();
-
-    const workouts = snapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
-    // console.log('workouts', workouts)
-    setPastWorkouts(workouts);
-  };
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const fetchWorkouts = async () => {
+      const user = auth.currentUser;
+      const workoutsRef = db.collection('users').doc(user.uid).collection('workouts');
+      const snapshot = await workoutsRef.get();
+  
+      const workouts = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+  
+      setPastWorkouts(workouts);
+      setLoading(false); // Set loading to false after fetching data
+    }
+  
     fetchWorkouts();
   }, []);
-
-  // Log the updated value of pastWorkouts whenever it changes
-  // useEffect(() => {
-  //   console.log('pastWorkouts', pastWorkouts);
-  // }, [pastWorkouts]);
   
+
   return (
     <View style={styles.container}>
       <View style={styles.topBar}>
         <BackButton />
       </View>
       <Text style={styles.title}>Past Workouts</Text>
+      {loading ? <Text>Loading...</Text> : 
       <FlatList 
         data={pastWorkouts}
         keyExtractor={item => item.id}
         renderItem={({ item }) => (
         <TouchableOpacity 
           style={styles.listItem}
-          onPress={() => navigation.navigate('PastWorkoutsDetailsScreen', { workout: item })}
+          onPress={() => {
+            console.log('Navigating to PastWorkoutsDetailsScreen with workout:', item);
+            navigation.navigate('PastWorkoutsDetailsScreen', { workout: item });
+          }}
         >
           <Text style={styles.item}>{item.workoutName}</Text>
         </TouchableOpacity>
         )}
-      />
+      />}
     </View>
   );
 };

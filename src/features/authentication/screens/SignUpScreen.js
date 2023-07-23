@@ -20,6 +20,9 @@ const SignUpScreen = ({ navigation }) => {
                 following: [],
                 followers: [],
             });
+
+
+            
             console.log('User data written to Firestore');
             } catch (error) {
             console.error('Error writing user data to Firestore: ', error);
