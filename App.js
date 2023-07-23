@@ -27,7 +27,7 @@ import LeaderboardDetailsScreen from './src/features/leaderboard/screens/Leaderb
 import LoginScreen from './src/features/authentication/screens/LoginScreen';
 import MeasurementScreen from './src/features/measurementsTracker/screens/MeasurementsScreen';
 import PastWorkoutsScreen from './src/features/pastWorkouts/screens/PastWorkoutsScreen';
-import PastWorkoutsDetailsScreen from './src/features/pastWorkouts/screens/PastWorkoutsScreen';
+import PastWorkoutsDetailsScreen from './src/features/pastWorkouts/screens/PastWorkoutsDetailsScreen';
 import ProfileScreen from './src/features/authentication/screens/ProfileScreen';
 import QuickStartScreen from './src/features/workoutTracker/screens/QuickStartScreen';
 import RecommendedRoutineScreen from './src/features/routines/screens/RecommendedRoutineScreen';
@@ -120,7 +120,6 @@ export default function App() {
                     name="Login"
                     component={LoginScreen}
                     options={{ headerShown: false }}
-                    cardstyle={backgroundColor = Colors.buttonColor}
                   />
                   <Stack.Screen
                     name="UserProfile"
@@ -274,15 +273,3 @@ export default function App() {
     </UserContext.Provider>
   );
 }
-
-// const styles = StyleSheet.create({
-//   buttons: {
-//     backgroundColor: Colors.buttonColor,
-//   },
-//   container: {
-//     flex: 1,
-//     backgroundColor: '#fff',
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//   },
-// });

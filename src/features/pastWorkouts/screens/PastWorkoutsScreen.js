@@ -6,25 +6,28 @@ import BackButton from '../../../components/BackButton';
 const PastWorkoutsScreen = ({ navigation }) => {
   const [pastWorkouts, setPastWorkouts] = useState([]);
 
+  const fetchWorkouts = async () => {
+    const user = auth.currentUser;
+    const workoutsRef = db.collection('users').doc(user.uid).collection('workouts');
+    const snapshot = await workoutsRef.get();
+
+    const workouts = snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    // console.log('workouts', workouts)
+    setPastWorkouts(workouts);
+  };
+
   useEffect(() => {
-    const fetchWorkouts = async () => {
-      const user = auth.currentUser;
-      const workoutsRef = db.collection('users').doc(user.uid).collection('workouts');
-      const snapshot = await workoutsRef.get();
-  
-      const workouts = snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-  
-      setPastWorkouts(workouts);
-      console.log(pastWorkouts)
-    }
-  
     fetchWorkouts();
   }, []);
-  
 
+  // Log the updated value of pastWorkouts whenever it changes
+  // useEffect(() => {
+  //   console.log('pastWorkouts', pastWorkouts);
+  // }, [pastWorkouts]);
+  
   return (
     <View style={styles.container}>
       <View style={styles.topBar}>
