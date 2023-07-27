@@ -46,7 +46,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: 'black',
     marginBottom: 10,
-    marginTop: 40
   },
   workoutDescription: {
     fontSize: 16,

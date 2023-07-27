@@ -120,7 +120,6 @@ export default function App() {
                     name="Login"
                     component={LoginScreen}
                     options={{ headerShown: false }}
-                    cardstyle={backgroundColor = Colors.buttonColor}
                   />
                   <Stack.Screen
                     name="UserProfile"
@@ -274,15 +273,3 @@ export default function App() {
     </UserContext.Provider>
   );
 }
-
-// const styles = StyleSheet.create({
-//   buttons: {
-//     backgroundColor: Colors.buttonColor,
-//   },
-//   container: {
-//     flex: 1,
-//     backgroundColor: '#fff',
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//   },
-// });

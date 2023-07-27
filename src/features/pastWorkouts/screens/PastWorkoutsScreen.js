@@ -25,7 +25,7 @@ const PastWorkoutsScreen = ({ navigation }) => {
     fetchWorkouts();
   }, []);
   
-  
+
   return (
     <View style={styles.container}>
       <View style={styles.topBar}>
